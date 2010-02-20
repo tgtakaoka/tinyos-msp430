@@ -1,0 +1,2 @@
+COMPONENT=Blink1Sec16AppC
+include $(MAKERULES)
