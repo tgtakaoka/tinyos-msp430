@@ -28,7 +28,7 @@ implementation
         BCSCTL1 = CALBC1_16MHZ | DIVA_0;    // DCO=16MHZ, ACLK/1
         DCOCTL = CALDCO_16MHZ;
         BCSCTL2 = SELM_0 | DIVM_0 | DIVS_3; // MCLK=DCO/1, SMCLK=MCLK/8
-        BCSCTL3 = LFXT1S_0 | XCAP_0;        // ACLK=32kHz, 1pF
+        BCSCTL3 = LFXT1S_0 | XCAP_2;        // ACLK=32kHz, CL,eff=8.5pF
 
         // IE1.OFIE = 0; no interrupt for oscillator fault
         CLR_FLAG( IE1, OFIE );
