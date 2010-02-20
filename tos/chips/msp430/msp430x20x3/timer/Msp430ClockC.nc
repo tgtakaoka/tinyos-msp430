@@ -5,7 +5,7 @@ configuration Msp430ClockC
 }
 implementation
 {
-    components Msp430ClockP as Msp430ClockP;
+    components Msp430ClockP;
     components McuSleepC;
 
     Init = Msp430ClockP;
