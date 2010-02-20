@@ -13,16 +13,22 @@ implementation
     components new Msp430GpioC() as Led0Impl;
     components new Msp430GpioC() as Led1Impl;
     components new Msp430GpioC() as Led2Impl;
+    components new InvertGeneralIO() as Led0Inv;
+    components new InvertGeneralIO() as Led1Inv;
+    components new InvertGeneralIO() as Led2Inv;
     components PlatformP;
 
     Init = PlatformP.LedsInit;
 
-    Led0 = Led0Impl;
+    Led0 = Led0Inv;
+    Led0Inv.Impl -> Led0Impl;
     Led0Impl -> GeneralIOC.Port10;
 
-    Led1 = Led1Impl;
+    Led1 = Led1Inv;
+    Led1Inv.Impl -> Led1Impl;
     Led1Impl -> GeneralIOC.Port11;
 
-    Led2 = Led2Impl;
+    Led2 = Led2Inv;
+    Led2Inv.Impl -> Led2Impl;
     Led2Impl -> GeneralIOC.Port12;
 }
