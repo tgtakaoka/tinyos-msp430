@@ -25,6 +25,28 @@ configuration HplMsp430GeneralIOC
     provides interface HplMsp430GeneralIO as Port26;
     provides interface HplMsp430GeneralIO as Port27;
 #endif
+
+#ifdef __msp430_have_port3
+    provides interface HplMsp430GeneralIO as Port30;
+    provides interface HplMsp430GeneralIO as Port31;
+    provides interface HplMsp430GeneralIO as Port32;
+    provides interface HplMsp430GeneralIO as Port33;
+    provides interface HplMsp430GeneralIO as Port34;
+    provides interface HplMsp430GeneralIO as Port35;
+    provides interface HplMsp430GeneralIO as Port36;
+    provides interface HplMsp430GeneralIO as Port37;
+#endif
+
+#ifdef __msp430_have_port4
+    provides interface HplMsp430GeneralIO as Port40;
+    provides interface HplMsp430GeneralIO as Port41;
+    provides interface HplMsp430GeneralIO as Port42;
+    provides interface HplMsp430GeneralIO as Port43;
+    provides interface HplMsp430GeneralIO as Port44;
+    provides interface HplMsp430GeneralIO as Port45;
+    provides interface HplMsp430GeneralIO as Port46;
+    provides interface HplMsp430GeneralIO as Port47;
+#endif
 }
 implementation
 {
@@ -54,6 +76,30 @@ implementation
         new HplMsp430GeneralIOP(P2IN_, P2OUT_, P2DIR_, P2SEL_, 7) as P27;
 #endif
 
+#ifdef __msp430_have_port3
+    components
+        new HplMsp430GeneralIOP(P3IN_, P3OUT_, P3DIR_, P3SEL_, 0) as P30,
+        new HplMsp430GeneralIOP(P3IN_, P3OUT_, P3DIR_, P3SEL_, 1) as P31,
+        new HplMsp430GeneralIOP(P3IN_, P3OUT_, P3DIR_, P3SEL_, 2) as P32,
+        new HplMsp430GeneralIOP(P3IN_, P3OUT_, P3DIR_, P3SEL_, 3) as P33,
+        new HplMsp430GeneralIOP(P3IN_, P3OUT_, P3DIR_, P3SEL_, 4) as P34,
+        new HplMsp430GeneralIOP(P3IN_, P3OUT_, P3DIR_, P3SEL_, 5) as P35,
+        new HplMsp430GeneralIOP(P3IN_, P3OUT_, P3DIR_, P3SEL_, 6) as P36,
+        new HplMsp430GeneralIOP(P3IN_, P3OUT_, P3DIR_, P3SEL_, 7) as P37;
+#endif
+
+#ifdef __msp430_have_port4
+    components
+        new HplMsp430GeneralIOP(P4IN_, P4OUT_, P4DIR_, P4SEL_, 0) as P40,
+        new HplMsp430GeneralIOP(P4IN_, P4OUT_, P4DIR_, P4SEL_, 1) as P41,
+        new HplMsp430GeneralIOP(P4IN_, P4OUT_, P4DIR_, P4SEL_, 2) as P42,
+        new HplMsp430GeneralIOP(P4IN_, P4OUT_, P4DIR_, P4SEL_, 3) as P43,
+        new HplMsp430GeneralIOP(P4IN_, P4OUT_, P4DIR_, P4SEL_, 4) as P44,
+        new HplMsp430GeneralIOP(P4IN_, P4OUT_, P4DIR_, P4SEL_, 5) as P45,
+        new HplMsp430GeneralIOP(P4IN_, P4OUT_, P4DIR_, P4SEL_, 6) as P46,
+        new HplMsp430GeneralIOP(P4IN_, P4OUT_, P4DIR_, P4SEL_, 7) as P47;
+#endif
+
 #ifdef __msp430_have_port1
     Port10 = P10;
     Port11 = P11;
@@ -76,5 +122,27 @@ implementation
 #endif
     Port26 = P26;
     Port27 = P27;
+#endif
+
+#ifdef __msp430_have_port3
+    Port30 = P30;
+    Port31 = P31;
+    Port32 = P32;
+    Port33 = P33;
+    Port34 = P34;
+    Port35 = P35;
+    Port36 = P36;
+    Port37 = P37;
+#endif
+
+#ifdef __msp430_have_port4
+    Port40 = P40;
+    Port41 = P41;
+    Port42 = P42;
+    Port43 = P43;
+    Port44 = P44;
+    Port45 = P45;
+    Port46 = P46;
+    Port47 = P47;
 #endif
 }

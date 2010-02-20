@@ -15,4 +15,10 @@ implementation
     Msp430Timer[1] = Msp430TimerC.TimerA;
     Msp430TimerControl[1] = Msp430TimerC.ControlA1;
     Msp430Compare[1] = Msp430TimerC.CompareA1;
+
+#if defined(__MSP430_HAS_TA3__)
+    Msp430Timer[2] = Msp430TimerC.TimerA;
+    Msp430TimerControl[2] = Msp430TimerC.ControlA2;
+    Msp430Compare[2] = Msp430TimerC.CompareA2;
+#endif
 }

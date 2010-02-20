@@ -13,6 +13,10 @@ implementation
     MSP430REG_NORACE(IE1);
     MSP430REG_NORACE(TACTL);
     MSP430REG_NORACE(TAIV);
+#if defined(__MSP430_HAS_TB3__)
+    MSP430REG_NORACE(TBCTL);
+    MSP430REG_NORACE(TBIV);
+#endif
 
     async command mcu_power_t McuPowerOverride.lowestState() {
         return MSP430_POWER_LPM3;
@@ -53,15 +57,43 @@ implementation
         TACTL &= ~(MC1|MC0);
     }
 
+#if defined(__MSP430_HAS_TB3__)
+    command void Msp430ClockInit.defaultInitTimerB() {
+        // TODO
+    }
+
+    default event void Msp430ClockInit.initTimerB() {
+        call Msp430ClockInit.defaultInitTimerB();
+    }
+
+    void startTimerB() {
+        // TODO 
+    }
+
+    void stopTimerB() {
+        // TODO
+    }
+#endif
+
     command error_t Init.init() {
         // Reset timers and clear interrupt vectors
         TACTL = TACLR;
         TAIV = 0;
+#if defined(__MSP430_HAS_TB3__)
+        TBCTL = TBCLR;
+        TBIV = 0;
+#endif
 
         atomic {
             signal Msp430ClockInit.initClocks();
             signal Msp430ClockInit.initTimerA();
+#if defined(__MSP430_HAS_TB3__)
+            signal Msp430ClockInit.initTimerB();
+#endif
             startTimerA();
+#if defined(__MSP430_HAS_TB3__)
+            startTimerB();
+#endif
         }
 
         return SUCCESS;

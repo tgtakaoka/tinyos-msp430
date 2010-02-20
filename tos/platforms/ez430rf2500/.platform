@@ -1,9 +1,9 @@
 # -*- mode:perl; -*-
 push( @includes, qw(
 
-      %T/platforms/ez430f2013
+      %T/platforms/ez430rf2500
 
-      %T/chips/msp430/msp430x20x3
+      %T/chips/msp430/msp430x22x4
 
       %T/chips/msp430/msp430x2xx
       %T/chips/msp430/msp430x2xx/pins
@@ -20,9 +20,10 @@ push( @includes, qw(
 
 @opts = qw(
       -gcc=msp430-gcc
-      -mmcu=msp430x2013
+      -mmcu=msp430x2274
       -mno-stack-init
       -fnesc-target=msp430
       -fnesc-no-debug
 );
 push @opts, "-fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask" if !$with_scheduler_flag;
+

@@ -4,9 +4,10 @@ push( @includes, qw(
       %T/platforms/msp430f2013
 
       %T/chips/msp430/msp430x20x3
-      %T/chips/msp430/msp430x20x3/interfaces
-      %T/chips/msp430/msp430x20x3/pins
-      %T/chips/msp430/msp430x20x3/timer
+
+      %T/chips/msp430/msp430x2xx
+      %T/chips/msp430/msp430x2xx/pins
+      %T/chips/msp430/msp430x2xx/timer
 
       %T/chips/msp430
       %T/chips/msp430/pins

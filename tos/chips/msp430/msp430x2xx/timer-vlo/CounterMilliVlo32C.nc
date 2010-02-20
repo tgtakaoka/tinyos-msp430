@@ -1,4 +1,5 @@
 #include "Timer.h"
+#include "Timer-vlo.h"
 
 configuration CounterMilliVlo32C
 {
