@@ -1,0 +1,15 @@
+#-*-Makefile-*- vim:syntax=make
+#$Id: telosb.target,v 1.5 2008/03/11 09:34:13 klueska Exp $
+
+PLATFORM ?= msp430f2131
+
+MSP_MCU = msp430x2131
+
+# Disable MSP430 hardware multiply because it makes MSPGCC die
+PFLAGS += -mdisable-hwmul
+OPTFLAGS += -O
+
+$(call TOSMake_include_platform,msp)
+
+msp430f2131: $(BUILD_DEPS)
+	@:
