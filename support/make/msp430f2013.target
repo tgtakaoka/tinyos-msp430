@@ -9,6 +9,10 @@ MSP_MCU = msp430x2013
 PFLAGS += -mdisable-hwmul
 OPTFLAGS += -O
 
+ifndef DEFAULT_PROGRAM
+DEFAULT_PROGRAM = mspdebug
+endif
+
 $(call TOSMake_include_platform,msp)
 
 msp430f2013: $(BUILD_DEPS)

@@ -1,0 +1,26 @@
+#-*-Makefile-*- vim:syntax=make
+#$Id: bsl.extra,v 1.7 2008/06/18 20:22:51 razvanm Exp $
+
+# mspdebug arguments:
+#
+#   mspdebug [MSP_UIF=<MSP430-UIF-device>]
+
+PROGRAM = mspdebug
+
+MSP_DEBUG ?= mspdebug
+
+ifneq ($(MSP_UIF),)
+  MSP_UIF_DEV=-u $(MSP_UIF)
+endif
+
+program: $(BSL_TARGETS) $(TELOS_PROGRAM_DEPS) FORCE
+	@echo "    installing $(PLATFORM) binary using mspdebug"
+	$(MSP_DEBUG) $(MSP_DEBUG_FLAGS) $(MSP_UIF_DEV) "prog $(INSTALL_IHEX)"
+	rm -f $(subst .ihex.,.exe.,$(INSTALL_IHEX)) $(INSTALL_IHEX) 
+
+program_bl: $(BSL_TARGETS) $(TELOS_PROGRAM_DEPS) FORCE
+	@echo "    installing $(PLATFORM) bootloader using mspdebug"
+	$(MSP_DEBUG) $(MSP_DEBUG_FLAGS) $(MSP_UIF_DEV) "prog $(BOOTLOADER_IMG)"
+
+program_input: ihex
+	@:
