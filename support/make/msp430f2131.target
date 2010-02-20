@@ -9,6 +9,12 @@ MSP_MCU = msp430x2131
 PFLAGS += -mdisable-hwmul
 OPTFLAGS += -O
 
+ifndef DEFAULT_PROGRAM
+DEFAULT_PROGRAM = tos-bsl
+endif
+
+MSP_BSL_FLAGS ?= --invert-reset
+
 $(call TOSMake_include_platform,msp)
 
 msp430f2131: $(BUILD_DEPS)
