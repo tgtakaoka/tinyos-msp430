@@ -13,6 +13,10 @@ implementation
     MSP430REG_NORACE(IE1);
     MSP430REG_NORACE(TACTL);
     MSP430REG_NORACE(TAIV);
+#if defined(__MSP430_HAS_T1A2__)
+    MSP430REG_NORACE(TA1CTL);
+    MSP430REG_NORACE(TA1IV);
+#endif
 #if defined(__MSP430_HAS_TB3__)
     MSP430REG_NORACE(TBCTL);
     MSP430REG_NORACE(TBIV);
@@ -28,19 +32,23 @@ implementation
         BCSCTL1 = CALBC1_16MHZ | DIVA_0;    // DCO=16MHZ, ACLK/1
         DCOCTL = CALDCO_16MHZ;
         BCSCTL2 = SELM_0 | DIVM_0 | DIVS_3; // MCLK=DCO/1, SMCLK=MCLK/8
-        BCSCTL3 = LFXT1S_0 | XCAP_2;        // ACLK=32kHz, CL,eff=8.5pF
+#if defined(ERRATA_XOSC8)
+        BCSCTL3 = LFXT1S_0 | XCAP_3;        // ACLK=32kHz, CL,eff=12.5pF
+#else
+        BCSCTL3 = LFXT1S_0 | XCAP_2;        // ACLK=32kHz, CL,eff=10pF
+#endif
 
         // IE1.OFIE = 0; no interrupt for oscillator fault
         CLR_FLAG( IE1, OFIE );
     }
 
+    default event void Msp430ClockInit.initClocks() {
+        call Msp430ClockInit.defaultInitClocks();
+    }
+
     command void Msp430ClockInit.defaultInitTimerA() {
         TACTL = TASSEL_1 | ID_0 | MC_2 | TAIE | TACLR;
         // ACLK/1=32kHz, Continuous mode
-    }
-
-    default event void Msp430ClockInit.initClocks() {
-        call Msp430ClockInit.defaultInitClocks();
     }
 
     default event void Msp430ClockInit.initTimerA() {
@@ -56,6 +64,27 @@ implementation
         //TACTL.MC = 0; stop timer A
         TACTL &= ~(MC1|MC0);
     }
+
+#if defined(__MSP430_HAS_T1A2__)
+    command void Msp430ClockInit.defaultInitTimer1A() {
+        TA1CTL = TASSEL_1 | ID_0 | MC_2 | TAIE | TACLR;
+        // ACLK/1=32kHz, Continuous mode
+    }
+
+    default event void Msp430ClockInit.initTimer1A() {
+        call Msp430ClockInit.defaultInitTimer1A();
+    }
+
+    void startTimer1A() {
+        // TA1CTL.MC = 2; continuous mode
+        TA1CTL = MC1 | (TA1CTL & ~(MC1|MC0));
+    }
+
+    void stopTimer1A() {
+        //TA1CTL.MC = 0; stop timer A
+        TA1CTL &= ~(MC1|MC0);
+    }
+#endif
 
 #if defined(__MSP430_HAS_TB3__)
     command void Msp430ClockInit.defaultInitTimerB() {
@@ -79,6 +108,10 @@ implementation
         // Reset timers and clear interrupt vectors
         TACTL = TACLR;
         TAIV = 0;
+#if defined(__MSP430_HAS_T1A2__)
+        TA1CTL = TACLR;
+        TA1IV = 0;
+#endif
 #if defined(__MSP430_HAS_TB3__)
         TBCTL = TBCLR;
         TBIV = 0;
@@ -87,10 +120,16 @@ implementation
         atomic {
             signal Msp430ClockInit.initClocks();
             signal Msp430ClockInit.initTimerA();
+#if defined(__MSP430_HAS_T1A2__)
+            signal Msp430ClockInit.initTimer1A();
+#endif
 #if defined(__MSP430_HAS_TB3__)
             signal Msp430ClockInit.initTimerB();
 #endif
             startTimerA();
+#if defined(__MSP430_HAS_T1A2__)
+            startTimer1A();
+#endif
 #if defined(__MSP430_HAS_TB3__)
             startTimerB();
 #endif
