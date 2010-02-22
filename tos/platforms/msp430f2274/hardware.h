@@ -1,5 +1,10 @@
 #ifndef _H_hardware_h
 #define _H_hardware_h
+
+#if !defined(__MSP430__REV__)
+#define __MSP430_REV__ 'F'
+#endif
+
 #include "msp430hardware.h"
 
 // LED
