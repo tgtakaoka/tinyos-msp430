@@ -37,7 +37,7 @@ implementation
 #if !defined(__MSP430_HAS_BC2__)
     command void Msp430ClockInit.defaultSetupDcoCalibrate()
     {
-  
+#if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)  
         // --- setup ---
 
         TACTL = TASSEL1 | MC1; // source SMCLK, continuous mode, everything else 0
@@ -45,6 +45,11 @@ implementation
         BCSCTL1 = XT2OFF | RSEL2;
         BCSCTL2 = 0;
         TBCCTL0 = CM0;
+#else
+        TACTL = TASSEL_1 | ID_0 | MC_2 | TACLR;  // source ACLK, continuous mode
+        BCSCTL1 = XT2OFF;                        // LF mode, ACLK=LFXT1CLK/1
+        BCSCTL2 = SELM_0 | DIVM_0 | DIVS_0 /* | DCOR */;
+#endif
     }
 #endif
 
@@ -204,6 +209,7 @@ implementation
         DCOCTL = calib & 0xff;
     }
 
+#if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
     uint16_t test_calib_busywait_delta( int calib )
     {
         int8_t aclk_count = 2;
@@ -223,6 +229,23 @@ implementation
 
         return dco_curr - dco_prev;
     }
+#else
+    void delay_10n(uint16_t n) {
+        do {
+            __asm__ __volatile__ ("nop"); /* 1 cycle */
+            __asm__ __volatile__ ("jmp $+2"); /* 2 cycles */
+            __asm__ __volatile__ ("jmp $+2"); /* 2 cycles */
+            __asm__ __volatile__ ("jmp $+2"); /* 2 cycles */
+        } while (--n != 0);         /* add, jnz: (1+2)=3 cycles */
+    }
+    
+    uint16_t calib_using_timera(int calib, uint16_t dco_khz) {
+        set_dco_calib(calib);
+        TACTL |= TACLR;         // clear TAR
+        delay_10n(dco_khz);
+        return TAR;
+    }
+#endif
 
     // busyCalibrateDCO
     // Should take about 9ms if ACLK_CALIB_PERIOD=8.
@@ -240,9 +263,14 @@ implementation
 
         for( calib=0,step=0x800; step!=0; step>>=1 )
         {
+#if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
             // if the step is not past the target, commit it
             if( test_calib_busywait_delta(calib|step) <= TARGET_DCO_DELTA )
                 calib |= step;
+#else
+            if (calib_using_timera(calib | step, TARGET_DCO_KHZ) > ACLK_KHZ / 100)
+                calib |= step;
+#endif
         }
 
         // if DCOx is 7 (0x0e0 in calib), then the 5-bit MODx is not useable, set it to 0
