@@ -20,7 +20,7 @@
 module Blink1SecC @safe()
 {
     uses interface Timer<TMilli> as Timer;
-    uses interface Leds;
+    uses interface Led;
     uses interface Boot;
 }
 implementation
@@ -32,7 +32,7 @@ implementation
     bool on = TRUE;
     
     event void Boot.booted() {
-        call Leds.led0On();
+        call Led.on();
         call Timer.startPeriodic(FLASH);
     }
 
@@ -42,7 +42,7 @@ implementation
         } else {
             call Timer.startPeriodic(FLASH);
         }
-        call Leds.led0Toggle();
+        call Led.toggle();
         on = !on;
     }
 }

@@ -20,13 +20,13 @@ configuration Blink1SecAppC
 }
 implementation
 {
-    components MainC, Blink1SecC, LedsC;
+    components MainC, Blink1SecC, LedC;
     components new TimerMilliC() as Timer;
 
     Blink1SecC -> MainC.Boot;
 
     Blink1SecC.Timer -> Timer;
-    Blink1SecC.Leds -> LedsC;
+    Blink1SecC.Led -> LedC;
 }
 
 /*
