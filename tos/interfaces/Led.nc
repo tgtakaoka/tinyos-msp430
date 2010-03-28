@@ -1,4 +1,4 @@
-/* -*- mode: c; mode: flyspell-prog; -*- */
+/* -*- mode: nesc; mode: flyspell-prog; -*- */
 /*
  * Copyright (C) 2010 Tadashi G. Takaoka
  *
@@ -15,19 +15,13 @@
  * limitations under the License.
  */
 
-#ifndef _H_hardware_h
-#define _H_hardware_h
-
-#if !defined(__MSP430__REV__)
-#define __MSP430_REV__ 'F'
-#endif
-
-#include "msp430hardware.h"
-
-// LED
-#define LED_RED Port10
-
-#endif // _H_hardware_h
+interface Led {
+    async command void on();
+    async command void off();
+    async command void toggle();
+    async command bool get();
+    async command void set(bool val);
+}
 
 /*
  * Local Variables:

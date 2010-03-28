@@ -1,4 +1,4 @@
-/* -*- mode: c; mode: flyspell-prog; -*- */
+/* -*- mode: nesc; mode: flyspell-prog; -*- */
 /*
  * Copyright (C) 2010 Tadashi G. Takaoka
  *
@@ -15,19 +15,23 @@
  * limitations under the License.
  */
 
-#ifndef _H_hardware_h
-#define _H_hardware_h
+#include "hardware.h"
 
-#if !defined(__MSP430__REV__)
-#define __MSP430_REV__ 'F'
-#endif
+configuration PlatformLedC
+{
+    provides interface GeneralIO as Led;
+    uses interface Init;
+}
+implementation
+{
+    components HplMsp430GeneralIOC as GeneralIOC;
+    components new Msp430GpioC() as LedImpl;
+    components PlatformP;
 
-#include "msp430hardware.h"
-
-// LED
-#define LED_RED Port10
-
-#endif // _H_hardware_h
+    Init = PlatformP.LedInit;
+    Led = LedImpl;
+    LedImpl -> GeneralIOC.LED_RED;
+}
 
 /*
  * Local Variables:

@@ -25,20 +25,25 @@
 #include "msp430hardware.h"
 
 // LED
-TOSH_ASSIGN_PIN(RED_LED, 1, 0);
+#define LED_RED Port10
 
-// GIO pins
-TOSH_ASSIGN_PIN(GIO1, 1, 1);
-TOSH_ASSIGN_PIN(GIO2, 1, 2);
-TOSH_ASSIGN_PIN(GIO3, 1, 3);
-TOSH_ASSIGN_PIN(GIO4, 1, 4);
-TOSH_ASSIGN_PIN(GIO5, 1, 5);
-TOSH_ASSIGN_PIN(GIO6, 1, 6);
-TOSH_ASSIGN_PIN(GIO7, 1, 7);
+// TimerA
+#define TIMERA_ACLK    Port10
+#define TIMERA_SCMLK   Port14
+#define TIMERA_TA0     Port11
+#define TIMERA_TA1     Port12
+#define TIMERA_CCI0A   Port11
+#define TIMERA_CCI1A   Port12
+#define TIMERA_TA0_ALT Port15
+#define TIMERA_TA1_ALT Port16
+#define TIMERA_CCI1B   Port16
 
-// P2.6=XIN, P2.7=XOUT
-//TOSH_ASSIGN_PIN(GIO8, 2, 6);
-//TOSH_ASSIGN_PIN(GIO9, 2, 7);
+// USI
+#define USI_SCLK Port15
+#define USI_SDO  Port16
+#define USI_SDI  Port17
+#define USI_SCL  Port16
+#define USI_SDA  Port17
 
 #endif // _H_hardware_h
 

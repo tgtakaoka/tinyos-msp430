@@ -15,30 +15,42 @@
  * limitations under the License.
  */
 
-#include "hardware.h"
-
-module PlatformP
-{
+module LedP @safe() {
     provides interface Init;
-    uses interface Init as Msp430ClockInit;
-    uses interface Init as LedsInit;
-    uses interface Init as LedInit;
+    provides interface Led;
+    uses interface GeneralIO as Out;
 }
-implementation
-{
+implementation {
     command error_t Init.init() {
-        call LedsInit.init();
-        call LedInit.init();
-        call Msp430ClockInit.init();
+        atomic {
+            call Out.clr();
+            call Out.makeOutput();
+        }
         return SUCCESS;
     }
 
-    default command error_t LedsInit.init() {
-        return SUCCESS;
+    async command void Led.on() {
+        call Out.set();
     }
 
-    default command error_t LedInit.init() {
-        return SUCCESS;
+    async command void Led.off() {
+        call Out.clr();
+    }
+
+    async command void Led.toggle() {
+        call Out.toggle();
+    }
+
+    async command bool Led.get() {
+        return call Out.get();
+    }
+
+    async command void Led.set(bool val) {
+        if (val) {
+            call Led.on();
+        } else {
+            call Led.off();
+        }
     }
 }
 

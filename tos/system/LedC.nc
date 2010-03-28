@@ -1,4 +1,4 @@
-/* -*- mode: c; mode: flyspell-prog; -*- */
+/* -*- mode: nesc; mode: flyspell-prog; -*- */
 /*
  * Copyright (C) 2010 Tadashi G. Takaoka
  *
@@ -15,19 +15,17 @@
  * limitations under the License.
  */
 
-#ifndef _H_hardware_h
-#define _H_hardware_h
+configuration LedC {
+    provides interface Led;
+}
+implementation {
+    components LedP, PlatformLedC;
 
-#if !defined(__MSP430__REV__)
-#define __MSP430_REV__ 'F'
-#endif
+    Led = LedP;
 
-#include "msp430hardware.h"
-
-// LED
-#define LED_RED Port10
-
-#endif // _H_hardware_h
+    LedP.Init <- PlatformLedC.Init;
+    LedP.Out -> PlatformLedC.Led;
+}
 
 /*
  * Local Variables:
