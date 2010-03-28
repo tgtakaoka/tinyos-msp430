@@ -38,6 +38,7 @@ push( @includes, qw(
       %T/lib/gpio
       %T/lib/timer
       %T/lib/power
+      %T/lib/misc
 ) );
 
 @opts = qw(
