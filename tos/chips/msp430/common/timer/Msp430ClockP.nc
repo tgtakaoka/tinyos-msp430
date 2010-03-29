@@ -73,7 +73,8 @@ implementation
     command void Msp430ClockInit.defaultInitClocks()
     {
 #if defined(__MSP430_HAS_BC2__)
-        P2SEL |= 0xc0;          // P2.6=XIN, P2.7=XOUT
+        P2SEL |= 0xc0;                  // P2.6=XIN, P2.7=XOUT
+        P2DIR = 0x80 | (P2DIR & ~0xc0); // some chips need P2.7 set as output
 
         BCSCTL1 = CALBC1_16MHZ | DIVA_0;    // DCO=16MHZ, ACLK/1
         DCOCTL = CALDCO_16MHZ;
