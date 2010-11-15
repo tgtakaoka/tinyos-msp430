@@ -1,0 +1,51 @@
+# -*- mode:perl; -*-
+#
+#  Copyright (C) 2010 Tadashi G. Takaoka
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#
+
+push( @includes, qw(
+
+      %T/platforms/msp430g2231
+      %T/platforms/msp430-common
+
+      %T/chips/msp430/msp430g2xx1
+
+      %T/chips/msp430/msp430x2xx
+      %T/chips/msp430/msp430x2xx/pins
+      %T/chips/msp430/msp430x2xx/timer
+
+      %T/chips/msp430/common
+      %T/chips/msp430/common/pins
+      %T/chips/msp430/common/timer
+
+      %T/chips/msp430
+      %T/chips/msp430/pins
+      %T/chips/msp430/timer16
+      %T/chips/msp430/timer
+
+      %T/lib/gpio
+      %T/lib/timer
+      %T/lib/power
+      %T/lib/misc
+) );
+
+@opts = qw(
+      -gcc=msp430-gcc
+      -mmcu=msp430x2231
+      -mno-stack-init
+      -fnesc-target=msp430
+      -fnesc-no-debug
+);
+push @opts, "-fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask" if !$with_scheduler_flag;
