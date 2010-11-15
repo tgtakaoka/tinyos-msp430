@@ -15,6 +15,19 @@
  * limitations under the License.
  */
 
+#ifndef _H_hardware_h
+#define _H_hardware_h
+
+#if !defined(__MSP430__REV__)
+#define __MSP430_REV__ 'B'
+#endif
+
+#include "msp430hardware.h"
+
+// LED
+#define LED_RED Port10
+
+#endif // _H_hardware_h
 
 /*
  * Local Variables:

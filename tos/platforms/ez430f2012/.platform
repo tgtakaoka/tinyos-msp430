@@ -17,13 +17,14 @@
 
 push( @includes, qw(
 
-      %T/platforms/msp430f2132
+      %T/platforms/ez430f2012
       %T/platforms/msp430-common
 
-      %T/chips/msp430/msp430x21x2
+      %T/chips/msp430/msp430x20x2
 
       %T/chips/msp430/msp430x2xx
       %T/chips/msp430/msp430x2xx/pins
+      %T/chips/msp430/msp430x2xx/timer-vlo
       %T/chips/msp430/msp430x2xx/timer
 
       %T/chips/msp430/common
@@ -43,7 +44,7 @@ push( @includes, qw(
 
 @opts = qw(
       -gcc=msp430-gcc
-      -mmcu=msp430x2132
+      -mmcu=msp430x2012
       -mno-stack-init
       -fnesc-target=msp430
       -fnesc-no-debug

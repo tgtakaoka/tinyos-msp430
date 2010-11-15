@@ -18,6 +18,7 @@
 push( @includes, qw(
 
       %T/platforms/ez430rf2500
+      %T/platforms/msp430-common
 
       %T/chips/msp430/msp430x22x4
 

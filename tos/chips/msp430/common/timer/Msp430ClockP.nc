@@ -76,8 +76,15 @@ implementation
         P2SEL |= 0xc0;                  // P2.6=XIN, P2.7=XOUT
         P2DIR = 0x80 | (P2DIR & ~0xc0); // some chips need P2.7 set as output
 
+#if defined(CALBC1_16MHZ_)
         BCSCTL1 = CALBC1_16MHZ | DIVA_0;    // DCO=16MHZ, ACLK/1
         DCOCTL = CALDCO_16MHZ;
+#elif defined(CALBC1_1MHZ_)
+        BCSCTL1 = CALBC1_1MHZ | DIVA_0;    // DCO=1MHZ, ACLK/1
+        DCOCTL = CALDCO_1MHZ;
+#else
+#error "no DCO calibration value found"
+#endif
         BCSCTL2 = SELM_0 | DIVM_0 | DIVS_3; // MCLK=DCO/1, SMCLK=MCLK/8
 #if defined(ERRATA_XOSC8)
         BCSCTL3 = LFXT1S_0 | XCAP_3;        // ACLK=32kHz, CL,eff=12.5pF

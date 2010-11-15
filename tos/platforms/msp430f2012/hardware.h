@@ -27,24 +27,6 @@
 // LED
 #define LED_RED Port10
 
-// TimerA
-#define TIMERA_ACLK    Port10
-#define TIMERA_SCMLK   Port14
-#define TIMERA_TA0     Port11
-#define TIMERA_TA1     Port12
-#define TIMERA_CCI0A   Port11
-#define TIMERA_CCI1A   Port12
-#define TIMERA_TA0_ALT Port15
-#define TIMERA_TA1_ALT Port16
-#define TIMERA_CCI1B   Port16
-
-// USI
-#define USI_SCLK Port15
-#define USI_SDO  Port16
-#define USI_SDI  Port17
-#define USI_SCL  Port16
-#define USI_SDA  Port17
-
 #endif // _H_hardware_h
 
 /*

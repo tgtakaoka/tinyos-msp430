@@ -25,11 +25,11 @@
 #include "msp430hardware.h"
 
 // LED
-#define LED_RED   Port10
+#define LED_RED Port10
 #define LED_GREEN Port11
 
 // SW
-#define PUSH_SW   Port12
+#define PUSH_SW Port12
 
 #endif // _H_hardware_h
 

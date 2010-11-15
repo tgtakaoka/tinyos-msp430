@@ -40,8 +40,15 @@ implementation
     }
 
     command void Msp430ClockInit.defaultInitClocks() {
+#if defined(CALBC1_16MHZ_)
         BCSCTL1 = CALBC1_16MHZ; // DCO=16MHZ, ACLK=VLO/1
         DCOCTL = CALDCO_16MHZ;
+#elif defined(CALBC1_1MHZ_)
+        BCSCTL1 = CALBC1_1MHZ; // DCO=1MHZ, ACLK=VLO/1
+        DCOCTL = CALDCO_1MHZ;
+#else
+#error "no DCO calibrated value found"
+#endif
         BCSCTL2 = SELM_0 | DIVM_0 | SELS | DIVS_0; // MCLK=DCO/1, SMCLK=VLO/1
         BCSCTL3 = LFXT1S_2;                        // ACLK=VLO
 
