@@ -18,31 +18,40 @@
 #ifndef _H_msp430errata_h
 #define _H_msp430errata_h
 
-/* See SLAZ009A MSP430F11x2/12x2 Device Erratasheet, Revised July 2010 */
+/* See SLAZ041C MSP430F21x2 Device Erratasheet, Revised January 2010 */
 
-#if defined(__MSP430_1222__) || defined(__MSP430_1232__)
-
+#if defined(__MSP430_2112__) || defined(__MSP430_2122__) || defined(__MSP430_2132__)
 #if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'F'"
-#define __MSP430_REV__ 'F'
+#warning "__MSP430_REV__ not defined, default to 'A'"
+#define __MSP430_REV__ 'A'
 #endif
-
-#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F'
-#define ERRATA_ADC22
-#define ERRATA_BCL5
-#define ERRATA_CPU4
-#define ERRATA_PORT3
-#define ERRATA_RES4
+#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B'
+#define ERRATA_BCL12
+#define ERRATA_CPU19
+#define ERRATA_FLASH19
+#define ERRATA_FLASH24
+#define ERRATA_FLASH27
+#define ERRATA_PORT12
 #define ERRATA_TA12
-#define ERRATA_TA13
 #define ERRATA_TA16
-#define ERRATA_US13
-#define ERRATA_US15
-#define ERRATA_WDG2
+#define ERRATA_TA22
+#define ERRATA_USCI20
+#define ERRATA_USCI21
+#define ERRATA_USCI22
+#define ERRATA_USCI23
+#define ERRATA_USCI24
+#define ERRATA_USCI25
+#define ERRATA_USCI26
+#define ERRATA_USCI28
+#define ERRATA_XOSC5
+#define ERRATA_XOSC8
+#endif
+#if __MSP430_REV__ == 'A'
+#define ERRATA_BCL13
 #endif
 
 #else
-#error "This msp430errata.h is for MSP430F12x2"
+#error "This errata/slaz041.h is for MSP430F21x2"
 #endif
 
 #endif

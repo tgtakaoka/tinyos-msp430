@@ -18,31 +18,35 @@
 #ifndef _H_msp430errata_h
 #define _H_msp430errata_h
 
-/* See SLAZ009A MSP430F11x2/12x2 Device Erratasheet, Revised July 2010 */
+/* See SLAZ061B MSP430G2x01, G2x11, G2x21, G2x31 Device Erratasheet, Revised December 2010 */
 
-#if defined(__MSP430_1222__) || defined(__MSP430_1232__)
-
+#if defined(__MSP430_2001__) || \
+    defined(__MSP430_2101__) || defined(__MSP430_2111__) || \
+    defined(__MSP430_2121__) || defined(__MSP430_2131__) || \
+    defined(__MSP430_2201__) || defined(__MSP430_2211__) || \
+    defined(__MSP430_2221__) || defined(__MSP430_2231__)
 #if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'F'"
-#define __MSP430_REV__ 'F'
+#warning "__MSP430_REV__ not defined, default to 'D'"
+#define __MSP430_REV__ 'D'
 #endif
-
-#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F'
-#define ERRATA_ADC22
-#define ERRATA_BCL5
+#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E'
+#define ERRATA_BCL12
 #define ERRATA_CPU4
-#define ERRATA_PORT3
-#define ERRATA_RES4
+#define ERRATA_FLASH16
 #define ERRATA_TA12
-#define ERRATA_TA13
 #define ERRATA_TA16
-#define ERRATA_US13
-#define ERRATA_US15
-#define ERRATA_WDG2
+#define ERRATA_TA22
+#if defined(__MSP430_2121__) || defined(__MSP430_2131__) || \
+    defined(__MSP430_2221__) || defined(__MSP430_2231__)
+#define ERRATA_USI4
+#define ERRATA_USI5
+#endif
+#define ERRATA_XOSC5
+#define ERRATA_XOSC8
 #endif
 
 #else
-#error "This msp430errata.h is for MSP430F12x2"
+#error "This errata/slaz061.h is for MSP430G2x01/G2x11/G2x21/G2x31"
 #endif
 
 #endif
