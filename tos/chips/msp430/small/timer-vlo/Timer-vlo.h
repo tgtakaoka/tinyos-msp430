@@ -15,28 +15,15 @@
  * limitations under the License.
  */
 
-configuration HilTimerMilliC
-{
-    provides interface Init;
-    provides interface Timer<TMilli> as TimerMilli[uint8_t num];
-    provides interface LocalTime<TMilli>;
-}
-implementation
-{
-    components new AlarmMilliVlo32C() as AlarmMilliC;
-    components new AlarmToTimerC(TMilli);
-    components new VirtualizeTimerC(TMilli,uniqueCount(UQ_TIMER_MILLI));
-    components new CounterToLocalTimeC(TMilli);
-    components CounterMilliVlo32C as CounterMilliC;
+#ifndef TIMER_VLO_H
+#define TIMER_VLO_H
 
-    Init = AlarmMilliC;
-    TimerMilli = VirtualizeTimerC;
-    LocalTime = CounterToLocalTimeC;
+typedef struct { int notUsed; } TVlo;
+#ifndef VLO_HZ
+#define VLO_HZ 12300
+#endif
 
-    VirtualizeTimerC.TimerFrom -> AlarmToTimerC;
-    AlarmToTimerC.Alarm -> AlarmMilliC;
-    CounterToLocalTimeC.Counter -> CounterMilliC;
-}
+#endif
 
 /*
  * Local Variables:

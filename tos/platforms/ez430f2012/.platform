@@ -8,10 +8,9 @@ push( @includes, qw(
 
       %T/chips/msp430/msp430x20x2
 
-      %T/chips/msp430/msp430x2xx/timer-vlo
-
       %T/chips/msp430/small
       %T/chips/msp430/small/pins
+      %T/chips/msp430/small/timer-vlo
       %T/chips/msp430/small/timer
 
       %T/chips/msp430
@@ -31,6 +30,7 @@ push( @includes, qw(
       -mno-stack-init
       -fnesc-target=msp430
       -fnesc-no-debug
+      -D__msp430_using_vlo
 );
 
 push @opts,
