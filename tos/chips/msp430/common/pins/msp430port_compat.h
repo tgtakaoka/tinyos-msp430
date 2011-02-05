@@ -18,35 +18,62 @@
 #ifndef _H_msp430port_compat_h
 #define _H_msp430port_compat_h
 
-#ifdef __MSP430_HAS_PORT1_R__
+#if defined(__MSP430_HAS_PORT0__)
+#define __msp430_have_port0
+#endif
+#if defined(__MSP430_HAS_PORT1__) || defined(__MSP430_HAS_PORT1_R__)
 #define __msp430_have_port1
 #endif
-#ifdef __MSP430_HAS_PORT2_R__
+#if defined(__MSP430_HAS_PORT2__) || defined(__MSP430_HAS_PORT2_R__)
 #define __msp430_have_port2
 #endif
-#ifdef __MSP430_HAS_PORT3_R__
+#if defined(__MSP430_HAS_PORT3__) || defined(__MSP430_HAS_PORT3_R__)
 #define __msp430_have_port3
 #endif
-#ifdef __MSP430_HAS_PORT4_R__
+#if defined(__MSP430_HAS_PORT4__) || defined(__MSP430_HAS_PORT4_R__)
 #define __msp430_have_port4
 #endif
-#ifdef __MSP430_HAS_PORT5_R__
+#if defined(__MSP430_HAS_PORT5__) || defined(__MSP430_HAS_PORT5_R__)
 #define __msp430_have_port5
 #endif
-#ifdef __MSP430_HAS_PORT6_R__
+#if defined(__MSP430_HAS_PORT6__) || defined(__MSP430_HAS_PORT6_R__)
 #define __msp430_have_port6
 #endif
-#ifdef __MSP430_HAS_PORT7_R__
+#if defined(__MSP430_HAS_PORT7__) || defined(__MSP430_HAS_PORT7_R__)
 #define __msp430_have_port7
 #endif
-#ifdef __MSP430_HAS_PORT8_R__
+#if defined(__MSP430_HAS_PORT8__) || defined(__MSP430_HAS_PORT8_R__)
 #define __msp430_have_port8
 #endif
-#ifdef __MSP430_HAS_PORT9_R__
+#if defined(__MSP430_HAS_PORT9__) || defined(__MSP430_HAS_PORT9_R__)
 #define __msp430_have_port9
 #endif
-#ifdef __MSP430_HAS_PORT10_R__
+#if defined(__MSP430_HAS_PORT10__) || defined(__MSP430_HAS_PORT10_R__)
 #define __msp430_have_port10
+#endif
+#if defined(__MSP430_HAS_PORT11__) || defined(__MSP430_HAS_PORT11_R__)
+#define __msp430_have_port11
+#endif
+#if defined(__MSP430_HAS_PORTA__) || defined(__MSP430_HAS_PORTA_R__)
+#define __msp430_have_porta
+#endif
+#if defined(__MSP430_HAS_PORTB__) || defined(__MSP430_HAS_PORTB_R__)
+#define __msp430_have_portb
+#endif
+#if defined(__MSP430_HAS_PORTC_R__)
+#define __msp430_have_portc
+#endif
+#if defined(__MSP430_HAS_PORTD_R__)
+#define __msp430_have_portd
+#endif
+#if defined(__MSP430_HAS_PORTE_R__)
+#define __msp430_have_porte
+#endif
+#if defined(__MSP430_HAS_PORTF_R__)
+#define __msp430_have_portf
+#endif
+#if defined(__MSP430_HAS_PORTJ_R__)
+#define __msp430_have_portj
 #endif
 
 #define TYPE_PORT_REN uint8_t
