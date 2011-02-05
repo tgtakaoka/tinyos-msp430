@@ -1,41 +1,26 @@
 # -*- mode: makefile-gmake; mode: flyspell-prog; -*-
-#
-#  Copyright (C) 2010 Tadashi G. Takaoka
-#
-#  Licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
-#
-#       http://www.apache.org/licenses/LICENSE-2.0
-#
-#  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
-#
 
-# BSL arguments:
+# TOS-BSL arguments:
 #
 #   tos-bsl BSL=<bsl-port-device> BSL_PASS='-P <previous-image-file>'
 
 PROGRAM = tos-bsl
 
-MSP_BSL ?= tos-bsl
+TOS_BSL ?= tos-bsl
 
 program: $(BSL_TARGETS) $(TELOS_PROGRAM_DEPS) FORCE
-	@echo "    installing $(PLATFORM) binary using bsl"
-	$(MSP_BSL) $(MSP_BSL_FLAGS) -c $(BSL) -r -e -I $(BSL_PASS) -p $(INSTALL_IHEX)
+	@echo "    installing $(PLATFORM) binary using tos-bsl $(BSL)"
+	$(TOS_BSL) $(TOS_BSL_FLAGS) -c $(BSL) -r -e -I $(BSL_PASS) -p $(INSTALL_IHEX)
 	rm -f $(subst .ihex.,.exe.,$(INSTALL_IHEX)) $(INSTALL_IHEX) 
 
 program_no_e: $(BSL_TARGETS) $(TELOS_PROGRAM_DEPS) FORCE
-	@echo "    installing $(PLATFORM) binary using bsl (without mass erase)"
-	$(MSP_BSL) $(MSP_BSL_FLAGS) -c $(BSL) -r -I $(BSL_PASS) -p $(INSTALL_IHEX)
+	@echo "    installing $(PLATFORM) binary using tos-bsl $(BSL) (without mass erase)"
+	$(TOS_BSL) $(TOS_BSL_FLAGS) -c $(BSL) -r -I $(BSL_PASS) -p $(INSTALL_IHEX)
 	rm -f $(subst .ihex.,.exe.,$(INSTALL_IHEX)) $(INSTALL_IHEX) 
 
 program_bl: $(BSL_TARGETS) $(TELOS_PROGRAM_DEPS) FORCE
-	@echo "    installing $(PLATFORM) bootloader using bsl"
-	$(MSP_BSL) $(MSP_BSL_FLAGS) -c $(BSL) -r -e -I -p $(BOOTLOADER_IMG)
+	@echo "    installing $(PLATFORM) bootloader using tos-bsl $(BSL)"
+	$(TOS_BSL) $(TOS_BSL_FLAGS) -c $(BSL) -r -e -I -p $(BOOTLOADER_IMG)
 
 program_input: ihex
 	@:

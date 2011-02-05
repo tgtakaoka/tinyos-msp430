@@ -2,14 +2,17 @@
 
 # mspdebug arguments:
 #
-#   mspdebug [MSPDEBUG_DRIVER=<mspdebug-drvier>]
+#   mspdebug [MSP_TTY=<mspdebug-tty-device>]
 
-PROGRAM = mspdebug
+PROGRAM = mspdebug-tty
 
 MSP_DEBUG ?= mspdebug
 
 ifeq ($(MSPDEBUG_DRIVER),)
-  MSPDEBUG_DRIVER=sim
+  ifeq ($(MSP_TTY),)
+     MSP_TTY=/dev/cu.ez430f2013
+  endif
+  MSPDEBUG_DRIVER=uif -d $(MSP_TTY)
 endif
 
 program: $(BSL_TARGETS) $(TELOS_PROGRAM_DEPS) FORCE
