@@ -279,11 +279,17 @@ implementation
     } while (--n != 0);                 // add, jnz: (1+2)=3 cycles
   }
 
-  uint16_t calib_using_timera(int calib, uint16_t dco_khz) {
+  uint16_t test_calib_busywait_delta( int calib )
+  {
     set_dco_calib(calib);
+
     TACTL |= TACLR;         // clear TAR
-    delay_10n(dco_khz);
-    return TAR;
+    delay_10n(TARGET_DCO_KHZ);
+    if (TAR > ACLK_KHZ / 100) {
+        return 0;
+    } else {
+        return TARGET_DCO_DELTA + 1;
+    }
   }
 #endif /* defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__) */
 
