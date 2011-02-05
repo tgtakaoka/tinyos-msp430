@@ -82,10 +82,10 @@ implementation {
              ) &&
          ((TACTL & TASSEL_3) == TASSEL_2))
 #ifdef __MSP430_HAS_UART0__
-        || ((ME1 & (UTXE0 | URXE0)) && (U0TCTL & SSEL1))
+        || ((U0ME & (UTXE0 | URXE0)) && (U0TCTL & SSEL1))
 #endif
 #ifdef __MSP430_HAS_UART1__
-        || ((ME2 & (UTXE1 | URXE1)) && (U1TCTL & SSEL1))
+        || ((U1ME & (UTXE1 | URXE1)) && (U1TCTL & SSEL1))
 #endif
 #ifdef __msp430_have_usart0_with_i2c
 	 // registers end in "nr" to prevent nesC race condition detection
