@@ -31,7 +31,7 @@
  */
 
 /**
- * AlarmMilli32VloC is the alarm for async millisecond alarms using VLO
+ * AlarmMilli16C is the alarm for async millisecond alarms
  *
  * @author Cory Sharp <cssharp@eecs.berkeley.edu>
  * @see  Please refer to TEP 102 for more information about this component and its
@@ -40,16 +40,16 @@
 
 #include "Timer-vlo.h"
  
-generic configuration AlarmMilli32VloC()
+generic configuration AlarmMilli16C()
 {
   provides interface Init;
-  provides interface Alarm<TMilli,uint32_t>;
+  provides interface Alarm<TMilli,uint16_t>;
 }
 implementation
 {
   components new AlarmVlo16C() as AlarmFrom;
-  components CounterMilli32VloC as Counter;
-  components new ApproximateAlarmC(TMilli,uint32_t,TVlo,uint16_t,
+  components CounterMilli16C as Counter;
+  components new ApproximateAlarmC(TMilli,uint16_t,TVlo,uint16_t,
                                    VLO_HZ/1000) as Transform;
 
   Init = AlarmFrom;

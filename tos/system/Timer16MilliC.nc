@@ -1,6 +1,6 @@
-
-/* Copyright (c) 2000-2003 The Regents of the University of California.
- * All rights reserved.
+// $Id: TimerMilliC.nc,v 1.5 2010-06-29 22:07:56 scipio Exp $
+/*
+ * Copyright (c) 2005 Stanford University. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -12,7 +12,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the
  *   distribution.
- * - Neither the name of the copyright holders nor the names of
+ * - Neither the name of the copyright holder nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
  *
@@ -31,25 +31,24 @@
  */
 
 /**
- * Msp430CounterVloC provides the VLO counter for the MSP430.
+ * The virtualized millisecond timer abstraction. Instantiating this 
+ * component gives an independent millisecond granularity timer.
  *
- * @author Cory Sharp <cssharp@eecs.berkeley.edu>
- * @see  Please refer to TEP 102 for more information about this component and its
- *          intended use.
- */
+ * @author Philip Levis
+ * @date   January 16 2006
+ * @see    TEP 102: Timers
+ */ 
 
-#include "Timer-vlo.h"
+#include "Timer16.h"
 
-configuration Msp430CounterVloC
-{
-  provides interface Counter<TVlo,uint16_t> as Msp430CounterVlo;
+generic configuration Timer16MilliC() {
+  provides interface Timer16<TMilli>;
 }
-implementation
-{
-  components Msp430TimerC;
-  components new Msp430CounterC(TVlo) as Counter;
+implementation {
+  components Timer16MilliP;
 
-  Msp430CounterVlo = Counter;
-  Counter.Msp430Timer -> Msp430TimerC.TimerA;
+  // The key to unique is based off of Timer16MilliC because TimerMilliImplP
+  // is just a pass-through to the underlying HIL component (TimerMilli).
+  Timer16 = Timer16MilliP.Timer16Milli[unique(UQ_TIMER16_MILLI)];
 }
 

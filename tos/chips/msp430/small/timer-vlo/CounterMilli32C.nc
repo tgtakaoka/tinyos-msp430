@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2000-2003 The Regents of the University of California.  
+/* Copyright (c) 2000-2003 The Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the
  *   distribution.
- * - Neither the name of the copyright holder nor the names of
+ * - Neither the name of the copyright holders nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
  *
@@ -31,34 +31,27 @@
  */
 
 /**
- * HilTimerMilliC provides a parameterized interface to a virtualized
- * millisecond timer.  TimerMilliC in tos/system/ uses this component to
- * allocate new timers.
+ * CounterMilli32C provides at 32-bit counter at 1024 ticks per second.
  *
  * @author Cory Sharp <cssharp@eecs.berkeley.edu>
  * @see  Please refer to TEP 102 for more information about this component and its
  *          intended use.
  */
 
-configuration HilTimerMilliC
+#include "Timer-vlo.h"
+    
+configuration CounterMilli32C
 {
-  provides interface Init;
-  provides interface Timer<TMilli> as TimerMilli[ uint8_t num ];
-  provides interface LocalTime<TMilli>;
+  provides interface Counter<TMilli,uint32_t>;
 }
 implementation
 {
-  components new AlarmMilli32VloC();
-  components new AlarmToTimerC(TMilli);
-  components new VirtualizeTimerC(TMilli,uniqueCount(UQ_TIMER_MILLI));
-  components new CounterToLocalTimeC(TMilli);
-  components CounterMilli32VloC;
+  components Msp430CounterVloC as CounterFrom;
+  components new ApproximateCounterC(TMilli,uint32_t,TVlo,uint16_t,
+                                     VLO_HZ/1000,uint32_t) as Transform;
 
-  Init = AlarmMilli32VloC;
-  TimerMilli = VirtualizeTimerC;
-  LocalTime = CounterToLocalTimeC;
+  Counter = Transform.Counter;
 
-  VirtualizeTimerC.TimerFrom -> AlarmToTimerC;
-  AlarmToTimerC.Alarm -> AlarmMilli32VloC;
-  CounterToLocalTimeC.Counter -> CounterMilli32VloC;
+  Transform.CounterFrom -> CounterFrom;
 }
+

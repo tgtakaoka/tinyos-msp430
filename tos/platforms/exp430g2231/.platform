@@ -15,7 +15,6 @@ push( @includes, qw(
 
       %T/chips/msp430
       %T/chips/msp430/pins
-      %T/chips/msp430/timer16
       %T/chips/msp430/timer
 
       %T/lib/gpio

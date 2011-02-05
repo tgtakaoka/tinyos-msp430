@@ -31,7 +31,7 @@
  */
 
 /**
- * Msp430CounterVloC provides the VLO counter for the MSP430.
+ * AlarmMilli32C is the alarm for async millisecond alarms
  *
  * @author Cory Sharp <cssharp@eecs.berkeley.edu>
  * @see  Please refer to TEP 102 for more information about this component and its
@@ -39,17 +39,23 @@
  */
 
 #include "Timer-vlo.h"
-
-configuration Msp430CounterVloC
+ 
+generic configuration AlarmMilli32C()
 {
-  provides interface Counter<TVlo,uint16_t> as Msp430CounterVlo;
+  provides interface Init;
+  provides interface Alarm<TMilli,uint32_t>;
 }
 implementation
 {
-  components Msp430TimerC;
-  components new Msp430CounterC(TVlo) as Counter;
+  components new AlarmVlo16C() as AlarmFrom;
+  components CounterMilli32C as Counter;
+  components new ApproximateAlarmC(TMilli,uint32_t,TVlo,uint16_t,
+                                   VLO_HZ/1000) as Transform;
 
-  Msp430CounterVlo = Counter;
-  Counter.Msp430Timer -> Msp430TimerC.TimerA;
+  Init = AlarmFrom;
+  Alarm = Transform;
+
+  Transform.AlarmFrom -> AlarmFrom;
+  Transform.Counter -> Counter;
 }
 

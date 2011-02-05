@@ -15,6 +15,8 @@
  * limitations under the License.
  */
 
+#include "Timer.h"
+
 #ifndef TIMER_VLO_H
 #define TIMER_VLO_H
 

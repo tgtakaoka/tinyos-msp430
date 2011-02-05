@@ -1,5 +1,6 @@
+//$Id: Timer.h,v 1.6 2010-06-29 22:07:50 scipio Exp $
 
-/* Copyright (c) 2000-2003 The Regents of the University of California.
+/* Copyright (c) 2000-2003 The Regents of the University of California.  
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -12,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the
  *   distribution.
- * - Neither the name of the copyright holders nor the names of
+ * - Neither the name of the copyright holder nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
  *
@@ -30,26 +31,21 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/**
- * Msp430CounterVloC provides the VLO counter for the MSP430.
- *
- * @author Cory Sharp <cssharp@eecs.berkeley.edu>
- * @see  Please refer to TEP 102 for more information about this component and its
- *          intended use.
- */
+//@author Cory Sharp <cssharp@eecs.berkeley.edu>
 
-#include "Timer-vlo.h"
+// The TinyOS Timer structures are discussed in TEP 102.
+#ifndef TIMER16_H
+#define TIMER16_H
 
-configuration Msp430CounterVloC
-{
-  provides interface Counter<TVlo,uint16_t> as Msp430CounterVlo;
-}
-implementation
-{
-  components Msp430TimerC;
-  components new Msp430CounterC(TVlo) as Counter;
+#if 0
+typedef struct { int notUsed; } TMilli;
+typedef struct { int notUsed; } T32khz;
+typedef struct { int notUsed; } TMicro;
+#endif
 
-  Msp430CounterVlo = Counter;
-  Counter.Msp430Timer -> Msp430TimerC.TimerA;
-}
+#define UQ_TIMER16_MILLI "HilTimerMilliC.Timer16"
+#define UQ_TIMER16_32KHZ "HilTimer32khzC.Timer16"
+#define UQ_TIMER16_MICRO "HilTimerMicroC.Timer16"
+
+#endif
 

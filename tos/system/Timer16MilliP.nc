@@ -1,5 +1,6 @@
-
-/* Copyright (c) 2000-2003 The Regents of the University of California.
+// $Id: TimerMilliP.nc,v 1.6 2010-06-29 22:07:56 scipio Exp $
+/*
+ * Copyright (c) 2005 The Regents of the University  of California.  
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -12,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the
  *   distribution.
- * - Neither the name of the copyright holders nor the names of
+ * - Neither the name of the University of California nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
  *
@@ -28,30 +29,28 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/**
- * CounterMilli32VloC provides at 32-bit counter at 1024 ticks per second using VLO.
  *
- * @author Cory Sharp <cssharp@eecs.berkeley.edu>
- * @see  Please refer to TEP 102 for more information about this component and its
- *          intended use.
  */
+/**
+ * Components should never wire to this component. This is the
+ * underlying configuration of virtualized millisecond timers. 
+ * It auto-wires wires the timer
+ * implementation (TimerC) to the boot sequence and exports the
+ * various Timer interfaces.
+ *
+ * @author Philip Levis
+ * @author Cory Sharp
+ * @date   May 16 2005
+ */ 
 
-#include "Timer-vlo.h"
-    
-configuration CounterMilli32VloC
-{
-  provides interface Counter<TMilli,uint32_t>;
+#include "Timer16.h"
+
+configuration Timer16MilliP {
+  provides interface Timer16<TMilli> as Timer16Milli[uint8_t id];
 }
-implementation
-{
-  components Msp430CounterVloC as CounterFrom;
-  components new ApproximateCounterC(TMilli,uint32_t,TVlo,uint16_t,
-                                     VLO_HZ/1000,uint32_t) as Transform;
-
-  Counter = Transform.Counter;
-
-  Transform.CounterFrom -> CounterFrom;
+implementation {
+  components HilTimer16MilliC, MainC;
+  MainC.SoftwareInit -> HilTimer16MilliC;
+  Timer16Milli = HilTimer16MilliC;
 }
 

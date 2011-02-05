@@ -1,5 +1,5 @@
 
-/* Copyright (c) 2000-2003 The Regents of the University of California.
+/* Copyright (c) 2000-2003 The Regents of the University of California.  
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -12,7 +12,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the
  *   distribution.
- * - Neither the name of the copyright holders nor the names of
+ * - Neither the name of the copyright holder nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
  *
@@ -31,25 +31,42 @@
  */
 
 /**
- * Msp430CounterVloC provides the VLO counter for the MSP430.
+ * HilTimerMilliC provides a parameterized interface to a virtualized
+ * millisecond timer.  TimerMilliC in tos/system/ uses this component to
+ * allocate new timers.
  *
  * @author Cory Sharp <cssharp@eecs.berkeley.edu>
  * @see  Please refer to TEP 102 for more information about this component and its
  *          intended use.
  */
 
-#include "Timer-vlo.h"
-
-configuration Msp430CounterVloC
+configuration HilTimer16MilliC
 {
-  provides interface Counter<TVlo,uint16_t> as Msp430CounterVlo;
+  provides interface Init;
+  provides interface Timer16<TMilli> as Timer16Milli[ uint8_t num ];
+#if 0
+  provides interface LocalTime<TMilli>;
+#endif
 }
 implementation
 {
-  components Msp430TimerC;
-  components new Msp430CounterC(TVlo) as Counter;
+  components new AlarmMilli16C();
+  components new AlarmToTimer16C(TMilli);
+  components new VirtualizeTimer16C(TMilli,uniqueCount(UQ_TIMER16_MILLI));
+#if 0
+  components new CounterToLocalTimeC(TMilli);
+  components CounterMilli32C;
+#endif
 
-  Msp430CounterVlo = Counter;
-  Counter.Msp430Timer -> Msp430TimerC.TimerA;
+  Init = AlarmMilli16C;
+  Timer16Milli = VirtualizeTimer16C;
+#if 0
+  LocalTime = CounterToLocalTimeC;
+#endif
+
+  VirtualizeTimer16C.TimerFrom -> AlarmToTimer16C;
+  AlarmToTimer16C.Alarm -> AlarmMilli16C;
+#if 0
+  CounterToLocalTimeC.Counter -> CounterMilli32C;
+#endif
 }
-

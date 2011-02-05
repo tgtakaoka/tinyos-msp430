@@ -24,7 +24,7 @@ implementation
     components Max7219C;
     components Clock7SegsC;
     components LedC;
-    components new TimerMilli16C() as Timer16;
+    components new Timer16MilliC() as Timer16;
     components new Led7SegsC("Max7219", 2, uint16_t) as CentiSec;
     components new Led7SegsC("Max7219", 2, uint16_t) as Sec;
     components new Led7SegsC("Max7219", 2, uint16_t) as Min;
