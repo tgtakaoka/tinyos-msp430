@@ -75,7 +75,7 @@ implementation
     components new Msp430TimerCapComP(TACCTL2_, TACCR2_) as Msp430TimerA2;
 #endif
 #if defined(__MSP430_HAS_T1A2__)
-    components new Msp430TimerP(TA1IV_, TAR1_, TA1CTL_, TAIFG, TACLR, TAIE,
+    components new Msp430TimerP(TA1IV_, TA1R_, TA1CTL_, TAIFG, TACLR, TAIE,
                                 TASSEL0, TASSEL1, FALSE) as Msp430Timer1A;
     components new Msp430TimerCapComP(TACCTL0_, TACCR0_) as Msp430Timer1A0;
     components new Msp430TimerCapComP(TACCTL1_, TACCR1_) as Msp430Timer1A1;
