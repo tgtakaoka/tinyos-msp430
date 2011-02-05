@@ -43,11 +43,11 @@ implementation
 
     Led1 = Led1Inv;
     Led1Inv.Impl -> Led1Impl;
-    Led1Impl -> GeneralIOC.Port11;
+    Led1Impl -> GeneralIOC.Port16;
 
     Led2 = Led2Inv;
     Led2Inv.Impl -> Led2Impl;
-    Led2Impl -> GeneralIOC.Port12;
+    Led2Impl -> GeneralIOC.Port10;
 }
 
 /*
