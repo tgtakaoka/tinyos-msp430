@@ -111,22 +111,30 @@ configuration HplMsp430GeneralIOC
 #endif
 
   // provides special ports explicitly 
-  // this section of HplMsp430GeneralIOC supports the F14x series
-#ifdef __msp430x14x
+
+#ifdef __MSP430_HAS_UART0__
   provides interface HplMsp430GeneralIO as STE0;
   provides interface HplMsp430GeneralIO as SIMO0;
   provides interface HplMsp430GeneralIO as SOMI0;
   provides interface HplMsp430GeneralIO as UCLK0;
   provides interface HplMsp430GeneralIO as UTXD0;
   provides interface HplMsp430GeneralIO as URXD0;
+#ifdef __MSP430_HAS_I2C__
+  provides interface HplMsp430GeneralIO as SDA;
+  provides interface HplMsp430GeneralIO as SCL;
+#endif
+#endif
 
+#ifdef __MSP430_HAS_UART1__
   provides interface HplMsp430GeneralIO as STE1;
   provides interface HplMsp430GeneralIO as SIMO1;
   provides interface HplMsp430GeneralIO as SOMI1;
   provides interface HplMsp430GeneralIO as UCLK1;
   provides interface HplMsp430GeneralIO as UTXD1;
   provides interface HplMsp430GeneralIO as URXD1;
+#endif
 
+#ifdef __MSP430_HAS_ADC12__
   provides interface HplMsp430GeneralIO as ADC0;
   provides interface HplMsp430GeneralIO as ADC1;
   provides interface HplMsp430GeneralIO as ADC2;
@@ -137,36 +145,12 @@ configuration HplMsp430GeneralIOC
   provides interface HplMsp430GeneralIO as ADC7;
 #endif
 
-  // this section of HplMsp430GeneralIOC supports the F16x series
-#ifdef __msp430x16x
-  provides interface HplMsp430GeneralIO as STE0;
-  provides interface HplMsp430GeneralIO as SIMO0;
-  provides interface HplMsp430GeneralIO as SDA;
-  provides interface HplMsp430GeneralIO as SOMI0;
-  provides interface HplMsp430GeneralIO as UCLK0;
-  provides interface HplMsp430GeneralIO as SCL;
-  provides interface HplMsp430GeneralIO as UTXD0;
-  provides interface HplMsp430GeneralIO as URXD0;
-
-  provides interface HplMsp430GeneralIO as STE1;
-  provides interface HplMsp430GeneralIO as SIMO1;
-  provides interface HplMsp430GeneralIO as SOMI1;
-  provides interface HplMsp430GeneralIO as UCLK1;
-  provides interface HplMsp430GeneralIO as UTXD1;
-  provides interface HplMsp430GeneralIO as URXD1;
-
-  provides interface HplMsp430GeneralIO as ADC0;
-  provides interface HplMsp430GeneralIO as ADC1;
-  provides interface HplMsp430GeneralIO as ADC2;
-  provides interface HplMsp430GeneralIO as ADC3;
-  provides interface HplMsp430GeneralIO as ADC4;
-  provides interface HplMsp430GeneralIO as ADC5;
-  provides interface HplMsp430GeneralIO as ADC6;
-  provides interface HplMsp430GeneralIO as ADC7;
-
+#ifdef __MSP430_HAS_DAC12_2__
   provides interface HplMsp430GeneralIO as DAC0;
   provides interface HplMsp430GeneralIO as DAC1;
+#endif
 
+#ifdef __MSP430_HAS_SVS__
   provides interface HplMsp430GeneralIO as SVSIN;
   provides interface HplMsp430GeneralIO as SVSOUT;
 #endif
@@ -371,6 +355,15 @@ implementation
 
   SVSIN = P67;
   SVSOUT = P57;
+#endif
+
+#ifdef __msp430x12x2
+  STE0 = P30;
+  SIMO0 = P31;
+  SOMI0 = P32;
+  UCLK0 = P33;
+  UTXD0 = P34;
+  URXD0 = P35;
 #endif
 }
 
