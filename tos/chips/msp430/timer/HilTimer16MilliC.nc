@@ -44,29 +44,21 @@ configuration HilTimer16MilliC
 {
   provides interface Init;
   provides interface Timer16<TMilli> as Timer16Milli[ uint8_t num ];
-#if 0
   provides interface LocalTime<TMilli>;
-#endif
 }
 implementation
 {
   components new AlarmMilli16C();
   components new AlarmToTimer16C(TMilli);
   components new VirtualizeTimer16C(TMilli,uniqueCount(UQ_TIMER16_MILLI));
-#if 0
   components new CounterToLocalTimeC(TMilli);
   components CounterMilli32C;
-#endif
 
   Init = AlarmMilli16C;
   Timer16Milli = VirtualizeTimer16C;
-#if 0
   LocalTime = CounterToLocalTimeC;
-#endif
 
   VirtualizeTimer16C.TimerFrom -> AlarmToTimer16C;
   AlarmToTimer16C.Alarm -> AlarmMilli16C;
-#if 0
   CounterToLocalTimeC.Counter -> CounterMilli32C;
-#endif
 }
