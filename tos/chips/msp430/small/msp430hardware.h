@@ -227,23 +227,29 @@ void __nesc_enable_interrupt(void) @safe()
 }
 
 #define UINT16_ATOMIC_T
+#define INLINE_ATOMIC_FUNC
+
 #ifdef UINT16_ATOMIC_T
 typedef uint16_t __nesc_atomic_t;
 #else
 typedef bool __nesc_atomic_t;
 #endif
-__nesc_atomic_t __nesc_atomic_start(void);
-void __nesc_atomic_end(__nesc_atomic_t reenable_interrupts);
+#ifdef INLINE_ATOMIC_FUNC
+#define ATOMIC_INLINE static inline
+#define ATOMIC_SPONTANEOUS
+#else
+#define ATOMIC_INLINE
+#define ATOMIC_SPONTANEOUS @spontaneous()
+#endif
+ATOMIC_INLINE __nesc_atomic_t __nesc_atomic_start(void);
+ATOMIC_INLINE void __nesc_atomic_end(__nesc_atomic_t reenable_interrupts);
 
 #ifndef NESC_BUILD_BINARY
 /* @spontaneous() functions should not be included when NESC_BUILD_BINARY
    is #defined, to avoid duplicate functions definitions when binary
    components are used. Such functions do need a prototype in all cases,
    though. */
-#ifdef UINT16_ATOMIC_T
-inline
-#endif
-__nesc_atomic_t __nesc_atomic_start(void) @spontaneous() @safe()
+ATOMIC_INLINE __nesc_atomic_t __nesc_atomic_start(void) ATOMIC_SPONTANEOUS @safe()
 {
 #ifdef UINT16_ATOMIC_T
   __nesc_atomic_t result = READ_SR & SR_GIE;
@@ -255,10 +261,7 @@ __nesc_atomic_t __nesc_atomic_start(void) @spontaneous() @safe()
   return result;
 }
 
-#ifdef UINT16_ATOMIC_T
-inline
-#endif
-void __nesc_atomic_end(__nesc_atomic_t reenable_interrupts) @spontaneous() @safe()
+ATOMIC_INLINE void __nesc_atomic_end(__nesc_atomic_t reenable_interrupts) ATOMIC_SPONTANEOUS @safe()
 {
   asm volatile("" : : : "memory"); /* ensure atomic section effect visibility */
 #ifdef UINT16_ATOMIC_T
