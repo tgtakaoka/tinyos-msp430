@@ -30,35 +30,45 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-configuration Clock7SegsAppC
+configuration LocalTime7SegsAppC
 {
 }
 implementation
 {
     components MainC;
-    components Max7219C;
-    components Clock7SegsC;
+    components LocalTime7SegsC as App;
     components LedC;
-    components new Timer16MilliC() as Timer16;
-    components new Led7SegsC("Max7219", 2, uint16_t) as CentiSec;
+    components new TimerMilliC() as Timer;
+    components LocalTimeMilliC as LocalTime;
+
+    components HplMsp430GeneralIOC as GeneralIOC;
+    components new Msp430GpioC() as Data;
+    components new Msp430GpioC() as Load;
+    components new Msp430GpioC() as Clock;
+    components new Max7219P("Max7219");
     components new Led7SegsC("Max7219", 2, uint16_t) as Sec;
     components new Led7SegsC("Max7219", 2, uint16_t) as Min;
     components new Led7SegsC("Max7219", 2, uint16_t) as Hour;
 
-    Max7219C -> MainC.Boot;
+    Max7219P.Boot -> MainC.Boot;
+    Max7219P.Data -> Data;
+    Data -> GeneralIOC.Port15;
+    Max7219P.Load -> Load;
+    Load -> GeneralIOC.Port14;
+    Max7219P.Clock -> Clock;
+    Clock -> GeneralIOC.Port13;
 
-    CentiSec.Led7Seg -> Max7219C.Led7Seg;
-    Sec.Led7Seg -> Max7219C.Led7Seg;
-    Min.Led7Seg -> Max7219C.Led7Seg;
-    Hour.Led7Seg -> Max7219C.Led7Seg;
+    Sec.Led7Seg -> Max7219P.Led7Seg;
+    Min.Led7Seg -> Max7219P.Led7Seg;
+    Hour.Led7Seg -> Max7219P.Led7Seg;
 
-    Clock7SegsC.Boot -> MainC.Boot;
-    Clock7SegsC.Timer16 -> Timer16;
-    Clock7SegsC.CentiSec -> CentiSec.Led7Segs;
-    Clock7SegsC.Sec -> Sec.Led7Segs;
-    Clock7SegsC.Min -> Min.Led7Segs;
-    Clock7SegsC.Hour -> Hour.Led7Segs;
-    Clock7SegsC.Led -> LedC;
+    App.Boot -> MainC.Boot;
+    App.Timer -> Timer;
+    App.LocalTime -> LocalTime;
+    App.Sec -> Sec.Led7Segs;
+    App.Min -> Min.Led7Segs;
+    App.Hour -> Hour.Led7Segs;
+    App.Led -> LedC;
 }
 
 /*

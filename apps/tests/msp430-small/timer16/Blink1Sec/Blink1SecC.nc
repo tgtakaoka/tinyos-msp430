@@ -30,31 +30,34 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-configuration Max7219C
+#include "Timer.h"
+
+module Blink1SecC @safe()
 {
-    provides interface Led7Seg[int digits];
+    uses interface Timer<TMilli> as Timer;
+    uses interface Led;
     uses interface Boot;
 }
 implementation
 {
-    components Max7219P;
-    components HplMsp430GeneralIOC as GeneralIOC;
-    components new Msp430GpioC() as Data;
-    components new Msp430GpioC() as Load;
-    components new Msp430GpioC() as Clock;
+    enum {
+        CYCLE = 1000,
+        FLASH = 200,
+    };
+    
+    event void Boot.booted() {
+        call Led.on();
+        call Timer.startPeriodic(FLASH);
+    }
 
-    Led7Seg = Max7219P.Led7Seg;
-
-    Boot = Max7219P;
-
-    Max7219P.Data -> Data;
-    Data -> GeneralIOC.Port15;
-
-    Max7219P.Load -> Load;
-    Load -> GeneralIOC.Port14;
-
-    Max7219P.Clock -> Clock;
-    Clock -> GeneralIOC.Port13;
+    event void Timer.fired() {
+        if (call Led.get()) {
+            call Timer.startPeriodic(CYCLE - FLASH);
+        } else {
+            call Timer.startPeriodic(FLASH);
+        }
+        call Led.toggle();
+    }
 }
 
 /*

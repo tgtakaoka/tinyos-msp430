@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G Takaoka
+/* Copyright (c) 2011, Tadashi G Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,71 +30,28 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module Max7219P
+module LocalTime7Segs16C
 {
-    provides interface Led7Seg[int digit];
-    uses interface GeneralIO as Data;
-    uses interface GeneralIO as Load;
-    uses interface GeneralIO as Clock;
+    uses interface Led7Segs<uint16_t> as Hour;
+    uses interface Led7Segs<uint16_t> as Min;
+    uses interface Led7Segs<uint16_t> as Sec;
+    uses interface Led;
+    uses interface Timer16<TMilli> as Timer;
+    uses interface LocalTime<TMilli>;
     uses interface Boot;
 }
 implementation
 {
-    static const uint8_t segments[] = {
-        0x7e, 0x30, 0x6d, 0x79, 0x33, 0x5b, 0x5f, 0x72,
-        0x7f, 0x7b, 0x77, 0x1f, 0x4e, 0x3d, 0x4f, 0x47
-    };
-
-    void write(unsigned data) {
-        int bits = 16;
-        atomic {
-            call Load.clr();
-            do {
-                call Clock.clr();
-                if (data & 0x8000) {
-                    call Data.set();
-                } else {
-                    call Data.clr();
-                }
-                call Clock.set();
-                data <<= 1;
-            } while (--bits != 0);
-            call Load.set();
-        }
+    event void Boot.booted() {
+        call Timer.startPeriodic(10);
     }
 
-    void normal(unsigned digits) {
-        write(0xb00 | (digits - 1));
-        write(0xc00 | 1);
-    }
-
-    void intensity(unsigned intense) {
-        write(0xa00 | intense);
-    }
-
-    void mode(unsigned bits) {
-        write(0x900 | bits);
-    }
-
-    void event Boot.booted() {
-        atomic {
-            call Load.set();
-            call Clock.clr();
-            call Load.makeOutput();
-            call Clock.makeOutput();
-            call Data.makeOutput();
-            normal(8);
-            mode(0x00);         /* segment mode */
-            intensity(15);
-        }
-    }
-
-    command void Led7Seg.off[int digit]() {
-        write(++digit << 8);
-    }
-
-    command void Led7Seg.set[int digit](unsigned nibble) {
-        write((++digit << 8) | segments[nibble]);
+    event void Timer.fired() {
+        uint32_t time = call LocalTime.get();
+        call Led.set(time % 1000 < 100);
+        call Sec.dec0((time /= 1000) % 60);
+        call Min.dec0((time /= 60) % 60);
+        call Hour.dec0((time / 60) % 24);
     }
 }
 

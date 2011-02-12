@@ -30,36 +30,45 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Timer.h"
-
-module Blink1Sec16C @safe()
+configuration LocalTime7Segs16AppC
 {
-    uses interface Timer16<TMilli> as Timer16;
-    uses interface Led;
-    uses interface Boot;
 }
 implementation
 {
-    enum {
-        CYCLE = 1000,
-        FLASH = 200,
-    };
-    bool on = TRUE;
-    
-    event void Boot.booted() {
-        call Led.on();
-        call Timer16.startPeriodic(FLASH);
-    }
+    components MainC;
+    components LocalTime7Segs16C as App;
+    components LedC;
+    components new Timer16MilliC() as Timer;
+    components LocalTime16MilliC as LocalTime;
 
-    event void Timer16.fired() {
-        if (on) {
-            call Timer16.startPeriodic(CYCLE - FLASH);
-        } else {
-            call Timer16.startPeriodic(FLASH);
-        }
-        call Led.toggle();
-        on = !on;
-    }
+    components HplMsp430GeneralIOC as GeneralIOC;
+    components new Msp430GpioC() as Data;
+    components new Msp430GpioC() as Load;
+    components new Msp430GpioC() as Clock;
+    components new Max7219P("Max7219");
+    components new Led7SegsC("Max7219", 2, uint16_t) as Sec;
+    components new Led7SegsC("Max7219", 2, uint16_t) as Min;
+    components new Led7SegsC("Max7219", 2, uint16_t) as Hour;
+
+    Max7219P.Boot -> MainC.Boot;
+    Max7219P.Data -> Data;
+    Data -> GeneralIOC.Port15;
+    Max7219P.Load -> Load;
+    Load -> GeneralIOC.Port14;
+    Max7219P.Clock -> Clock;
+    Clock -> GeneralIOC.Port13;
+
+    Sec.Led7Seg -> Max7219P.Led7Seg;
+    Min.Led7Seg -> Max7219P.Led7Seg;
+    Hour.Led7Seg -> Max7219P.Led7Seg;
+
+    App.Boot -> MainC.Boot;
+    App.Timer -> Timer;
+    App.LocalTime -> LocalTime;
+    App.Sec -> Sec.Led7Segs;
+    App.Min -> Min.Led7Segs;
+    App.Hour -> Hour.Led7Segs;
+    App.Led -> LedC;
 }
 
 /*

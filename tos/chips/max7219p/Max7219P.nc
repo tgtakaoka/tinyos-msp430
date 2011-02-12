@@ -30,35 +30,71 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Timer.h"
-
-module Blink1SecC @safe()
+generic module Max7219P(char resourceName[])
 {
-    uses interface Timer<TMilli> as Timer;
-    uses interface Led;
+    provides interface Led7Seg[int digit];
+    uses interface GeneralIO as Data;
+    uses interface GeneralIO as Load;
+    uses interface GeneralIO as Clock;
     uses interface Boot;
 }
 implementation
 {
-    enum {
-        CYCLE = 1000,
-        FLASH = 200,
+    static const uint8_t segments[] = {
+        0x7e, 0x30, 0x6d, 0x79, 0x33, 0x5b, 0x5f, 0x72,
+        0x7f, 0x7b, 0x77, 0x1f, 0x4e, 0x3d, 0x4f, 0x47
     };
-    bool on = TRUE;
-    
-    event void Boot.booted() {
-        call Led.on();
-        call Timer.startPeriodic(FLASH);
+
+    void write(unsigned data) {
+        int bits = 16;
+        atomic {
+            call Load.clr();
+            do {
+                call Clock.clr();
+                if (data & 0x8000) {
+                    call Data.set();
+                } else {
+                    call Data.clr();
+                }
+                call Clock.set();
+                data <<= 1;
+            } while (--bits != 0);
+            call Load.set();
+        }
     }
 
-    event void Timer.fired() {
-        if (on) {
-            call Timer.startPeriodic(CYCLE - FLASH);
-        } else {
-            call Timer.startPeriodic(FLASH);
+    void normal(unsigned digits) {
+        write(0xb00 | (digits - 1));
+        write(0xc00 | 1);
+    }
+
+    void intensity(unsigned intense) {
+        write(0xa00 | intense);
+    }
+
+    void mode(unsigned bits) {
+        write(0x900 | bits);
+    }
+
+    void event Boot.booted() {
+        atomic {
+            call Load.set();
+            call Clock.clr();
+            call Load.makeOutput();
+            call Clock.makeOutput();
+            call Data.makeOutput();
+            normal(uniqueCount(resourceName));
+            mode(0x00);         /* segment mode */
+            intensity(15);
         }
-        call Led.toggle();
-        on = !on;
+    }
+
+    command void Led7Seg.off[int digit]() {
+        write(++digit << 8);
+    }
+
+    command void Led7Seg.set[int digit](unsigned nibble) {
+        write((++digit << 8) | segments[nibble]);
     }
 }
 
