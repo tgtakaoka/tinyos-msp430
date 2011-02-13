@@ -33,7 +33,8 @@
 interface Led7Seg
 {
     command void off();
-    command void set(unsigned nibble);
+    command void nibble(unsigned nibble);
+    command void segments(unsigned segments);
 }
 
 /*

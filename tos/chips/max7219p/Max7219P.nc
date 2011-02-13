@@ -40,7 +40,7 @@ generic module Max7219P(char resourceName[])
 }
 implementation
 {
-    static const uint8_t segments[] = {
+    static const uint8_t hexdecimal_segments[] = {
         0x7e, 0x30, 0x6d, 0x79, 0x33, 0x5b, 0x5f, 0x72,
         0x7f, 0x7b, 0x77, 0x1f, 0x4e, 0x3d, 0x4f, 0x47
     };
@@ -61,6 +61,10 @@ implementation
             } while (--bits != 0);
             call Load.set();
         }
+    }
+
+    void setSegments(int digit, unsigned segments) {
+        write((++digit << 8) | segments);
     }
 
     void normal(unsigned digits) {
@@ -90,11 +94,15 @@ implementation
     }
 
     command void Led7Seg.off[int digit]() {
-        write(++digit << 8);
+        setSegments(digit, 0x00);
     }
 
-    command void Led7Seg.set[int digit](unsigned nibble) {
-        write((++digit << 8) | segments[nibble]);
+    command void Led7Seg.nibble[int digit](unsigned nibble) {
+        setSegments(digit, hexdecimal_segments[nibble]);
+    }
+
+    command void Led7Seg.segments[int digit](unsigned segments) {
+        setSegments(digit, segments);
     }
 }
 

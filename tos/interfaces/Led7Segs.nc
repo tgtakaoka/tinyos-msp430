@@ -32,10 +32,13 @@
 
 interface Led7Segs<size_type>
 {
+    command int offset();
+    command int digits();
     command void off();
-    command void dec(size_type val);
-    command void dec0(size_type val);
-    command void hex(size_type val);
+    command void decimal(size_type val);
+    command void decimal0(size_type val);
+    command void hexadecimal(size_type val);
+    command void segments(size_type segments);
 }
 
 /*

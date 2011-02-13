@@ -50,9 +50,9 @@ implementation
     event void Timer.fired() {
         uint32_t time = call LocalTime.get();
         call Led.set(time % 1000 < 100);
-        call Sec.dec0((time /= 1000) % 60);
-        call Min.dec0((time /= 60) % 60);
-        call Hour.dec0((time / 60) % 24);
+        call Sec.decimal0((time /= 1000) % 60);
+        call Min.decimal0((time /= 60) % 60);
+        call Hour.decimal0((time / 60) % 24);
     }
 }
 

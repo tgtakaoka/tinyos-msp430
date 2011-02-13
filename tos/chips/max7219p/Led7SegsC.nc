@@ -41,39 +41,56 @@ implementation
         OFFSET = uniqueN(name, numDigits),
     };
 
-    command void Led7Segs.off() {
-        int i;
-        for (i = 0; i < numDigits; i++)
-            call Led7Seg.off[OFFSET + i]();
+    command int Led7Segs.offset() {
+        return OFFSET;
     }
 
-    command void Led7Segs.dec(size_type val) {
+    command int Led7Segs.digits() {
+        return numDigits;
+    }
+
+    command void Led7Segs.off() {
+        int i;
+        for (i = 0; i < numDigits; i++) {
+            call Led7Seg.off[OFFSET + i]();
+        }
+    }
+
+    command void Led7Segs.decimal(size_type val) {
         int i;
         bool suppress = FALSE;
         for (i = 0; i < numDigits; i++) {
             if (suppress) {
-                call Led7Seg.off[OFFSET + i]();
+                call Led7Seg.segments[OFFSET + i](0);
             } else {
-                call Led7Seg.set[OFFSET + i](val % 10);
+                call Led7Seg.nibble[OFFSET + i](val % 10);
             }
             if ((val /= 10) == 0)
                 suppress = TRUE;
         }
     }
 
-    command void Led7Segs.dec0(size_type val) {
+    command void Led7Segs.decimal0(size_type val) {
         int i;
         for (i = 0; i < numDigits; i++) {
-            call Led7Seg.set[OFFSET + i](val % 10);
+            call Led7Seg.nibble[OFFSET + i](val % 10);
             val /= 10;
         }
     }
 
-    command void Led7Segs.hex(size_type val) {
+    command void Led7Segs.hexadecimal(size_type val) {
         int i;
         for (i = 0; i < numDigits; i++) {
-            call Led7Seg.set[OFFSET + i](val % 16);
+            call Led7Seg.nibble[OFFSET + i](val % 16);
             val /= 16;
+        }
+    }
+
+    command void Led7Segs.segments(size_type segments) {
+        int i;
+        for (i = 0; i < numDigits; i++) {
+            call Led7Seg.segments[OFFSET + i](segments & 0xff);
+            segments >>= 8;
         }
     }
 }
