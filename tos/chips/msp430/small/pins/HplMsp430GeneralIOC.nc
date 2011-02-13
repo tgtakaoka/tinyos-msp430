@@ -154,6 +154,44 @@ configuration HplMsp430GeneralIOC
   provides interface HplMsp430GeneralIO as SVSIN;
   provides interface HplMsp430GeneralIO as SVSOUT;
 #endif
+
+#if defined(__MSP430_HAS_USCI__) || defined(__MSP430_HAS_USCI_A0__) || \
+    defined(__MSP430_HAS_USCI_AB0__)
+  provides interface HplMsp430GeneralIO as UCA0CLK;
+  provides interface HplMsp430GeneralIO as UCA0STE;
+  provides interface HplMsp430GeneralIO as UCA0TXD;
+  provides interface HplMsp430GeneralIO as UCA0RXD;
+  provides interface HplMsp430GeneralIO as UCA0SIMO;
+  provides interface HplMsp430GeneralIO as UCA0SOMI;
+#endif
+
+#if defined(__MSP430_HAS_USCI__) || defined(__MSP430_HAS_USCI_B0__) || \
+    defined(__MSP430_HAS_USCI_AB0__)
+  provides interface HplMsp430GeneralIO as UCB0CLK;
+  provides interface HplMsp430GeneralIO as UCB0STE;
+  provides interface HplMsp430GeneralIO as UCB0SIMO;
+  provides interface HplMsp430GeneralIO as UCB0SOMI;
+  provides interface HplMsp430GeneralIO as UCB0SDA;
+  provides interface HplMsp430GeneralIO as UCB0SCL;
+#endif
+
+#if defined(__MSP430_HAS_USCI_A1__) || defined(__MSP430_HAS_USCI_AB1__)
+  provides interface HplMsp430GeneralIO as UCA1CLK;
+  provides interface HplMsp430GeneralIO as UCA1STE;
+  provides interface HplMsp430GeneralIO as UCA1TXD;
+  provides interface HplMsp430GeneralIO as UCA1RXD;
+  provides interface HplMsp430GeneralIO as UCA1SIMO;
+  provides interface HplMsp430GeneralIO as UCA1SOMI;
+#endif
+
+#if defined(__MSP430_HAS_USCI_B1__) || defined(__MSP430_HAS_USCI_AB1__)
+  provides interface HplMsp430GeneralIO as UCB1CLK;
+  provides interface HplMsp430GeneralIO as UCB1STE;
+  provides interface HplMsp430GeneralIO as UCB1SIMO;
+  provides interface HplMsp430GeneralIO as UCB1SOMI;
+  provides interface HplMsp430GeneralIO as UCB1SDA;
+  provides interface HplMsp430GeneralIO as UCB1SCL;
+#endif
 }
 implementation
 {
@@ -364,6 +402,38 @@ implementation
   UCLK0 = P33;
   UTXD0 = P34;
   URXD0 = P35;
+#endif
+
+#ifdef __msp430x21x2
+  UCA0CLK = P30;
+  UCA0STE = P33;
+  UCA0TXD = P34;
+  UCA0RXD = P35;
+  UCA0SIMO = P34;
+  UCA0SOMI = P35;
+
+  UCB0CLK = P33;  
+  UCB0STE = P30;
+  UCB0SIMO = P31;
+  UCB0SOMI = P32;
+  UCB0SDA = P31;
+  UCB0SCL = P32;
+#endif
+
+#if defined(__msp430x22x2) || defined(__msp430x22x4)
+  UCA0CLK = P30;
+  UCA0STE = P33;
+  UCA0TXD = P34;
+  UCA0RXD = P35;
+  UCA0SIMO = P34;
+  UCA0SOMI = P35;
+
+  UCB0CLK = P33;  
+  UCB0STE = P30;
+  UCB0SIMO = P31;
+  UCB0SOMI = P32;
+  UCB0SDA = P31;
+  UCB0SCL = P32;
 #endif
 }
 

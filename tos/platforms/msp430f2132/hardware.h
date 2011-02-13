@@ -38,6 +38,7 @@
 #endif
 
 #include "msp430hardware.h"
+#include "msp430usci.h"
 
 // LED
 #define LED_RED Port10
