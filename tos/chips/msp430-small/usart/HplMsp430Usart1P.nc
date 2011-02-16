@@ -118,11 +118,7 @@ implementation
   }
 
   async command msp430_uctl_t Usart.getUctl() {
-#if 0 // Bug
-    return int2uctl(U0CTL);
-#else
     return int2uctl(U1CTL);
-#endif
   }
 
   async command void Usart.setUtctl(msp430_utctl_t control) {
