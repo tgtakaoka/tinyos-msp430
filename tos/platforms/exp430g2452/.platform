@@ -2,7 +2,7 @@
 
 push( @includes, qw(
 
-      %T/platforms/exp430g2252
+      %T/platforms/exp430g2452
       %T/platforms/exp430g-common
       %T/platforms/msp430-common
 
@@ -25,7 +25,7 @@ push( @includes, qw(
 
 @opts = qw(
       -gcc=msp430-gcc
-      -mmcu=msp430g2252
+      -mmcu=msp430g2452
       -mno-stack-init
       -fnesc-target=msp430
       -fnesc-no-debug

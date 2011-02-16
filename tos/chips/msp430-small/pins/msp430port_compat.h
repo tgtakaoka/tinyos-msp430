@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G Takaoka
+/* Copyright (c) 2010, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -43,7 +43,7 @@
 #define __msp430_have_port2_67
 #endif
     
-#if defined(__msp430x11x1) || defined(__msp430x11x2) || defined(__msp430x22x2) || \
+#if defined(__msp430x11x1) || defined(__msp430x11x2) || defined(__msp430x22x2)
 /* These devices have only P2.0 through P2.5 at Port2 */
 #define __msp430_have_port2_05
 #endif

@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G Takaoka
+/* Copyright (c) 2011, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,7 +47,7 @@ implementation
     LocalTimeC.UartStream -> PlatformSerialC;
     LocalTimeC.Timer -> Timer;
     LocalTimeC.LocalTime -> LocalTime;
-    LocalTimeC.Led -> LedC;
+    LocalTimeC.Led -> LedC.Led0;
 }
 
 /*

@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G Takaoka
+/* Copyright (c) 2010, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,22 +40,26 @@ module Blink1SecC @safe()
 }
 implementation
 {
+    bool led_state;
+
     enum {
         CYCLE = 1000,
         FLASH = 200,
     };
     
     event void Boot.booted() {
+        led_state = TRUE;
         call Led.on();
         call Timer.startPeriodic(FLASH);
     }
 
     event void Timer.fired() {
-        if (call Led.get()) {
+        if (led_state) {
             call Timer.startPeriodic(CYCLE - FLASH);
         } else {
             call Timer.startPeriodic(FLASH);
         }
+        led_state = !led_state;
         call Led.toggle();
     }
 }

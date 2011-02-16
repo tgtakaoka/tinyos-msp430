@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G Takaoka
+/* Copyright (c) 2010-2011, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,12 +32,10 @@
 
 #include "hardware.h"
 
-configuration PlatformC
-{
+configuration PlatformC {
     provides interface Init;
 }
-implementation
-{
+implementation {
     components PlatformP, Msp430ClockC;
     Init = PlatformP;
     PlatformP.Msp430ClockInit -> Msp430ClockC.Init;

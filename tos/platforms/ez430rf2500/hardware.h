@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G Takaoka
+/* Copyright (c) 2010, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,12 +39,8 @@
 
 #include "msp430hardware.h"
 
-// LED
-#define LED_RED Port10
-#define LED_GREEN Port11
-
 // SW
-#define PUSH_SW Port12
+#define PORT_PUSH_SW   Port12
 
 #endif // _H_hardware_h
 

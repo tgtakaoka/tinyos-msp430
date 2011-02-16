@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G Takaoka
+/* Copyright (c) 2010, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,7 @@ implementation
     Blink1Sec16C -> MainC.Boot;
 
     Blink1Sec16C.Timer16 -> Timer16;
-    Blink1Sec16C.Led -> LedC;
+    Blink1Sec16C.Led -> LedC.Led0;
 }
 
 /*

@@ -32,15 +32,15 @@
 
 #include "hardware.h"
 
-configuration PlatformLedsC
-{
-    provides interface GeneralIO as Led0;
-    provides interface GeneralIO as Led1;
-    provides interface GeneralIO as Led2;
+configuration PlatformLedsC {
+    provides {
+        interface GeneralIO as Led0;
+        interface GeneralIO as Led1;
+        interface GeneralIO as Led2;
+    }
     uses interface Init;
 }
-implementation
-{
+implementation {
     components HplMsp430GeneralIOC as GeneralIOC;
     components new Msp430GpioC() as Led0Impl;
     components new Msp430GpioC() as Led1Impl;
@@ -54,15 +54,22 @@ implementation
 
     Led0 = Led0Inv;
     Led0Inv.Impl -> Led0Impl;
-    Led0Impl -> GeneralIOC.Port10;
-
     Led1 = Led1Inv;
     Led1Inv.Impl -> Led1Impl;
-    Led1Impl -> GeneralIOC.Port11;
-
     Led2 = Led2Inv;
     Led2Inv.Impl -> Led2Impl;
-    Led2Impl -> GeneralIOC.Port12;
+
+    Led0Impl -> GeneralIOC.PORT_LED0;
+#if PLATFORM_LED_COUNT >= 2
+    Led1Impl -> GeneralIOC.PORT_LED1;
+#else
+    Led1Impl -> GeneralIOC.PORT_LED0;
+#endif
+#if PLATFORM_LED_COUNT >= 3
+    Led2Impl -> GeneralIOC.PORT_LED2;
+#else
+    Led2Impl -> GeneralIOC.PORT_LED0;
+#endif
 }
 
 /*

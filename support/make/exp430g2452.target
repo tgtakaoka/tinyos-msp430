@@ -1,8 +1,8 @@
 # -*- mode: makefile-gmake; mode: flyspell-prog; -*-
 
-PLATFORM ?= exp430g2252
+PLATFORM ?= exp430g2452
 
-MSP_MCU = msp430x2252
+MSP_MCU = msp430x2452
 
 # Disable MSP430 hardware multiply because it makes MSPGCC die
 PFLAGS += -mdisable-hwmul
@@ -15,7 +15,7 @@ endif
 
 $(call TOSMake_include_platform,msp)
 
-exp430g2252: $(BUILD_DEPS)
+exp430g2452: $(BUILD_DEPS)
 	@:
 
 # vim: set noet ts=8 sw=8 syntax=make:

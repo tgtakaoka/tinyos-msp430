@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G Takaoka
+/* Copyright (c) 2011, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,19 +30,15 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_hardware_h
-#define _H_hardware_h
-
-#if !defined(__MSP430__REV__)
-#define __MSP430_REV__ 'B'
-#endif
-
-#include "msp430hardware.h"
+#ifndef _PLATFORM_LED_H_
+#define _PLATFORM_LED_H_
 
 // LED
-#define LED_RED Port10
+#define PORT_LED0           Port10  // RED
+#define PLATFORM_LED_COUNT  1
+#define PLATFORM_LED_RED    0       // LED1
 
-#endif // _H_hardware_h
+#endif // _PLATFORM_LED_H_
 
 /*
  * Local Variables:

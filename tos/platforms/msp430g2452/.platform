@@ -2,7 +2,7 @@
 
 push( @includes, qw(
 
-      %T/platforms/msp430g2252
+      %T/platforms/msp430g2452
       %T/platforms/msp430-common
 
       %T/chips/msp430-small/msp430g2xx2
@@ -23,7 +23,7 @@ push( @includes, qw(
 
 @opts = qw(
       -gcc=msp430-gcc
-      -mmcu=msp430g2252
+      -mmcu=msp430g2452
       -mno-stack-init
       -fnesc-target=msp430
       -fnesc-no-debug

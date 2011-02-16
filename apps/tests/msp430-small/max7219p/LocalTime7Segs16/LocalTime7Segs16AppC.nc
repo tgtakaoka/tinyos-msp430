@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G Takaoka
+/* Copyright (c) 2010, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,7 +68,7 @@ implementation
     App.Sec -> Sec.Led7Segs;
     App.Min -> Min.Led7Segs;
     App.Hour -> Hour.Led7Segs;
-    App.Led -> LedC;
+    App.Led -> LedC.Led0;
 }
 
 /*

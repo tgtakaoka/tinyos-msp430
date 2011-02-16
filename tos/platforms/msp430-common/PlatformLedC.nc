@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G Takaoka
+/* Copyright (c) 2010-2011, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,20 +32,18 @@
 
 #include "hardware.h"
 
-configuration PlatformLedC
-{
-    provides interface GeneralIO as Led;
-    uses interface Init;
+configuration PlatformLedC {
+    provides {
+        interface MultiLed;
+        interface Led[uint8_t led_id];
+    }
 }
-implementation
-{
-    components HplMsp430GeneralIOC as GeneralIOC;
-    components new Msp430GpioC() as LedImpl;
-    components PlatformP;
+implementation {
+    components LedsC, PlatformLedP;
+    MultiLed = PlatformLedP;
+    Led = PlatformLedP;
 
-    Init = PlatformP.LedInit;
-    Led = LedImpl;
-    LedImpl -> GeneralIOC.LED_RED;
+    PlatformLedP.Leds -> LedsC;
 }
 
 /*

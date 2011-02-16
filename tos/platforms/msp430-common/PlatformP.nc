@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G Takaoka
+/* Copyright (c) 2010-2011, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,29 +30,21 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "hardware.h"
-
-module PlatformP
-{
+module PlatformP {
     provides interface Init;
-    uses interface Init as Msp430ClockInit;
-    uses interface Init as LedsInit;
-    uses interface Init as LedInit;
+    uses {
+        interface Init as Msp430ClockInit;
+        interface Init as LedsInit;
+    }
 }
-implementation
-{
+implementation {
     command error_t Init.init() {
         call LedsInit.init();
-        call LedInit.init();
         call Msp430ClockInit.init();
         return SUCCESS;
     }
 
     default command error_t LedsInit.init() {
-        return SUCCESS;
-    }
-
-    default command error_t LedInit.init() {
         return SUCCESS;
     }
 }
