@@ -8,10 +8,10 @@ push( @includes, qw(
 
       %T/chips/msp430/msp430x20x2
 
-      %T/chips/msp430/small
-      %T/chips/msp430/small/pins
-      %T/chips/msp430/small/timer-vlo
-      %T/chips/msp430/small/timer
+      %T/chips/msp430-small
+      %T/chips/msp430-small/pins
+      %T/chips/msp430-small/timer-vlo
+      %T/chips/msp430-small/timer
 
       %T/chips/msp430
       %T/chips/msp430/pins
