@@ -11,10 +11,12 @@ push( @includes, qw(
       %T/chips/msp430-small/pins
       %T/chips/msp430-small/timer-vlo
       %T/chips/msp430-small/timer
+      %T/chips/msp430-small/usci
 
       %T/chips/msp430
       %T/chips/msp430/pins
       %T/chips/msp430/timer
+      %T/chips/msp430X/usci
 
       %T/lib/gpio
       %T/lib/timer

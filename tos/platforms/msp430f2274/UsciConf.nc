@@ -1,12 +1,12 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
-module Msp430SerialP {
+module UsciConf {
     provides interface StdControl;
     provides interface Msp430UartConfigure;
     uses interface Resource;
 }
 implementation {
-    const msp430_uart_union_config_t msp430_uart_config = {
+    const msp430_uart_union_config_t uart_config = {
         {
         ucssel : 0x01,             // baud rate clock source ACLK=32kHz
         ubr    : UBR_32KHZ_9600,   // baud rate
@@ -33,7 +33,7 @@ implementation {
     event void Resource.granted() {}
 
     async command const msp430_uart_union_config_t* Msp430UartConfigure.getConfig() {
-        return &msp430_uart_config;
+        return &uart_config;
     }
 }
 

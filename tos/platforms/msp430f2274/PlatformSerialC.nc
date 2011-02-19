@@ -12,10 +12,10 @@ implementation {
     UartStream = UartC;
     UartByte = UartC;
 
-    components Msp430SerialP;
-    StdControl = Msp430SerialP;
-    Msp430SerialP.Msp430UartConfigure <- UartC.Msp430UartConfigure;
-    Msp430SerialP.Resource -> UartC.Resource;
+    components UsciConf;
+    StdControl = UsciConf;
+    UsciConf.Msp430UartConfigure <- UartC.Msp430UartConfigure;
+    UsciConf.Resource -> UartC.Resource;
 }
 
 /*

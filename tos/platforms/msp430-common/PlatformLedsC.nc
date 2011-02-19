@@ -31,6 +31,7 @@
  */
 
 #include "hardware.h"
+#include "PlatformLed.h"
 
 configuration PlatformLedsC {
     provides {
