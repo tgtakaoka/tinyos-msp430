@@ -30,69 +30,45 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-generic module Led7SegsC(char name[], int numDigits, typedef size_type @integer())
+configuration LocalTime7SegsAppC
 {
-    provides interface Led7Segs<size_type>;
-    uses interface Led7Seg[int digits];
 }
 implementation
 {
-    enum {
-        OFFSET = uniqueN(name, numDigits),
-    };
+    components MainC;
+    components LocalTime7SegsC as App;
+    components LedC;
+    components new TimerMilliC() as Timer;
+    components LocalTimeMilliC as LocalTime;
 
-    command int Led7Segs.offset() {
-        return OFFSET;
-    }
+    components HplMsp430GeneralIOC as GeneralIOC;
+    components new Msp430GpioC() as DIN;
+    components new Msp430GpioC() as CS;
+    components new Msp430GpioC() as CLK;
+    components new Max7219P("Max7219");
+    components new Led7SegsC("Max7219", 2, uint16_t) as Sec;
+    components new Led7SegsC("Max7219", 2, uint16_t) as Min;
+    components new Led7SegsC("Max7219", 2, uint16_t) as Hour;
 
-    command int Led7Segs.digits() {
-        return numDigits;
-    }
+    Max7219P.Boot -> MainC.Boot;
+    Max7219P.DIN -> DIN;
+    DIN -> GeneralIOC.Port15;
+    Max7219P.CS -> CS;
+    CS -> GeneralIOC.Port14;
+    Max7219P.CLK -> CLK;
+    CLK -> GeneralIOC.Port13;
 
-    command void Led7Segs.off() {
-        int i;
-        for (i = 0; i < numDigits; i++) {
-            call Led7Seg.off[OFFSET + i]();
-        }
-    }
+    Sec.Led7Seg -> Max7219P.Led7Seg;
+    Min.Led7Seg -> Max7219P.Led7Seg;
+    Hour.Led7Seg -> Max7219P.Led7Seg;
 
-    command void Led7Segs.decimal(size_type val) {
-        int i;
-        bool suppress = FALSE;
-        for (i = 0; i < numDigits; i++) {
-            if (suppress) {
-                call Led7Seg.segments[OFFSET + i](0);
-            } else {
-                call Led7Seg.nibble[OFFSET + i](val % 10);
-            }
-            if ((val /= 10) == 0)
-                suppress = TRUE;
-        }
-    }
-
-    command void Led7Segs.decimal0(size_type val) {
-        int i;
-        for (i = 0; i < numDigits; i++) {
-            call Led7Seg.nibble[OFFSET + i](val % 10);
-            val /= 10;
-        }
-    }
-
-    command void Led7Segs.hexadecimal(size_type val) {
-        int i;
-        for (i = 0; i < numDigits; i++) {
-            call Led7Seg.nibble[OFFSET + i](val % 16);
-            val /= 16;
-        }
-    }
-
-    command void Led7Segs.segments(size_type segments) {
-        int i;
-        for (i = 0; i < numDigits; i++) {
-            call Led7Seg.segments[OFFSET + i](segments & 0xff);
-            segments >>= 8;
-        }
-    }
+    App.Boot -> MainC.Boot;
+    App.Timer -> Timer;
+    App.LocalTime -> LocalTime;
+    App.Sec -> Sec.Led7Segs;
+    App.Min -> Min.Led7Segs;
+    App.Hour -> Hour.Led7Segs;
+    App.Led -> LedC.Led0;
 }
 
 /*

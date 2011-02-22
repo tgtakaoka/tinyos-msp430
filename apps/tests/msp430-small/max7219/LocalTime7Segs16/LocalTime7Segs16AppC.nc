@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2010, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,29 +30,43 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module LocalTime7Segs16C
-{
-    uses interface Led7Segs<uint16_t> as Hour;
-    uses interface Led7Segs<uint16_t> as Min;
-    uses interface Led7Segs<uint16_t> as Sec;
-    uses interface Led;
-    uses interface Timer16<TMilli> as Timer;
-    uses interface LocalTime<TMilli>;
-    uses interface Boot;
+configuration LocalTime7Segs16AppC {
 }
-implementation
-{
-    event void Boot.booted() {
-        call Timer.startPeriodic(10);
-    }
+implementation {
+    components MainC;
+    components LocalTime7Segs16C as App;
+    components LedC;
+    components new Timer16MilliC() as Timer;
+    components LocalTime16MilliC as LocalTime;
 
-    event void Timer.fired() {
-        uint32_t time = call LocalTime.get();
-        call Led.set(time % 1000 < 100);
-        call Sec.decimal0((time /= 1000) % 60);
-        call Min.decimal0((time /= 60) % 60);
-        call Hour.decimal0((time / 60) % 24);
-    }
+    components HplMsp430GeneralIOC as GeneralIOC;
+    components new Msp430GpioC() as DIN;
+    components new Msp430GpioC() as CS;
+    components new Msp430GpioC() as CLK;
+    components new Max7219P("Max7219");
+    components new Led7SegsC("Max7219", 2, uint16_t) as Sec;
+    components new Led7SegsC("Max7219", 2, uint16_t) as Min;
+    components new Led7SegsC("Max7219", 2, uint16_t) as Hour;
+
+    Max7219P.Boot -> MainC.Boot;
+    Max7219P.DIN -> DIN;
+    DIN -> GeneralIOC.Port15;
+    Max7219P.CS -> CS;
+    CS -> GeneralIOC.Port14;
+    Max7219P.CLK -> CLK;
+    CLK -> GeneralIOC.Port13;
+
+    Sec.Led7Seg -> Max7219P.Led7Seg;
+    Min.Led7Seg -> Max7219P.Led7Seg;
+    Hour.Led7Seg -> Max7219P.Led7Seg;
+
+    App.Boot -> MainC.Boot;
+    App.Timer -> Timer;
+    App.LocalTime -> LocalTime;
+    App.Sec -> Sec.Led7Segs;
+    App.Min -> Min.Led7Segs;
+    App.Hour -> Hour.Led7Segs;
+    App.Led -> LedC.Led0;
 }
 
 /*

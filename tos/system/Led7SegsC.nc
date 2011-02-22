@@ -30,45 +30,70 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-configuration LocalTime7SegsAppC
-{
+/** An interface to arbitrary digits of 7 segments LEDs.
+ *
+ * Provides the ability to turn off and set integer value as zero
+ * suppressed decimal, zero filled decimal, hexadecimal number.
+ *
+ * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
+ */
+generic module Led7SegsC(char name[], int numDigits, typedef size_type @integer()) {
+    provides interface Led7Segs<size_type>;
+    uses interface Led7Seg[int digits];
 }
-implementation
-{
-    components MainC;
-    components LocalTime7SegsC as App;
-    components LedC;
-    components new TimerMilliC() as Timer;
-    components LocalTimeMilliC as LocalTime;
+implementation {
+    enum {
+        OFFSET = uniqueN(name, numDigits),
+    };
 
-    components HplMsp430GeneralIOC as GeneralIOC;
-    components new Msp430GpioC() as Data;
-    components new Msp430GpioC() as Load;
-    components new Msp430GpioC() as Clock;
-    components new Max7219P("Max7219");
-    components new Led7SegsC("Max7219", 2, uint16_t) as Sec;
-    components new Led7SegsC("Max7219", 2, uint16_t) as Min;
-    components new Led7SegsC("Max7219", 2, uint16_t) as Hour;
+    command int Led7Segs.offset() {
+        return OFFSET;
+    }
 
-    Max7219P.Boot -> MainC.Boot;
-    Max7219P.Data -> Data;
-    Data -> GeneralIOC.Port15;
-    Max7219P.Load -> Load;
-    Load -> GeneralIOC.Port14;
-    Max7219P.Clock -> Clock;
-    Clock -> GeneralIOC.Port13;
+    command int Led7Segs.digits() {
+        return numDigits;
+    }
 
-    Sec.Led7Seg -> Max7219P.Led7Seg;
-    Min.Led7Seg -> Max7219P.Led7Seg;
-    Hour.Led7Seg -> Max7219P.Led7Seg;
+    command void Led7Segs.off() {
+        int i;
+        for (i = 0; i < numDigits; i++) {
+            call Led7Seg.off[OFFSET + i]();
+        }
+    }
 
-    App.Boot -> MainC.Boot;
-    App.Timer -> Timer;
-    App.LocalTime -> LocalTime;
-    App.Sec -> Sec.Led7Segs;
-    App.Min -> Min.Led7Segs;
-    App.Hour -> Hour.Led7Segs;
-    App.Led -> LedC.Led0;
+    command void Led7Segs.decimal(size_type val) {
+        int i;
+        bool suppress = FALSE;
+        for (i = 0; i < numDigits; i++) {
+            if (suppress) {
+                call Led7Seg.off[OFFSET + i]();
+            } else {
+                call Led7Seg.hexadecimal[OFFSET + i](val % 10);
+            }
+            if ((val /= 10) == 0)
+                suppress = TRUE;
+        }
+    }
+
+    command void Led7Segs.decimal0(size_type val) {
+        int i;
+        for (i = 0; i < numDigits; i++) {
+            call Led7Seg.hexadecimal[OFFSET + i](val % 10);
+            val /= 10;
+        }
+    }
+
+    command void Led7Segs.hexadecimal(size_type val) {
+        int i;
+        for (i = 0; i < numDigits; i++) {
+            call Led7Seg.hexadecimal[OFFSET + i](val % 16);
+            val /= 16;
+        }
+    }
+
+    command void Led7Segs.segments(int digit, unsigned segments) {
+        call Led7Seg.segments[OFFSET + digit](segments & 0xff);
+    }
 }
 
 /*

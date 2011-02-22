@@ -30,15 +30,34 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-interface Led7Segs<size_type>
-{
+/** An interface to arbitrary digits of 7 segments LEDs.
+ *
+ * Provides the ability to turn off and set integer value as zero
+ * suppressed decimal, zero filled decimal, hexadecimal number.
+ *
+ * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
+ */
+interface Led7Segs<size_type> {
+    /** Returns starting offset of digits. */
     command int offset();
+
+    /** Returns the size of digits. */
     command int digits();
+
+    /** Turns off all digits. */
     command void off();
+
+    /** Set integer value as zero suppressed decimal number. */
     command void decimal(size_type val);
+
+    /** Set integer value as zero filled decimal number. */
     command void decimal0(size_type val);
+
+    /** Set integer value as hexadecimal number. */
     command void hexadecimal(size_type val);
-    command void segments(size_type segments);
+
+    /** Set each segment. Bit7-Bit0 of segments represent DP, A through G segment respectively. */
+    command void segments(int digit, unsigned segments);
 }
 
 /*

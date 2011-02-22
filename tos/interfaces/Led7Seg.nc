@@ -30,10 +30,21 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-interface Led7Seg
-{
+/** An interface to 7 segments LED.
+ *
+ * Provides the ability to turn off and set 4-bit integer value as
+ * hexadecimal number.
+ *
+ * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
+ */
+interface Led7Seg {
+    /** Turns LED off. */
     command void off();
-    command void nibble(unsigned nibble);
+
+    /** Set 4-bit integer value as 1-digit hexadecimal number. */
+    command void hexadecimal(unsigned nibble);
+
+    /** Set each segment. Bit7-Bit0 of segments represent DP, A through G segment respectively. */
     command void segments(unsigned segments);
 }
 

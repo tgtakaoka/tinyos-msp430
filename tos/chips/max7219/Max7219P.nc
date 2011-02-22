@@ -30,40 +30,47 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-generic module Max7219P(char resourceName[])
-{
+/** An implementation of MAX7219/MAX7221 8-Digit LED Display Drivers
+ *
+ * Provides the ability to turn off and set integer value as zero
+ * suppressed decimal, zero filled decimal, hexadecimal number.
+ *
+ * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
+ */
+generic module Max7219P(char resourceName[]) {
     provides interface Led7Seg[int digit];
-    uses interface GeneralIO as Data;
-    uses interface GeneralIO as Load;
-    uses interface GeneralIO as Clock;
-    uses interface Boot;
+    uses {
+        interface GeneralIO as DIN;
+        interface GeneralIO as CLK;
+        interface GeneralIO as CS;
+        interface Boot;
+    }
 }
-implementation
-{
-    static const uint8_t hexdecimal_segments[] = {
-        0x7e, 0x30, 0x6d, 0x79, 0x33, 0x5b, 0x5f, 0x72,
+implementation {
+    static const uint8_t hexadecimal_segments[] = {
+        0x7e, 0x30, 0x6d, 0x79, 0x33, 0x5b, 0x5f, 0x70,
         0x7f, 0x7b, 0x77, 0x1f, 0x4e, 0x3d, 0x4f, 0x47
     };
 
     void write(unsigned data) {
         int bits = 16;
         atomic {
-            call Load.clr();
+            call CS.clr();
             do {
-                call Clock.clr();
+                call CLK.clr();
                 if (data & 0x8000) {
-                    call Data.set();
+                    call DIN.set();
                 } else {
-                    call Data.clr();
+                    call DIN.clr();
                 }
-                call Clock.set();
+                call CLK.set();
                 data <<= 1;
             } while (--bits != 0);
-            call Load.set();
+            call CS.set();
         }
     }
 
-    void setSegments(int digit, unsigned segments) {
+    void setSegments(int digit, uint8_t segments) {
         write((++digit << 8) | segments);
     }
 
@@ -82,11 +89,11 @@ implementation
 
     void event Boot.booted() {
         atomic {
-            call Load.set();
-            call Clock.clr();
-            call Load.makeOutput();
-            call Clock.makeOutput();
-            call Data.makeOutput();
+            call CS.set();
+            call CLK.clr();
+            call CS.makeOutput();
+            call CLK.makeOutput();
+            call DIN.makeOutput();
             normal(uniqueCount(resourceName));
             mode(0x00);         /* segment mode */
             intensity(15);
@@ -97,8 +104,8 @@ implementation
         setSegments(digit, 0x00);
     }
 
-    command void Led7Seg.nibble[int digit](unsigned nibble) {
-        setSegments(digit, hexdecimal_segments[nibble]);
+    command void Led7Seg.hexadecimal[int digit](unsigned nibble) {
+        setSegments(digit, hexadecimal_segments[nibble & 0xf]);
     }
 
     command void Led7Seg.segments[int digit](unsigned segments) {
