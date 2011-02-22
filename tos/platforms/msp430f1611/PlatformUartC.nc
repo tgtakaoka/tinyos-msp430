@@ -2,7 +2,7 @@
 
 #include "msp430usart.h"
 
-configuration PlatformSerialC {
+configuration PlatformUartC {
     provides interface StdControl;
     provides interface UartStream;
     provides interface UartByte;
@@ -18,9 +18,9 @@ implementation {
     UartByte = UartC;
 
     components UsartConf;
-    StdControl = UsartConf;
+    UsartConf.UartControl = StdControl;
     UsartConf.Msp430UartConfigure <- UartC.Msp430UartConfigure;
-    UsartConf.Resource -> UartC.Resource;
+    UsartConf.UartResource -> UartC.Resource;
 }
 
 /*

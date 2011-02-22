@@ -36,18 +36,18 @@ configuration LocalTimeAppC
 implementation
 {
     components MainC;
-    components PlatformSerialC;
+    components PlatformUartC as UartC;
     components LedC;
     components new TimerMilliC() as Timer;
     components LocalTimeMilliC as LocalTime;
-    components LocalTimeC;
+    components LocalTimeC as App;
 
-    LocalTimeC -> MainC.Boot;
-    LocalTimeC.UartControl -> PlatformSerialC;
-    LocalTimeC.UartStream -> PlatformSerialC;
-    LocalTimeC.Timer -> Timer;
-    LocalTimeC.LocalTime -> LocalTime;
-    LocalTimeC.Led -> LedC.Led0;
+    App -> MainC.Boot;
+    App.UartControl -> UartC;
+    App.UartStream -> UartC;
+    App.Timer -> Timer;
+    App.LocalTime -> LocalTime;
+    App.Led -> LedC.Led0;
 }
 
 /*

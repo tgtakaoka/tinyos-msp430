@@ -1,9 +1,9 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
 module UsartConf {
-    provides interface StdControl;
+    provides interface StdControl as UartControl;
     provides interface Msp430UartConfigure;
-    uses interface Resource;
+    uses interface Resource as UartResource;
 }
 implementation {
     const msp430_uart_union_config_t uart_config = {
@@ -26,16 +26,16 @@ implementation {
         },
     };
 
-    command error_t StdControl.start() {
-        return call Resource.immediateRequest();
+    command error_t UartControl.start() {
+        return call UartResource.immediateRequest();
     }
 
-    command error_t StdControl.stop() {
-        call Resource.release();
+    command error_t UartControl.stop() {
+        call UartResource.release();
         return SUCCESS;
     }
 
-    event void Resource.granted() {}
+    event void UartResource.granted() {}
 
     async command const msp430_uart_union_config_t* Msp430UartConfigure.getConfig() {
         return &uart_config;

@@ -1,8 +1,8 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
-#include "msp430usart.h"
+#include "msp430usci.h"
 
-configuration PlatformSerialC {
+configuration PlatformUartC {
     provides interface StdControl;
     provides interface UartStream;
     provides interface UartByte;
@@ -12,10 +12,10 @@ implementation {
     UartStream = UartC;
     UartByte = UartC;
 
-    components UsartConf;
-    StdControl = UsartConf;
-    UsartConf.Msp430UartConfigure <- UartC.Msp430UartConfigure;
-    UsartConf.Resource -> UartC.Resource;
+    components UsciConf;
+    UsciConf.UartControl = StdControl;
+    UsciConf.Msp430UartConfigure <- UartC.Msp430UartConfigure;
+    UsciConf.UartResource -> UartC.Resource;
 }
 
 /*
