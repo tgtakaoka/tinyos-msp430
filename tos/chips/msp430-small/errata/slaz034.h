@@ -33,7 +33,7 @@
 #ifndef _H_slaz034_h
 #define _H_slaz034_h
 
-/* See SLAZ034G MSP430F22x2/22x4 Device Erratasheet, Revised March 2009 */
+/* See SLAZ034G MSP430F22x2/22x4 Device Erratasheet, Revised Feburuary 2011 */
 
 #if defined(__MSP430_2232__) || defined(__MSP430_2252__) || defined(__MSP430_2272__) || \
     defined(__MSP430_2234__) || defined(__MSP430_2254__) || defined(__MSP430_2274__)
@@ -47,7 +47,9 @@
 #define ERRATA_CPU19
 #define ERRATA_FLASH24
 #define ERRATA_FLASH27
+#define ERRATA_FLASH36
 #define ERRATA_PORT10
+#define ERRATA_SYS15
 #define ERRATA_TA12
 #define ERRATA_TA16
 #define ERRATA_TAB22
@@ -62,6 +64,7 @@
 #define ERRATA_USCI26
 #define ERRATA_USCI27
 #define ERRATA_XOSC5
+#define ERRATA_XOSC8
 #endif
 #if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F'
 #define ERRATA_BCL13

@@ -43,8 +43,10 @@
 #endif
 /* Note: Revision F is not defined */
 #if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || \
-    __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H' || __MSP430_REV__ == 'I'
+    __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H' || __MSP430_REV__ == 'I' || \
+    __MSP430_REV__ == 'K'
 #define ERRATA_BCL12
+#define ERRATA_BCL14
 #define ERRATA_CPU4
 #define ERRATA_CPU11
 #define ERRATA_CPU12
@@ -54,8 +56,11 @@
 #define ERRATA_FLASH17
 #define ERRATA_FLASH18
 #define ERRATA_FLASH19
+#define ERRATA_FLASH20
 #define ERRATA_FLASH24
 #define ERRATA_FLASH27
+#define ERRATA_FLASH36
+#define ERRATA_SYS15
 #define ERRATA_TA12
 #define ERRATA_TA16
 #define ERRATA_TA22
