@@ -4,6 +4,10 @@ module UsciConf {
     provides interface StdControl as UartControl;
     provides interface Msp430UartConfigure;
     uses interface Resource as UartResource;
+
+    provides interface StdControl as SpiControl;
+    provides interface Msp430SpiConfigure;
+    uses interface Resource as SpiResource;
 }
 implementation {
     const msp430_uart_union_config_t uart_config = {
@@ -34,6 +38,34 @@ implementation {
 
     async command const msp430_uart_union_config_t* Msp430UartConfigure.getConfig() {
         return &uart_config;
+    }
+
+    const msp430_spi_union_config_t spi_config = {
+        {
+        ubr     : 16,           /* SMCLK/16   */
+        ucmode  : 0,            /* 3 pin, no STE */
+        ucmst   : 1,            /* master */
+        uc7bit  : 0,            /* 8 bit */
+        ucmsb   : 1,            /* msb first, compatible with msp430 usart */
+        ucckpl  : 0,            /* inactive state low */
+        ucckph  : 1,            /* data captured on rising, changed falling */
+        ucssel  : 2,            /* SMCLK */
+        },
+    };
+
+    command error_t SpiControl.start() {
+        return call SpiResource.immediateRequest();
+    }
+
+    command error_t SpiControl.stop() {
+        call SpiResource.release();
+        return SUCCESS;
+    }
+
+    event void SpiResource.granted() {}
+
+    async command const msp430_spi_union_config_t* Msp430SpiConfigure.getConfig() {
+        return &spi_config;
     }
 }
 
