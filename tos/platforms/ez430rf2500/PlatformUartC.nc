@@ -3,7 +3,7 @@
 #include "msp430usci.h"
 
 configuration PlatformUartC {
-    provides interface StdControl;
+    provides interface StdControl as UartControl;
     provides interface UartStream;
     provides interface UartByte;
 }
@@ -13,9 +13,9 @@ implementation {
     UartByte = UartC;
 
     components UsciConf;
-    UsciConf.UartControl = StdControl;
-    UsciConf.Msp430UartConfigure <- UartC.Msp430UartConfigure;
-    UsciConf.UartResource -> UartC.Resource;
+    UsciConf.UartControl = UartControl;
+    UsciConf.Msp430UartConfigure <- UartC;
+    UsciConf.UartResource -> UartC;
 }
 
 /*

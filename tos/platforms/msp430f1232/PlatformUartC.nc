@@ -14,8 +14,8 @@ implementation {
 
     components UsartConf;
     UsartConf.UartControl = StdControl;
-    UsartConf.Msp430UartConfigure <- UartC.Msp430UartConfigure;
-    UsartConf.UartResource -> UartC.Resource;
+    UsartConf.Msp430UartConfigure <- UartC;
+    UsartConf.UartResource -> UartC;
 }
 
 /*

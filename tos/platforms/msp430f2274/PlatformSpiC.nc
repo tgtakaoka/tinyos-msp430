@@ -3,7 +3,7 @@
 #include "msp430usci.h"
 
 configuration PlatformSpiC {
-    provides interface StdControl;
+    provides interface StdControl as SpiControl;
     provides interface SpiByte;
     provides interface SpiPacket;
 }
@@ -13,7 +13,7 @@ implementation {
     SpiPacket = SpiC;
 
     components UsciConf;
-    StdControl = UsciConf.SpiControl;
+    SpiControl = UsciConf.SpiControl;
     UsciConf.Msp430SpiConfigure <- SpiC.Msp430SpiConfigure;
     UsciConf.SpiResource -> SpiC.Resource;
 }

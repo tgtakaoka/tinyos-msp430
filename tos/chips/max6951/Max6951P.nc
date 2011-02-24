@@ -40,7 +40,7 @@ generic module Max6951P(char resourceName[]) {
     }
 }
 implementation {
-    static const uint8_t hexdecimal_segments[] = {
+    static const uint8_t hexadecimal_segments[] = {
         0x7e, 0x30, 0x6d, 0x79, 0x33, 0x5b, 0x5f, 0x72,
         0x7f, 0x7b, 0x77, 0x1f, 0x4e, 0x3d, 0x4f, 0x47
     };
@@ -89,8 +89,8 @@ implementation {
         setSegments(digit, 0x00);
     }
 
-    command void Led7Seg.nibble[int digit](unsigned nibble) {
-        setSegments(digit, hexdecimal_segments[nibble]);
+    command void Led7Seg.hexadecimal[int digit](unsigned nibble) {
+        setSegments(digit, hexadecimal_segments[nibble]);
     }
 
     command void Led7Seg.segments[int digit](unsigned segments) {

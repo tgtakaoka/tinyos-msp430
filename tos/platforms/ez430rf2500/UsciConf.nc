@@ -25,7 +25,7 @@ implementation {
         return call UartResource.immediateRequest();
     }
 
-    command error_t UartControlo.stop() {
+    command error_t UartControl.stop() {
         call UartResource.release();
         return SUCCESS;
     }
