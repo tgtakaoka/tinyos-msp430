@@ -10,26 +10,23 @@ configuration DisplayC {
 implementation {
     components MainC;
     components HplMsp430GeneralIOC as GeneralIOC;
-    components new Msp430GpioC() as Din;
     components new Msp430GpioC() as Load;
-    components new Msp430GpioC() as Clk;
-    components new Max7219GpioP("Max7219") as Max7219;
+    components PlatformSpiC as SpiC;
+    components new Max7219SpiP("Max7219") as Max7219;
     components new Led7SegsC("Max7219", 2, uint16_t) as S;
     components new Led7SegsC("Max7219", 2, uint16_t) as M;
     components new Led7SegsC("Max7219", 2, uint16_t) as H;
 
-    Din -> GeneralIOC.Port15;
     Load -> GeneralIOC.Port14;
-    Clk -> GeneralIOC.Port13;
 
     Sec = S;
     Min = M;
     Hour = H;
 
     Max7219.Boot -> MainC.Boot;
-    Max7219.Din -> Din;
     Max7219.Load -> Load;
-    Max7219.Clk -> Clk;
+    Max7219.SpiByte -> SpiC;
+    Max7219.SpiControl -> SpiC;
 
     S.Led7Seg -> Max7219;
     M.Led7Seg -> Max7219;

@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G. Takaoka
+/* Copyright (c) 2011, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,11 +37,11 @@
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-generic module Max7219GpioP(char resourceName[]) {
+generic module Max7219SpiP(char resourceName[]) {
     provides interface Led7Seg[int digit];
     uses {
-        interface GeneralIO as Din;
-        interface GeneralIO as Clk;
+        interface StdControl as SpiControl;
+        interface SpiByte;
         interface GeneralIO as Load;
         interface Boot;
     }
@@ -53,21 +53,10 @@ implementation {
     };
 
     void write(unsigned data) {
-        int bits = 16;
-        atomic {
-            call Load.clr();
-            do {
-                if (data & 0x8000) {
-                    call Din.set();
-                } else {
-                    call Din.clr();
-                }
-                call Clk.set();
-                data <<= 1;
-                call Clk.clr();
-            } while (--bits != 0);
-            call Load.set();
-        }
+        call Load.clr();
+        call SpiByte.write(data >> 8);
+        call SpiByte.write(data);
+        call Load.set();
     }
 
     void setSegments(int digit, uint8_t segments) {
@@ -91,9 +80,7 @@ implementation {
         atomic {
             call Load.set();
             call Load.makeOutput();
-            call Clk.clr();
-            call Clk.makeOutput();
-            call Din.makeOutput();
+            call SpiControl.start();
             normal(uniqueCount(resourceName));
             mode(0x00);         /* segment mode */
             intensity(15);
