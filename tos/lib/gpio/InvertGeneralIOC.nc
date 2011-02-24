@@ -30,36 +30,38 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-generic module InvertGeneralIO()
-{
+/** An generic module to invert GeneralIO.
+ *
+ * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
+ */
+generic module InvertGeneralIOC() {
     provides interface GeneralIO;
-    uses interface GeneralIO as Impl;
+    uses interface GeneralIO as Inverted;
 }
-implementation
-{
+implementation {
     async command void GeneralIO.set() {
-        call Impl.clr();
+        call Inverted.clr();
     }
     async command void GeneralIO.clr() {
-        call Impl.set();
+        call Inverted.set();
     }
     async command void GeneralIO.toggle() {
-        call Impl.toggle();
+        call Inverted.toggle();
     }
     async command bool GeneralIO.get() {
-        return !(call Impl.get());
+        return !(call Inverted.get());
     }
     async command void GeneralIO.makeInput() {
-        call Impl.makeInput();
+        call Inverted.makeInput();
     }
     async command bool GeneralIO.isInput() {
-        return call Impl.isInput();
+        return call Inverted.isInput();
     }
     async command void GeneralIO.makeOutput() {
-        call Impl.makeOutput();
+        call Inverted.makeOutput();
     }
     async command bool GeneralIO.isOutput() {
-        return call Impl.isOutput();
+        return call Inverted.isOutput();
     }
 }
 
