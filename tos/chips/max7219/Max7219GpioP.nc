@@ -30,19 +30,19 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An implementation of MAX7219/MAX7221 8-Digit LED Display Drivers
+/** An implementation of MAX7219 8-Digit LED Display Drivers
  *
  * Provides the ability to turn off and set integer value as zero
  * suppressed decimal, zero filled decimal, hexadecimal number.
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-generic module Max7219P(char resourceName[]) {
+generic module Max7219GpioP(char resourceName[]) {
     provides interface Led7Seg[int digit];
     uses {
-        interface GeneralIO as DIN;
-        interface GeneralIO as CLK;
-        interface GeneralIO as CS;
+        interface GeneralIO as Din;
+        interface GeneralIO as Clk;
+        interface GeneralIO as Load;
         interface Boot;
     }
 }
@@ -55,18 +55,18 @@ implementation {
     void write(unsigned data) {
         int bits = 16;
         atomic {
-            call CS.clr();
+            call Load.clr();
             do {
-                call CLK.clr();
+                call Clk.clr();
                 if (data & 0x8000) {
-                    call DIN.set();
+                    call Din.set();
                 } else {
-                    call DIN.clr();
+                    call Din.clr();
                 }
-                call CLK.set();
+                call Clk.set();
                 data <<= 1;
             } while (--bits != 0);
-            call CS.set();
+            call Load.set();
         }
     }
 
@@ -89,11 +89,11 @@ implementation {
 
     void event Boot.booted() {
         atomic {
-            call CS.set();
-            call CLK.clr();
-            call CS.makeOutput();
-            call CLK.makeOutput();
-            call DIN.makeOutput();
+            call Load.set();
+            call Clk.clr();
+            call Load.makeOutput();
+            call Clk.makeOutput();
+            call Din.makeOutput();
             normal(uniqueCount(resourceName));
             mode(0x00);         /* segment mode */
             intensity(15);

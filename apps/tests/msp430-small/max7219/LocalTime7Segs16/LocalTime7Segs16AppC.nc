@@ -40,25 +40,25 @@ implementation {
     components LocalTime16MilliC as LocalTime;
 
     components HplMsp430GeneralIOC as GeneralIOC;
-    components new Msp430GpioC() as DIN;
-    components new Msp430GpioC() as CS;
-    components new Msp430GpioC() as CLK;
-    components new Max7219P("Max7219");
+    components new Msp430GpioC() as Din;
+    components new Msp430GpioC() as Load;
+    components new Msp430GpioC() as Clk;
+    components new Max7219GpioP("Max7219") as Max7219;
     components new Led7SegsC("Max7219", 2, uint16_t) as Sec;
     components new Led7SegsC("Max7219", 2, uint16_t) as Min;
     components new Led7SegsC("Max7219", 2, uint16_t) as Hour;
 
-    Max7219P.Boot -> MainC.Boot;
-    Max7219P.DIN -> DIN;
-    DIN -> GeneralIOC.Port15;
-    Max7219P.CS -> CS;
-    CS -> GeneralIOC.Port14;
-    Max7219P.CLK -> CLK;
-    CLK -> GeneralIOC.Port13;
+    Max7219.Boot -> MainC.Boot;
+    Max7219.Din -> Din;
+    Din -> GeneralIOC.Port15;
+    Max7219.Load -> Load;
+    Load -> GeneralIOC.Port14;
+    Max7219.Clk -> Clk;
+    Clk -> GeneralIOC.Port13;
 
-    Sec.Led7Seg -> Max7219P.Led7Seg;
-    Min.Led7Seg -> Max7219P.Led7Seg;
-    Hour.Led7Seg -> Max7219P.Led7Seg;
+    Sec.Led7Seg -> Max7219.Led7Seg;
+    Min.Led7Seg -> Max7219.Led7Seg;
+    Hour.Led7Seg -> Max7219.Led7Seg;
 
     App.Boot -> MainC.Boot;
     App.Timer -> Timer;
