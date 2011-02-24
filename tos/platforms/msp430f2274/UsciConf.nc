@@ -42,7 +42,7 @@ implementation {
 
     const msp430_spi_union_config_t spi_config = {
         {
-        ubr     : 16,           /* SMCLK/16   */
+        ubr     : 2,            /* SMCLK/2   */
         ucmode  : 0,            /* 3 pin, no STE */
         ucmst   : 1,            /* master */
         uc7bit  : 0,            /* 8 bit */

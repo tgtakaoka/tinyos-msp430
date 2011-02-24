@@ -17,7 +17,7 @@ implementation {
     components new Led7SegsC("Max7219", 2, uint16_t) as M;
     components new Led7SegsC("Max7219", 2, uint16_t) as H;
 
-    Load -> GeneralIOC.Port14;
+    Load -> GeneralIOC.Port30;
 
     Sec = S;
     Min = M;

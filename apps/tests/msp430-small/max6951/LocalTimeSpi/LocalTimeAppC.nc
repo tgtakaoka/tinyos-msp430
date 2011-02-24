@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2010, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,72 +30,23 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-generic module Max6951P(char resourceName[]) {
-    provides interface Led7Seg[int digit];
-    uses {
-        interface StdControl as SpiControl;
-        interface SpiPacket;
-        interface GeneralIO as CS;
-        interface Boot;
-    }
+configuration LocalTimeAppC {
 }
 implementation {
-    static const uint8_t hexadecimal_segments[] = {
-        0x7e, 0x30, 0x6d, 0x79, 0x33, 0x5b, 0x5f, 0x72,
-        0x7f, 0x7b, 0x77, 0x1f, 0x4e, 0x3d, 0x4f, 0x47
-    };
+    components MainC;
+    components LocalTimeC as App;
+    components DisplayC;
+    components LedC;
+    components new Timer16MilliC() as Timer;
+    components LocalTime16MilliC as LocalTime;
 
-    uint8_t buf[2];
-
-    async event void SpiPacket.sendDone(uint8_t *tx_buf, uint8_t* rx_buf, uint16_t len,
-                                        error_t error) {
-        call CS.set();
-    }
-
-    void write(unsigned data) {
-        buf[0] = data >> 8;
-        buf[1] = data;
-        call CS.clr();
-        call SpiPacket.send(buf, NULL, sizeof(buf));
-    }
-
-    void setSegments(int digit, unsigned segments) {
-        write((++digit << 8) | segments);
-    }
-
-    void normal(unsigned digits) {
-        write(0xb00 | (digits - 1));
-        write(0xc00 | 1);
-    }
-
-    void intensity(unsigned intense) {
-        write(0xa00 | intense);
-    }
-
-    void mode(unsigned bits) {
-        write(0x900 | bits);
-    }
-
-    void event Boot.booted() {
-        call CS.set();
-        call CS.makeOutput();
-        call SpiControl.start();
-        normal(uniqueCount(resourceName));
-        mode(0x00);         /* segment mode */
-        intensity(15);
-    }
-
-    command void Led7Seg.off[int digit]() {
-        setSegments(digit, 0x00);
-    }
-
-    command void Led7Seg.hexadecimal[int digit](unsigned nibble) {
-        setSegments(digit, hexadecimal_segments[nibble]);
-    }
-
-    command void Led7Seg.segments[int digit](unsigned segments) {
-        setSegments(digit, segments);
-    }
+    App.Boot -> MainC.Boot;
+    App.Timer -> Timer;
+    App.LocalTime -> LocalTime;
+    App.Sec -> DisplayC.Sec;
+    App.Min -> DisplayC.Min;
+    App.Hour -> DisplayC.Hour;
+    App.Led -> LedC.Led0;
 }
 
 /*
