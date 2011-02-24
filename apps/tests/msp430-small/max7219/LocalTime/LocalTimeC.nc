@@ -30,26 +30,23 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module LocalTime7SegsC
-{
+module LocalTimeC {
     uses interface Led7Segs<uint16_t> as Hour;
     uses interface Led7Segs<uint16_t> as Min;
     uses interface Led7Segs<uint16_t> as Sec;
     uses interface Led;
-    uses interface Timer<TMilli>;
+    uses interface Timer16<TMilli> as Timer;
     uses interface LocalTime<TMilli>;
     uses interface Boot;
 }
-implementation
-{
-
+implementation {
     event void Boot.booted() {
         call Timer.startPeriodic(10);
     }
 
     event void Timer.fired() {
         uint32_t time = call LocalTime.get();
-        call Led.set(time % 1000 < 100);
+        call Led.set(time % 1000 < 10);
         call Sec.decimal0((time /= 1000) % 60);
         call Min.decimal0((time /= 60) % 60);
         call Hour.decimal0((time / 60) % 24);

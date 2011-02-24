@@ -30,11 +30,11 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-configuration LocalTime7Segs16AppC {
+configuration LocalTimeAppC {
 }
 implementation {
     components MainC;
-    components LocalTime7Segs16C as App;
+    components LocalTimeC as App;
     components DisplayC;
     components LedC;
     components new Timer16MilliC() as Timer;
