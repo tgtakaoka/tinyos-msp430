@@ -35,34 +35,17 @@ configuration LocalTime7Segs16AppC {
 implementation {
     components MainC;
     components LocalTime7Segs16C as App;
+    components DisplayC;
     components LedC;
     components new Timer16MilliC() as Timer;
     components LocalTime16MilliC as LocalTime;
 
-    components HplMsp430GeneralIOC as GeneralIOC;
-    components new Msp430GpioC() as CS;
-    components PlatformSpiC as SpiC;
-    components new Max6951P("Max6951");
-    components new Led7SegsC("Max6951", 2, uint16_t) as Sec;
-    components new Led7SegsC("Max6951", 2, uint16_t) as Min;
-    components new Led7SegsC("Max6951", 2, uint16_t) as Hour;
-
-    Max6951P.Boot -> MainC.Boot;
-    Max6951P.SpiControl -> SpiC;
-    Max6951P.SpiPacket -> SpiC;
-    Max6951P.CS -> CS;
-    CS -> GeneralIOC.Port14;
-
-    Sec.Led7Seg -> Max6951P.Led7Seg;
-    Min.Led7Seg -> Max6951P.Led7Seg;
-    Hour.Led7Seg -> Max6951P.Led7Seg;
-
     App.Boot -> MainC.Boot;
     App.Timer -> Timer;
     App.LocalTime -> LocalTime;
-    App.Sec -> Sec.Led7Segs;
-    App.Min -> Min.Led7Segs;
-    App.Hour -> Hour.Led7Segs;
+    App.Sec -> DisplayC.Sec;
+    App.Min -> DisplayC.Min;
+    App.Hour -> DisplayC.Hour;
     App.Led -> LedC.Led0;
 }
 
