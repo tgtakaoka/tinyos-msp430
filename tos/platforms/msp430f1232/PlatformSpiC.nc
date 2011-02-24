@@ -1,6 +1,6 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
-#include "msp430usci.h"
+#include "msp430usart.h"
 
 configuration PlatformSpiC {
     provides interface StdControl as SpiControl;
@@ -8,14 +8,14 @@ configuration PlatformSpiC {
     provides interface SpiPacket;
 }
 implementation {
-    components new Msp430SpiB0C() as SpiC;
+    components new Msp430Spi0C() as SpiC;
     SpiByte = SpiC;
     SpiPacket = SpiC;
 
-    components UsciConf;
-    SpiControl = UsciConf.SpiControl;
-    UsciConf.Msp430SpiConfigure <- SpiC;
-    UsciConf.SpiResource -> SpiC;
+    components UsartConf;
+    SpiControl = UsartConf.SpiControl;
+    UsartConf.Msp430SpiConfigure <- SpiC;
+    UsartConf.SpiResource -> SpiC;
 }
 
 /*
