@@ -32,14 +32,12 @@
 
 #include "Timer.h"
 
-module Blink1Sec16C @safe()
-{
+module Blink1Sec16C @safe() {
     uses interface Timer16<TMilli> as Timer16;
     uses interface Led;
     uses interface Boot;
 }
-implementation
-{
+implementation {
     bool led_state;
 
     enum {

@@ -30,11 +30,9 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-configuration Blink1Sec16AppC
-{
+configuration Blink1Sec16AppC {
 }
-implementation
-{
+implementation {
     components MainC, Blink1Sec16C, LedC;
     components new Timer16MilliC() as Timer16;
 

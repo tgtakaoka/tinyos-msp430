@@ -30,11 +30,9 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-configuration LocalTimeAppC
-{
+configuration LocalTimeAppC {
 }
-implementation
-{
+implementation {
     components MainC;
     components PlatformUartC as UartC;
     components LedC;
@@ -42,7 +40,7 @@ implementation
     components LocalTimeMilliC as LocalTime;
     components LocalTimeC as App;
 
-    App -> MainC.Boot;
+    App.Boot -> MainC;
     App.UartControl -> UartC;
     App.UartStream -> UartC;
     App.Timer -> Timer;

@@ -32,8 +32,7 @@
 
 #include "Timer.h"
 
-module LocalTimeC
-{
+module LocalTimeC {
     uses interface Boot;
     uses interface StdControl as UartControl;
     uses interface UartStream;
@@ -41,8 +40,7 @@ module LocalTimeC
     uses interface LocalTime<TMilli>;
     uses interface Led;
 }
-implementation
-{
+implementation {
     uint8_t prevSec = -1;
     uint8_t message[] = "HH:MM:SS\r\n";
 
