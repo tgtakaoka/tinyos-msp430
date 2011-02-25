@@ -37,7 +37,7 @@
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-generic module Max7219SpiP(char resourceName[]) {
+generic module Max7219P(char resourceName[]) {
     provides interface Led7Seg[int digit];
     uses {
         interface StdControl as SpiControl;

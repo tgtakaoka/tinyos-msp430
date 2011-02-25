@@ -30,73 +30,87 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An implementation of MAX6951 8-Digit LED Display Drivers
- *
- * Provides the ability to turn off and set integer value as zero
- * suppressed decimal, zero filled decimal, hexadecimal number.
+#include "SpiMaster.h"
+
+/** An software SPI master implementation using GPIO.
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-generic module Max6951SpiP(char resourceName[]) {
-    provides interface Led7Seg[int digit];
-    uses {
+generic module SpiMasterC(const int mode, const int bit_endian) {
+    provides {
         interface StdControl as SpiControl;
         interface SpiByte;
-        interface GeneralIO as CS;
-        interface Boot;
+    }
+    uses {
+        interface GeneralIO as SIMO;
+        interface GeneralIO as SOMI;
+        interface GeneralIO as CLK;
     }
 }
 implementation {
-    static const uint8_t hexadecimal_segments[] = {
-        0x7e, 0x30, 0x6d, 0x79, 0x33, 0x5b, 0x5f, 0x70,
-        0x7f, 0x7b, 0x77, 0x1f, 0x4e, 0x3d, 0x4f, 0x47
-    };
-
-    void write(unsigned data) {
-        call CS.clr();
-        call SpiByte.write(data >> 8);
-        call SpiByte.write(data);
-        call CS.set();
-    }
-
-    void setSegments(int digit, uint8_t segments) {
-        write(0x2000 | (digit << 8) | segments);
-    }
-
-    void normal(unsigned digits) {
-        write(0x0300 | (digits - 1));
-        write(0x0400 | 1);
-    }
-
-    void intensity(unsigned intense) {
-        write(0x0200 | intense);
-    }
-
-    void mode(unsigned bits) {
-        write(0x0100 | bits);
-    }
-
-    void event Boot.booted() {
-        atomic {
-            call CS.set();
-            call CS.makeOutput();
-            call SpiControl.start();
-            normal(uniqueCount(resourceName));
-            mode(0x00);         /* segment mode */
-            intensity(15);
+    void inactivateClk() {
+        if (mode == SPI_MASTER_MODE0 || mode == SPI_MASTER_MODE1) {
+            call CLK.clr();
+        } else {
+            call CLK.set();
         }
     }
 
-    command void Led7Seg.off[int digit]() {
-        setSegments(digit, 0x00);
+    uint8_t writeSlave(uint8_t tx) {
+        if (bit_endian == SPI_MASTER_MSB) {
+            if (tx & 0x80) {
+                call SIMO.set();
+            } else {
+                call SIMO.clr();
+            }
+            tx <<= 1;
+        } else {
+            if (tx & 0x01) {
+                call SIMO.set();
+            } else {
+                call SIMO.clr();
+            }
+            tx >>= 1;
+        }
+        return tx;
     }
 
-    command void Led7Seg.hexadecimal[int digit](unsigned nibble) {
-        setSegments(digit, hexadecimal_segments[nibble & 0xf]);
+    uint8_t readSlave() {
+        if (bit_endian == SPI_MASTER_MSB) {
+            return call SOMI.get() ? 0x01 : 0x00;
+        } else {
+            return call SOMI.get() ? 0x80 : 0x00;
+        }
     }
 
-    command void Led7Seg.segments[int digit](unsigned segments) {
-        setSegments(digit, segments);
+    command error_t SpiControl.start() {
+        inactivateClk();
+        call CLK.makeOutput();
+        call SIMO.makeOutput();
+        call SOMI.makeInput();
+        return SUCCESS;
+    }
+
+    command error_t SpiControl.stop() {
+        return SUCCESS;
+    }
+
+    async command uint8_t SpiByte.write(uint8_t tx) {
+        int bit = 8;
+        do {
+            if (mode == SPI_MASTER_MODE0 || mode == SPI_MASTER_MODE2) {
+                tx = writeSlave(tx);
+                call CLK.toggle();
+                tx |= readSlave();
+                call CLK.toggle();
+            } else {
+                call CLK.toggle();
+                tx = writeSlave(tx);
+                call CLK.toggle();
+                tx |= readSlave();
+            }
+        } while (--bit != 0);
+        return tx;
     }
 }
 

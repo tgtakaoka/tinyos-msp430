@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G. Takaoka
+/* Copyright (c) 2011, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,19 +30,19 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An implementation of MAX7219 8-Digit LED Display Drivers
+/** An implementation of MAX6951 8-Digit LED Display Drivers
  *
  * Provides the ability to turn off and set integer value as zero
  * suppressed decimal, zero filled decimal, hexadecimal number.
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-generic module Max7219GpioP(char resourceName[]) {
+generic module Max6951P(char resourceName[]) {
     provides interface Led7Seg[int digit];
     uses {
-        interface GeneralIO as Din;
-        interface GeneralIO as Clk;
-        interface GeneralIO as Load;
+        interface StdControl as SpiControl;
+        interface SpiByte;
+        interface GeneralIO as CS;
         interface Boot;
     }
 }
@@ -53,47 +53,34 @@ implementation {
     };
 
     void write(unsigned data) {
-        int bits = 16;
-        atomic {
-            call Load.clr();
-            do {
-                if (data & 0x8000) {
-                    call Din.set();
-                } else {
-                    call Din.clr();
-                }
-                call Clk.set();
-                data <<= 1;
-                call Clk.clr();
-            } while (--bits != 0);
-            call Load.set();
-        }
+        call CS.clr();
+        call SpiByte.write(data >> 8);
+        call SpiByte.write(data);
+        call CS.set();
     }
 
     void setSegments(int digit, uint8_t segments) {
-        write((++digit << 8) | segments);
+        write(0x2000 | (digit << 8) | segments);
     }
 
     void normal(unsigned digits) {
-        write(0xb00 | (digits - 1));
-        write(0xc00 | 1);
+        write(0x0300 | (digits - 1));
+        write(0x0400 | 1);
     }
 
     void intensity(unsigned intense) {
-        write(0xa00 | intense);
+        write(0x0200 | intense);
     }
 
     void mode(unsigned bits) {
-        write(0x900 | bits);
+        write(0x0100 | bits);
     }
 
     void event Boot.booted() {
         atomic {
-            call Load.set();
-            call Load.makeOutput();
-            call Clk.clr();
-            call Clk.makeOutput();
-            call Din.makeOutput();
+            call CS.set();
+            call CS.makeOutput();
+            call SpiControl.start();
             normal(uniqueCount(resourceName));
             mode(0x00);         /* segment mode */
             intensity(15);

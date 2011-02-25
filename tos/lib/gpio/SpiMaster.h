@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G. Takaoka
+/* Copyright (c) 2011, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,30 +30,15 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-configuration LocalTimeAppC {
-}
-implementation {
-    components MainC;
-    components LocalTimeC as App;
-    components DisplayC;
-    components LedC;
-    components new Timer16MilliC() as Timer;
-    components LocalTime16MilliC as LocalTime;
+#ifndef SPI_MASTER_H
+#define SPI_MASTER_H
 
-    App.Boot -> MainC.Boot;
-    App.Timer -> Timer;
-    App.LocalTime -> LocalTime;
-    App.Sec -> DisplayC.Sec;
-    App.Min -> DisplayC.Min;
-    App.Hour -> DisplayC.Hour;
-    App.Led -> LedC.Led0;
-}
+#define SPI_MASTER_MODE0 0      /* CPOL=0 CPHA=0 */
+#define SPI_MASTER_MODE1 1      /* CPOL=0 CPHA=1 */
+#define SPI_MASTER_MODE2 2      /* CPOL=1 CPHA=0 */
+#define SPI_MASTER_MODE3 3      /* CPOL=1 CPHA=1 */
 
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
+#define SPI_MASTER_MSB 0        /* MSB first */
+#define SPI_MASTER_LSB 1        /* LSB first */
+
+#endif
