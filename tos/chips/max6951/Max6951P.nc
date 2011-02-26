@@ -83,7 +83,7 @@ implementation {
             call SpiControl.start();
             normal(uniqueCount(resourceName));
             mode(0x00);         /* segment mode */
-            intensity(15);
+            intensity(1);
         }
     }
 
