@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G. Takaoka
+/* Copyright (c) 2011, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,23 +30,45 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-configuration LocalTimeAppC {
+module ClockC {
+    uses interface Led7Segs<uint16_t> as Hour;
+    uses interface Led7Segs<uint16_t> as Min;
+    uses interface Led7Segs<uint16_t> as Sec;
+    uses interface Led;
+    uses interface Timer16<TMilli> as Timer;
+    uses interface Boot;
 }
 implementation {
-    components MainC;
-    components LocalTimeC as App;
-    components DisplayC;
-    components LedC;
-    components new Timer16MilliC() as Timer;
-    components LocalTime16MilliC as LocalTime;
+    uint8_t deciSec;
+    uint8_t sec;
+    uint8_t min;
+    uint8_t hour;
 
-    App.Boot -> MainC.Boot;
-    App.Timer -> Timer;
-    App.LocalTime -> LocalTime;
-    App.Sec -> DisplayC.Sec;
-    App.Min -> DisplayC.Min;
-    App.Hour -> DisplayC.Hour;
-    App.Led -> LedC.Led0;
+    event void Boot.booted() {
+        call Timer.startPeriodic(100);
+    }
+
+    event void Timer.fired() {
+        ++deciSec;
+        if (deciSec == 10) {
+            deciSec = 0;
+            ++sec;
+            if (sec == 60) {
+                sec = 0;
+                min++;
+                if (min == 60) {
+                    min = 0;
+                    hour++;
+                    if (hour == 24)
+                        hour = 0;
+                }
+            }
+        }
+        call Led.set(deciSec < 1);
+        call Sec.decimal0(sec);
+        call Min.decimal0(min);
+        call Hour.decimal0(hour);
+    }
 }
 
 /*

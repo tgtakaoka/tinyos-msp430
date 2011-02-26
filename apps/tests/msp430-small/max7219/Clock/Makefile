@@ -1,6 +1,6 @@
 # -*- mode: makefile-gmake; mode: flyspell-prog; -*-
 
-COMPONENT=LocalTimeAppC
+COMPONENT=ClockAppC
 PFLAGS+=-I$(TOSDIR)/chips/max7219
 include $(MAKERULES)
 
