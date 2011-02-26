@@ -16,14 +16,14 @@ implementation {
     components new Msp430GpioC() as CLK0;
 
     STE0  -> IOC.Port14;
-    SIMO0 -> IOC.Port15;
-    SOMI0 -> IOC.Port16;
-    CLK0  -> IOC.Port17;
+    CLK0  -> IOC.Port15;
+    SIMO0 -> IOC.Port16;
+    SOMI0 -> IOC.Port17;
 
     STE  = STE0;
+    CLK  = CLK0;
     SIMO = SIMO0;
     SOMI = SOMI0;
-    CLK  = CLK0;
 }
 
 /*

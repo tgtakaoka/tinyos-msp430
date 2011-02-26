@@ -244,6 +244,14 @@ configuration HplMsp430GeneralIOC
   provides interface HplMsp430GeneralIO as UCB1SDA;
   provides interface HplMsp430GeneralIO as UCB1SCL;
 #endif
+
+#if defined(__MSP430_HAS_USI__)
+  provides interface HplMsp430GeneralIO as USISDO;
+  provides interface HplMsp430GeneralIO as USISDI;
+  provides interface HplMsp430GeneralIO as USISCLK;
+  provides interface HplMsp430GeneralIO as USISCL;
+  provides interface HplMsp430GeneralIO as USISDA;
+#endif
 }
 implementation
 {
@@ -597,4 +605,14 @@ implementation
   UCB0SCL = P32;
 #endif
 
+#if defined(__msp430x20x2) || defined(__msp430x20x3) || \
+    defined(__msp430g2x21) || defined(__msp430g2x31) || \
+    defined(__msp430g2x02) || defined(__msp430g2x32) || \
+    defined(__msp430g2x12) || defined(__msp430g2x52)
+  USISCLK = P15;
+  USISDO = P16;
+  USISDI = P17;
+  USISCL = P16;
+  USISDA = P17;
+#endif
 }
