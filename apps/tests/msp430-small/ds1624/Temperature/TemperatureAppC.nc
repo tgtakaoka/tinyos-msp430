@@ -39,9 +39,15 @@ implementation {
     components LedC;
     components PlatformI2CC as I2CC;
     components new Timer16MilliC() as Timer;
+    components new HplDs1624C(0x9e >> 1);
+    components new Ds1624P();
+
+    HplDs1624C -> I2CC.I2CPacket;
+    Ds1624P.Hpl -> HplDs1624C;
 
     App.Boot -> MainC;
     App.Timer -> Timer;
+    App.Ds1624 -> Ds1624P;
     App.Frac -> DisplayC.Frac;
     App.Temp -> DisplayC.Temp;
     App.Sec -> DisplayC.Sec;

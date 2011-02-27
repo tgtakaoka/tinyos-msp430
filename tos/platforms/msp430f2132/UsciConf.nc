@@ -78,12 +78,12 @@ implementation {
         ucmode  : 3,			/* i2c mode */
         ucmst   : 1,			/* master */
         ucmm    : 0,			/* single master */
-        ucsla10 : 1,			/* 10 bit slave */
-        uca10   : 1,			/* 10 bit us */
+        ucsla10 : 0,			/* 7 bit slave address */
+        uca10   : 0,			/* 7 bit own address */
         uctr    : 1,			/* tx mode to start */
         ucssel  : 2,			/* SMCLK */
         i2coa   : 1,			/* our address is 1 */
-        ucgcen  : 1,			/* respond to general call */
+        ucgcen  : 0,			/* respond to general call */
         }
     };
 

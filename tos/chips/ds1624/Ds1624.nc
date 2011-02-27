@@ -30,16 +30,26 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An HPL of DS1624 13-bit Temperature sensor and 256 byte EEPROM
+/** An interface of DS1624 13-bit Temperature sensor and 256 byte EEPROM
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-interface HplDs1624 {
-    command error_t read(uint8_t *cmd, uint8_t cmd_len, uint8_t data_len, uint8_t *data);
-    command error_t write(uint8_t *cmd, uint8_t cmd_len, uint8_t data_len, uint8_t *data);
+interface Ds1624 {
+    command error_t readTemperature(uint8_t *temperature);
+    command error_t startConversion();
+    command error_t stopConversion();
+    command error_t readConfig();
+    command error_t writeConfig(uint8_t condif);
+    command error_t readMemory(uint8_t memAddr, uint8_t data_len, uint8_t *data);
+    command error_t writeMemory(uint8_t memAddr, uint8_t data_len, uint8_t *data);
 
-    event void readDone(error_t error, uint8_t *cmd, uint8_t data_len, uint8_t *data);
-    event void writeDone(error_t error, uint8_t *cmd, uint8_t data_len, uint8_t *data);
+    event void readTemperatureDone(error_t error, uint8_t *temperature);
+    event void startConversionDone(error_t error);
+    event void stopConversionDone(error_t error);
+    event void readConfigDone(error_t error, uint8_t config);
+    event void writeConfigDone(error_t error);
+    event void readMemoryDone(error_t error, uint8_t memAddr, uint8_t data_len, uint8_t *data);
+    event void writeMemoryDone(error_t error, uint8_t memAddr, uint8_t data_len, uint8_t *data);
 }
 
 /*

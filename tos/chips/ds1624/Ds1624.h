@@ -30,17 +30,22 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An HPL of DS1624 13-bit Temperature sensor and 256 byte EEPROM
- *
- * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
- */
-interface HplDs1624 {
-    command error_t read(uint8_t *cmd, uint8_t cmd_len, uint8_t data_len, uint8_t *data);
-    command error_t write(uint8_t *cmd, uint8_t cmd_len, uint8_t data_len, uint8_t *data);
+#ifndef _H_DS1624_H
+#define _H_DS1624_H
 
-    event void readDone(error_t error, uint8_t *cmd, uint8_t data_len, uint8_t *data);
-    event void writeDone(error_t error, uint8_t *cmd, uint8_t data_len, uint8_t *data);
-}
+#define DS1624_I2C_ADDRESS(a) (0x48 + ((a) & 0x7)
+
+#define DS1624_COMMAND_READ_TEMPERATURE 0xaa
+#define DS1624_COMMAND_START_CONVERT    0xee
+#define DS1624_COMMAND_STOP_CONVERT     0x22
+#define DS1624_COMMAND_ACCESS_MEMORY    0x17
+#define DS1624_COMMAND_ACCESS_CONFIG    0xac
+
+#define DS1624_CONFIG_DONE       0x80
+#define DS1624_CONFIG_1SHOT      0x01
+#define DS1624_CONFIG_CONTINUOUS 0x00
+
+#endif /* _H_DS1624_H */
 
 /*
  * Local Variables:

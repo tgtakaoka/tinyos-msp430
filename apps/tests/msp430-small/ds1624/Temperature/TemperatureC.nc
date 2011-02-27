@@ -30,16 +30,59 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An HPL of DS1624 13-bit Temperature sensor and 256 byte EEPROM
- *
- * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
- */
-interface HplDs1624 {
-    command error_t read(uint8_t *cmd, uint8_t cmd_len, uint8_t data_len, uint8_t *data);
-    command error_t write(uint8_t *cmd, uint8_t cmd_len, uint8_t data_len, uint8_t *data);
+module TemperatureC {
+    uses interface Led7Segs<uint16_t> as Temp;
+    uses interface Led7Segs<uint16_t> as Frac;
+    uses interface Led7Segs<uint16_t> as Min;
+    uses interface Led7Segs<uint16_t> as Sec;
+    uses interface Led;
+    uses interface Timer16<TMilli> as Timer;
+    uses interface Boot;
+    uses interface Ds1624;
+}
+implementation {
+    uint8_t deciSec;
+    uint8_t sec;
+    uint8_t min;
+    uint8_t temp[2];
 
-    event void readDone(error_t error, uint8_t *cmd, uint8_t data_len, uint8_t *data);
-    event void writeDone(error_t error, uint8_t *cmd, uint8_t data_len, uint8_t *data);
+    event void Boot.booted() {
+        call Timer.startPeriodic(100);
+    }
+
+    event void Timer.fired() {
+        ++deciSec;
+        if (deciSec == 10) {
+            call Ds1624.readTemperature(temp);
+            deciSec = 0;
+            ++sec;
+            if (sec == 60) {
+                sec = 0;
+                min++;
+                if (min == 60) {
+                    min = 0;
+                }
+            }
+        }
+//        call Led.set(deciSec < 1);
+        call Sec.decimal0(sec);
+        call Min.decimal0(min);
+        call Temp.decimal(temp[0]);
+        call Frac.decimal0((temp[1] * 100) / 256);
+    }
+
+    event void Ds1624.readTemperatureDone(error_t error, uint8_t *temperature) {
+        call Led.toggle();
+    }
+
+    event void Ds1624.startConversionDone(error_t error) {}
+    event void Ds1624.stopConversionDone(error_t error) {}
+    event void Ds1624.readConfigDone(error_t error, uint8_t config) {}
+    event void Ds1624.writeConfigDone(error_t error) {}
+    event void Ds1624.readMemoryDone(error_t error, uint8_t memAddr, uint8_t data_len,
+                                     uint8_t *data) {}
+    event void Ds1624.writeMemoryDone(error_t error, uint8_t memAddr, uint8_t data_len,
+                                      uint8_t *data) {}
 }
 
 /*
