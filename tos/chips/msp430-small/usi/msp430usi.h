@@ -130,7 +130,7 @@ typedef union {
 } msp430_spi_union_config_t;
 
 
-const msp430_spi_union_config_t msp430_spi_default_config = {
+static const msp430_spi_union_config_t msp430_spi_default_config = {
     {
     usimst    : 1,            // master
     usilsb    : 0,            // msb first

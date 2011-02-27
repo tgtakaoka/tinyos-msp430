@@ -126,7 +126,7 @@ typedef union {
   msp430_spi_registers_t spiRegisters;
 } msp430_spi_union_config_t;
 
-const msp430_spi_union_config_t msp430_spi_default_config = { 
+static const msp430_spi_union_config_t msp430_spi_default_config = { 
   {
     ubr : 0x0002, 
     ssel : 0x02, 
@@ -213,7 +213,7 @@ typedef union {
   msp430_uart_registers_t uartRegisters;
 } msp430_uart_union_config_t;
     
-const msp430_uart_union_config_t msp430_uart_default_config = { 
+static const msp430_uart_union_config_t msp430_uart_default_config = { 
   {
     utxe : 1, 
     urxe : 1, 
@@ -289,7 +289,7 @@ typedef union {
   msp430_i2c_registers_t i2cRegisters;
 } msp430_i2c_union_config_t;
 
-const msp430_i2c_union_config_t msp430_i2c_default_config = { 
+staic const msp430_i2c_union_config_t msp430_i2c_default_config = { 
   {
     rxdmaen : 0, 
     txdmaen : 0, 
