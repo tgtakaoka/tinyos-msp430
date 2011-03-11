@@ -30,35 +30,15 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An implementation of MAX7219 8-Digit LED Display Drivers
- *
- * Provides the ability to turn off and set integer value as zero
- * suppressed decimal, zero filled decimal, hexadecimal number.
+/** An HPL of MAX549 2ch 8-bit DAC
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-
-generic module Max7219P() {
-    provides interface Led7Seg[int digit];
-    uses interface HplMax7219 as Hpl;
-}
-implementation {
-    static const uint8_t hexadecimal_segments[] = {
-        0x7e, 0x30, 0x6d, 0x79, 0x33, 0x5b, 0x5f, 0x70,
-        0x7f, 0x7b, 0x77, 0x1f, 0x4e, 0x3d, 0x4f, 0x47
-    };
-
-    command void Led7Seg.off[int digit]() __attribute__((noinline)) {
-        call Hpl.setDigit(digit, 0x00);
-    }
-
-    command void Led7Seg.hexadecimal[int digit](unsigned nibble) __attribute__((noinline)) {
-        call Hpl.setDigit(digit, hexadecimal_segments[nibble & 0xf]);
-    }
-
-    command void Led7Seg.segments[int digit](unsigned segments) __attribute__((noinline)) {
-        call Hpl.setDigit(digit, segments);
-    }
+interface HplMax549 {
+    async command void setInputReg(uint16_t channel, uint8_t data);
+    async command void setDacReg(uint16_t channel, uint8_t data);
+    async command void loadDacReg();
+    async command void shutdown();
 }
 
 /*

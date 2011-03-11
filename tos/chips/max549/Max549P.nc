@@ -30,49 +30,32 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "Max549.h"
+
 /** An implementation of MAX549 2ch 8-bit DAC
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
+
 generic module Max549P() {
     provides interface Max549;
-    uses {
-        interface StdControl as SpiControl;
-        interface SpiByte;
-        interface GeneralIO as CS;
-        interface Boot;
-    }
+    uses interface HplMax549 as Hpl;
 }
 implementation {
-    void write(unsigned data) {
-        call CS.clr();
-        call SpiByte.write(data >> 8);
-        call SpiByte.write(data);
-        call CS.set();
-    }
-
-    void event Boot.booted() {
-        atomic {
-            call CS.set();
-            call CS.makeOutput();
-            call SpiControl.start();
-        }
-    }
-
     async command void Max549.outA(uint8_t data) {
-        write(0x0900 | data);
+        call Hpl.setDacReg(MAX549_CHANNEL_A, data);
     }
 
     async command void Max549.outB(uint8_t data) {
-        write(0x0a00 | data);
+        call Hpl.setDacReg(MAX549_CHANNEL_B, data);
     }
 
     async command void Max549.outAB(uint8_t data) {
-        write(0x0b00 | data);
+        call Hpl.setDacReg(MAX549_CHANNEL_AB, data);
     }
 
     async command void Max549.shutdown() {
-        write(0x1000);
+        call Hpl.shutdown();
     }
 }
 

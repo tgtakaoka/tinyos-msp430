@@ -30,6 +30,8 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "Max6951.h"
+
 /** An implementation of MAX6951 8-Digit LED Display Drivers
  *
  * Provides the ability to turn off and set integer value as zero
@@ -37,14 +39,10 @@
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-generic module Max6951P(char resourceName[]) {
+
+generic module Max6951P() {
     provides interface Led7Seg[int digit];
-    uses {
-        interface StdControl as SpiControl;
-        interface SpiByte;
-        interface GeneralIO as CS;
-        interface Boot;
-    }
+    uses interface HplMax6951 as Hpl;
 }
 implementation {
     static const uint8_t hexadecimal_segments[] = {
@@ -52,51 +50,16 @@ implementation {
         0x7f, 0x7b, 0x77, 0x1f, 0x4e, 0x3d, 0x4f, 0x47
     };
 
-    void write(unsigned data) {
-        call CS.clr();
-        call SpiByte.write(data >> 8);
-        call SpiByte.write(data);
-        call CS.set();
+    command void Led7Seg.off[int digit]() __attribute__((noinline)) {
+        call Hpl.setDigit(MAX6951_PLANE_P0, digit, 0x00);
     }
 
-    void setSegments(int digit, uint8_t segments) {
-        write(0x2000 | (digit << 8) | segments);
+    command void Led7Seg.hexadecimal[int digit](unsigned nibble) __attribute__((noinline)) {
+        call Hpl.setDigit(MAX6951_PLANE_P0, digit, hexadecimal_segments[nibble & 0xf]);
     }
 
-    void normal(unsigned digits) {
-        write(0x0300 | (digits - 1));
-        write(0x0400 | 1);
-    }
-
-    void intensity(unsigned intense) {
-        write(0x0200 | intense);
-    }
-
-    void mode(unsigned bits) {
-        write(0x0100 | bits);
-    }
-
-    void event Boot.booted() {
-        atomic {
-            call CS.set();
-            call CS.makeOutput();
-            call SpiControl.start();
-            normal(uniqueCount(resourceName));
-            mode(0x00);         /* segment mode */
-            intensity(1);
-        }
-    }
-
-    command void Led7Seg.off[int digit]() {
-        setSegments(digit, 0x00);
-    }
-
-    command void Led7Seg.hexadecimal[int digit](unsigned nibble) {
-        setSegments(digit, hexadecimal_segments[nibble & 0xf]);
-    }
-
-    command void Led7Seg.segments[int digit](unsigned segments) {
-        setSegments(digit, segments);
+    command void Led7Seg.segments[int digit](unsigned segments) __attribute__((noinline)) {
+        call Hpl.setDigit(MAX6951_PLANE_P0, digit, segments);
     }
 }
 

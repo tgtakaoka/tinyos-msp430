@@ -30,36 +30,25 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An implementation of MAX7219 8-Digit LED Display Drivers
- *
- * Provides the ability to turn off and set integer value as zero
- * suppressed decimal, zero filled decimal, hexadecimal number.
- *
- * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
- */
+#ifndef _H_MAX6951_H
+#define _H_MAX6951_H
 
-generic module Max7219P() {
-    provides interface Led7Seg[int digit];
-    uses interface HplMax7219 as Hpl;
-}
-implementation {
-    static const uint8_t hexadecimal_segments[] = {
-        0x7e, 0x30, 0x6d, 0x79, 0x33, 0x5b, 0x5f, 0x70,
-        0x7f, 0x7b, 0x77, 0x1f, 0x4e, 0x3d, 0x4f, 0x47
-    };
+#define MAX6951_PLANE_P0   0x2000
+#define MAX6951_PLANE_P1   0x4000
+#define MAX6951_PLANE_P0P1 0x6000
 
-    command void Led7Seg.off[int digit]() __attribute__((noinline)) {
-        call Hpl.setDigit(digit, 0x00);
-    }
+#define MAX6951_CONFIG_SHUTDOWN    0x01
+#define MAX6951_CONFIG_NORMAL      0x00
+#define MAX6951_CONFIG_BLINK_1_0S  0x00
+#define MAX6951_CONFIG_BLINK_0_5S  0x04
+#define MAX6951_CONFIG_BLINK_OFF   0x00
+#define MAX6951_CONFIG_BLINK_ON    0x08
+#define MAX6951_CONFIG_BLINK_ASYNC 0x00
+#define MAX6951_CONFIG_BLINK_SYNC  0x10
+#define MAX6951_CONFIG_CLEAR_ASYNC 0x00
+#define MAX6951_CONFIG_CLEAR_SYNC  0x20
 
-    command void Led7Seg.hexadecimal[int digit](unsigned nibble) __attribute__((noinline)) {
-        call Hpl.setDigit(digit, hexadecimal_segments[nibble & 0xf]);
-    }
-
-    command void Led7Seg.segments[int digit](unsigned segments) __attribute__((noinline)) {
-        call Hpl.setDigit(digit, segments);
-    }
-}
+#endif
 
 /*
  * Local Variables:

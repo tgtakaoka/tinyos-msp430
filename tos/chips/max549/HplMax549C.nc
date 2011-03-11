@@ -30,34 +30,58 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An implementation of MAX7219 8-Digit LED Display Drivers
- *
- * Provides the ability to turn off and set integer value as zero
- * suppressed decimal, zero filled decimal, hexadecimal number.
+#include "Max549.h"
+
+/** An HPL module of MAX549 2ch 8-bit DAC
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-
-generic module Max7219P() {
-    provides interface Led7Seg[int digit];
-    uses interface HplMax7219 as Hpl;
+generic module HplMax549C() {
+    provides interface HplMax549 as Hpl;
+    uses {
+        interface StdControl as SpiControl;
+        interface SpiByte;
+        interface GeneralIO as CS;
+        interface Boot;
+    }
 }
 implementation {
-    static const uint8_t hexadecimal_segments[] = {
-        0x7e, 0x30, 0x6d, 0x79, 0x33, 0x5b, 0x5f, 0x70,
-        0x7f, 0x7b, 0x77, 0x1f, 0x4e, 0x3d, 0x4f, 0x47
+    enum {
+        LOAD_INPUT_REG = 0x0000,
+        LOAD_DAC_REG   = 0x0800,
     };
 
-    command void Led7Seg.off[int digit]() __attribute__((noinline)) {
-        call Hpl.setDigit(digit, 0x00);
+    void write(unsigned data) {
+        atomic {
+            call CS.clr();
+            call SpiByte.write(data >> 8);
+            call SpiByte.write(data);
+            call CS.set();
+        }
     }
 
-    command void Led7Seg.hexadecimal[int digit](unsigned nibble) __attribute__((noinline)) {
-        call Hpl.setDigit(digit, hexadecimal_segments[nibble & 0xf]);
+    void event Boot.booted() {
+        atomic {
+            call CS.set();
+            call CS.makeOutput();
+            call SpiControl.start();
+        }
     }
 
-    command void Led7Seg.segments[int digit](unsigned segments) __attribute__((noinline)) {
-        call Hpl.setDigit(digit, segments);
+    async command void Hpl.setInputReg(uint16_t channel, uint8_t data) __attribute__((noinline)) {
+        write(LOAD_INPUT_REG | channel | data);
+    }
+
+    async command void Hpl.setDacReg(uint16_t channel, uint8_t data) __attribute__((noinline)) {
+        write(LOAD_DAC_REG | channel | data);
+    }
+
+    async command void Hpl.loadDacReg() __attribute__((noinline)) {
+        write(LOAD_DAC_REG);
+    }
+
+    async command void Hpl.shutdown() __attribute__((noinline)) {
+        write(0x1800);
     }
 }
 

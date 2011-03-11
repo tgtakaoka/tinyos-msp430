@@ -30,7 +30,9 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An implementation of MAX7219 8-Digit LED Display Drivers
+#include "Max6951.h"
+
+/** An HPL module of MAX6951 8-Digit LED Display Drivers
  *
  * Provides the ability to turn off and set integer value as zero
  * suppressed decimal, zero filled decimal, hexadecimal number.
@@ -38,26 +40,69 @@
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 
-generic module Max7219P() {
-    provides interface Led7Seg[int digit];
-    uses interface HplMax7219 as Hpl;
+generic module HplMax6951C(char resourceName[]) {
+    provides interface HplMax6951 as Hpl;
+    uses {
+        interface StdControl as SpiControl;
+        interface SpiByte;
+        interface GeneralIO as CS;
+        interface Boot;
+    }
 }
 implementation {
-    static const uint8_t hexadecimal_segments[] = {
-        0x7e, 0x30, 0x6d, 0x79, 0x33, 0x5b, 0x5f, 0x70,
-        0x7f, 0x7b, 0x77, 0x1f, 0x4e, 0x3d, 0x4f, 0x47
+    enum {
+        ADDRESS_DECODE_MODE    = 0x0100,
+        ADDRESS_INTENSITY      = 0x0200,
+        ADDRESS_SCAN_LIMIT     = 0x0300,
+        ADDRESS_CONFIG         = 0x0400,
+        ADDRESS_DISPLAY_TEST   = 0x0700,
     };
 
-    command void Led7Seg.off[int digit]() __attribute__((noinline)) {
-        call Hpl.setDigit(digit, 0x00);
+    void event Boot.booted() {
+        atomic {
+            call CS.set();
+            call CS.makeOutput();
+            call SpiControl.start();
+            call Hpl.setConfig(MAX6951_CONFIG_NORMAL | MAX6951_CONFIG_BLINK_1_0S |
+                               MAX6951_CONFIG_BLINK_OFF | MAX6951_CONFIG_BLINK_ASYNC |
+                               MAX6951_CONFIG_CLEAR_ASYNC);
+            call Hpl.setScanLimit(uniqueCount(resourceName));
+            call Hpl.setDecodeMode(0x00); /* segment mode */
+            call Hpl.setIntensity(1);
+        }
     }
 
-    command void Led7Seg.hexadecimal[int digit](unsigned nibble) __attribute__((noinline)) {
-        call Hpl.setDigit(digit, hexadecimal_segments[nibble & 0xf]);
+    void write(uint16_t commands) {
+        atomic {
+            call CS.clr();
+            call SpiByte.write(commands >> 8);
+            call SpiByte.write(commands);
+            call CS.set();
+        }
     }
 
-    command void Led7Seg.segments[int digit](unsigned segments) __attribute__((noinline)) {
-        call Hpl.setDigit(digit, segments);
+    async command void Hpl.setDigit(uint16_t plane, uint8_t digit, uint8_t segments) {
+        write((digit << 8) | plane | segments);
+    }
+
+    async command void Hpl.setDecodeMode(uint8_t modes) {
+        write(ADDRESS_DECODE_MODE | modes);
+    }
+
+    async command void Hpl.setIntensity(uint8_t intensity) {
+        write(ADDRESS_INTENSITY | intensity);
+    }
+
+    async command void Hpl.setScanLimit(uint8_t digits) {
+        write(ADDRESS_SCAN_LIMIT | digits);
+    }
+
+    async command void Hpl.setConfig(uint8_t config) {
+        write(ADDRESS_CONFIG | config);
+    }
+
+    async command void Hpl.displayTest() {
+        write(ADDRESS_DISPLAY_TEST | 1);
     }
 }
 
