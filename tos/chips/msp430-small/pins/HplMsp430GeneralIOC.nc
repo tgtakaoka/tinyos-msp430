@@ -605,10 +605,7 @@ implementation
   UCB0SCL = P32;
 #endif
 
-#if defined(__msp430x20x2) || defined(__msp430x20x3) || \
-    defined(__msp430g2x21) || defined(__msp430g2x31) || \
-    defined(__msp430g2x02) || defined(__msp430g2x32) || \
-    defined(__msp430g2x12) || defined(__msp430g2x52)
+#if defined(__MSP430_HAS_USI__)
   USISCLK = P15;
   USISDO = P16;
   USISDI = P17;
