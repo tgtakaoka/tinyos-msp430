@@ -35,8 +35,8 @@
 
 /* See SLAZ020H MSP430F21x1 Device Erratasheet, Revised December 2008 */
 
-#if defined(__MSP430_2101__) || defined(__MSP430_2111__) || defined(__MSP430_2121__) || \
-    defined(__MSP430_2131__)
+#if defined(__MSP430F2101__) || defined(__MSP430F2111__) || defined(__MSP430F2121__) || \
+    defined(__MSP430F2131__)
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'C'"
 #define __MSP430_REV__ 'C'

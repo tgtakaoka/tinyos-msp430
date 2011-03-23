@@ -35,11 +35,11 @@
 
 /* See SLAZ061B MSP430G2x01, G2x11, G2x21, G2x31 Device Erratasheet, Revised December 2010 */
 
-#if defined(__MSP430_G2001__) || \
-    defined(__MSP430_G2101__) || defined(__MSP430_G2111__) || \
-    defined(__MSP430_G2121__) || defined(__MSP430_G2131__) || \
-    defined(__MSP430_G2201__) || defined(__MSP430_G2211__) || \
-    defined(__MSP430_G2221__) || defined(__MSP430_G2231__)
+#if defined(__MSP430G2001__) || \
+    defined(__MSP430G2101__) || defined(__MSP430G2111__) || \
+    defined(__MSP430G2121__) || defined(__MSP430G2131__) || \
+    defined(__MSP430G2201__) || defined(__MSP430G2211__) || \
+    defined(__MSP430G2221__) || defined(__MSP430G2231__)
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'D'"
 #define __MSP430_REV__ 'D'
@@ -51,8 +51,8 @@
 #define ERRATA_TA12
 #define ERRATA_TA16
 #define ERRATA_TA22
-#if defined(__MSP430_G2121__) || defined(__MSP430_G2131__) || \
-    defined(__MSP430_G2221__) || defined(__MSP430_G2231__)
+#if defined(__MSP430G2121__) || defined(__MSP430G2131__) || \
+    defined(__MSP430G2221__) || defined(__MSP430G2231__)
 #define ERRATA_USI4
 #define ERRATA_USI5
 #endif

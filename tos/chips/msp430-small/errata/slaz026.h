@@ -35,7 +35,7 @@
 
 /* See SLAZ026N MSP430F20xx Device Erratasheet, Revised January 2011 */
 
-#if defined(__MSP430_2001__) || defined(__MSP430_2011__)
+#if defined(__MSP430F2001__) || defined(__MSP430F2011__)
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'A'"
 #define __MSP430_REV__ 'A'
@@ -68,7 +68,7 @@
 #define ERRATA_TA17
 #endif
 
-#elif defined(__MSP430_2002__) || defined(__MSP430_2012__)
+#elif defined(__MSP430F2002__) || defined(__MSP430F2012__)
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'A'"
 #define __MSP430_REV__ 'A'
@@ -98,7 +98,7 @@
 #define ERRATA_SBW1
 #endif
 
-#elif defined(__MSP430_2003__) || defined(__MSP430_2013__)
+#elif defined(__MSP430F2003__) || defined(__MSP430F2013__) || defined(__MSP430F2013__)
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'B'"
 #define __MSP430_REV__ 'B'
@@ -137,7 +137,7 @@
 #endif
 
 #else
-#error "This errata/slaz26.h is for MSP430F20xx"
+#error "This errata/slaz026.h is for MSP430F20xx"
 #endif
 
 #endif

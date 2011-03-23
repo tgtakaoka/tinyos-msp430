@@ -35,7 +35,7 @@
 
 /* See SLAZ019A MSP430F11x1(A) Device Erratasheet, Revised September 2010 */
 
-#if defined(__MSP430_1101__) || defined(__MSP430_1111__) || defined(__MSP430_1121__)
+#if defined(__MSP430F1101__) || defined(__MSP430F1111__) || defined(__MSP430F1121__)
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'H'"
 #define __MSP430_REV__ 'H'

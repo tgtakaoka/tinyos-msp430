@@ -35,8 +35,8 @@
 
 /* See SLAZ018C MSP430F15x/16x/161x Device Erratasheet, Revised February 2010 */
 
-#if defined(__MSP430_155__) || defined(__MSP430_156__) || defined(__MSP430_157__) || \
-    defined(__MSP430_167__) || defined(__MSP430_168__) || defined(__MSP430_169__)
+#if defined(__MSP430F155__) || defined(__MSP430F156__) || defined(__MSP430F157__) || \
+    defined(__MSP430F167__) || defined(__MSP430F168__) || defined(__MSP430F169__)
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'B'"
 #define __MSP430_REV__ 'B'
@@ -72,7 +72,7 @@
 #define ERRATA_XOSC4
 #endif
 
-#elif defined(__MSP430_1610_) || defined(__MSP430_1611__) || defined(__MSP430_1612__)
+#elif defined(__MSP430F1610_) || defined(__MSP430F1611__) || defined(__MSP430F1612__)
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'A'"
 #define __MSP430_REV__ 'A'

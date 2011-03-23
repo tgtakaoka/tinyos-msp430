@@ -35,7 +35,7 @@
 
 /* See SLAZ009A MSP430F11x2/12x2 Device Erratasheet, Revised February 2011 */
 
-#if defined(__MSP430_1122__) || defined(__MSP430_1132__)
+#if defined(__MSP430F1122__) || defined(__MSP430F1132__)
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'E'"
 #define __MSP430_REV__ 'E'
@@ -54,7 +54,7 @@
 #define ERRATA_WDG2
 #endif
 
-#elif defined(__MSP430_1222__) || defined(__MSP430_1232__)
+#elif defined(__MSP430F1222__) || defined(__MSP430F1232__)
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'D'"
 #define __MSP430_REV__ 'D'

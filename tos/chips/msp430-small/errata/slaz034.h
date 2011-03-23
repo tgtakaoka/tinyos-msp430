@@ -35,8 +35,8 @@
 
 /* See SLAZ034G MSP430F22x2/22x4 Device Erratasheet, Revised Feburuary 2011 */
 
-#if defined(__MSP430_2232__) || defined(__MSP430_2252__) || defined(__MSP430_2272__) || \
-    defined(__MSP430_2234__) || defined(__MSP430_2254__) || defined(__MSP430_2274__)
+#if defined(__MSP430F2232__) || defined(__MSP430F2252__) || defined(__MSP430F2272__) || \
+    defined(__MSP430F2234__) || defined(__MSP430F2254__) || defined(__MSP430F2274__)
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'D'"
 #define __MSP430_REV__ 'D'
