@@ -25,7 +25,7 @@ push( @includes, qw(
 
 @opts = qw(
       -gcc=msp430-gcc
-      -mmcu=msp430x2013
+      -mmcu=msp430f2013
       -fnesc-target=msp430
       -fnesc-no-debug
       -D__msp430_using_vlo

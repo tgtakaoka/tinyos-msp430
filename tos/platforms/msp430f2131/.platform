@@ -23,7 +23,7 @@ push( @includes, qw(
 
 @opts = qw(
       -gcc=msp430-gcc
-      -mmcu=msp430x2131
+      -mmcu=msp430f2131
       -fnesc-target=msp430
       -fnesc-no-debug
 );

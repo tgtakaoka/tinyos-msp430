@@ -2,7 +2,7 @@
 
 PLATFORM ?= msp430f1121
 
-MSP_MCU = msp430x1121
+MSP_MCU = msp430f1121
 
 # Disable MSP430 hardware multiply because it makes MSPGCC die
 PFLAGS += -mdisable-hwmul
