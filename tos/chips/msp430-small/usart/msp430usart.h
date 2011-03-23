@@ -289,7 +289,7 @@ typedef union {
   msp430_i2c_registers_t i2cRegisters;
 } msp430_i2c_union_config_t;
 
-staic const msp430_i2c_union_config_t msp430_i2c_default_config = { 
+static const msp430_i2c_union_config_t msp430_i2c_default_config = { 
   {
     rxdmaen : 0, 
     txdmaen : 0, 
