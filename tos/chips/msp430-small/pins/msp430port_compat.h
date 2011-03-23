@@ -33,17 +33,19 @@
 #ifndef _H_msp430port_compat_h
 #define _H_msp430port_compat_h
 
-#if defined(__msp430x20x1) || defined(__msp430x20x2) || defined(__msp430x20x3) || \
-    defined(__MSP430_G2001) || \
-    defined(__MSP430_G2101) || defined(__MSP430_G2111) || \
-    defined(__MSP430_G2201) || defined(__MSP430_G2211) || \
-    defined(__MSP430_G2121) || defined(__MSP430_G2131) || \
-    defined(__MSP430_G2221) || defined(__MSP430_G2231)
+#if defined(__MSP430F2001__) || defined(__MSP430F2002__) || defined(__MSP430F2003__) || \
+    defined(__MSP430F2011__) || defined(__MSP430F2012__) || defined(__MSP430F2013__) || \
+    defined(__MSP430G2001__) || \
+    defined(__MSP430G2101__) || defined(__MSP430G2111__) || \
+    defined(__MSP430G2121__) || defined(__MSP430G2131__) || \
+    defined(__MSP430G2201__) || defined(__MSP430G2211__) || \
+    defined(__MSP430G2221__) || defined(__MSP430G2231__)
 /* These devices have only P2.6 and P2.7 at Port2 */
 #define __msp430_have_port2_67
 #endif
     
-#if defined(__msp430x11x1) || defined(__msp430x11x2) || defined(__msp430x22x2)
+#if defined(__MSP430F1101__) || defined(__MSP430F1111__) || defined(__MSP430F1121__) || \
+    defined(__MSP430F1122__) || defined(__MSP430F1132__)
 /* These devices have only P2.0 through P2.5 at Port2 */
 #define __msp430_have_port2_05
 #endif
