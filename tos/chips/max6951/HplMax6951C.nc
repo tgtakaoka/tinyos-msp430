@@ -94,7 +94,7 @@ implementation {
     }
 
     async command void Hpl.setScanLimit(uint8_t digits) {
-        write(ADDRESS_SCAN_LIMIT | digits);
+        write(ADDRESS_SCAN_LIMIT | (digits - 1));
     }
 
     async command void Hpl.setConfig(uint8_t config) {
