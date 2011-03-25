@@ -6,7 +6,6 @@ MSP_MCU = msp430f1121
 
 # Disable MSP430 hardware multiply because it makes MSPGCC die
 PFLAGS += -mdisable-hwmul
-OPTFLAGS += -O
 
 ifndef DEFAULT_PROGRAM
 DEFAULT_PROGRAM = tos-bsl
