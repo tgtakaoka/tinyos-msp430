@@ -8,7 +8,7 @@ configuration PlatformSpiC {
     provides interface SpiPacket;
 }
 implementation {
-    components new Msp430SpiB0C() as SpiC;
+    components new Msp430SpiA0C() as SpiC;
     SpiByte = SpiC;
     SpiPacket = SpiC;
 
