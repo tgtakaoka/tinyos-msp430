@@ -35,10 +35,10 @@
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 interface Max549 {
-    async command void outA(uint8_t data);
-    async command void outB(uint8_t data);
-    async command void outAB(uint8_t data);
-    async command void shutdown();
+    command void outA(uint8_t data);
+    command void outB(uint8_t data);
+    command void outAB(uint8_t data);
+    command void shutdown();
 }
 
 /*

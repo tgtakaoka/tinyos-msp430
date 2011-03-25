@@ -35,10 +35,10 @@
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 interface HplMax549 {
-    async command void setInputReg(uint16_t channel, uint8_t data);
-    async command void setDacReg(uint16_t channel, uint8_t data);
-    async command void loadDacReg();
-    async command void shutdown();
+    command void setInputReg(uint16_t channel, uint8_t data);
+    command void setDacReg(uint16_t channel, uint8_t data);
+    command void loadDacReg();
+    command void shutdown();
 }
 
 /*

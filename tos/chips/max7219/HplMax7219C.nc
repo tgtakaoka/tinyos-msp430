@@ -80,27 +80,27 @@ implementation {
         }
     }
 
-    async command void Hpl.setDigit(uint8_t digit, uint8_t segments) {
+    command void Hpl.setDigit(uint8_t digit, uint8_t segments) {
         write((digit << 8) | ADDRESS_DIGIT0 | segments);
     }
 
-    async command void Hpl.setDecodeMode(uint8_t modes) {
+    command void Hpl.setDecodeMode(uint8_t modes) {
         write(ADDRESS_DECODE_MODE | modes);
     }
 
-    async command void Hpl.setIntensity(uint8_t intensity) {
+    command void Hpl.setIntensity(uint8_t intensity) {
         write(ADDRESS_INTENSITY | intensity);
     }
 
-    async command void Hpl.setScanLimit(uint8_t digits) {
+    command void Hpl.setScanLimit(uint8_t digits) {
         write(ADDRESS_SCAN_LIMIT | digits);
     }
 
-    async command void Hpl.setConfig(uint8_t config) {
+    command void Hpl.setConfig(uint8_t config) {
         write(ADDRESS_CONFIG | config);
     }
 
-    async command void Hpl.displayTest() {
+    command void Hpl.displayTest() {
         write(ADDRESS_DISPLAY_TEST | 1);
     }
 }

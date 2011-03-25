@@ -42,19 +42,19 @@ generic module Max549P() {
     uses interface HplMax549 as Hpl;
 }
 implementation {
-    async command void Max549.outA(uint8_t data) {
+    command void Max549.outA(uint8_t data) {
         call Hpl.setDacReg(MAX549_CHANNEL_A, data);
     }
 
-    async command void Max549.outB(uint8_t data) {
+    command void Max549.outB(uint8_t data) {
         call Hpl.setDacReg(MAX549_CHANNEL_B, data);
     }
 
-    async command void Max549.outAB(uint8_t data) {
+    command void Max549.outAB(uint8_t data) {
         call Hpl.setDacReg(MAX549_CHANNEL_AB, data);
     }
 
-    async command void Max549.shutdown() {
+    command void Max549.shutdown() {
         call Hpl.shutdown();
     }
 }

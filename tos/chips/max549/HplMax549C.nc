@@ -68,19 +68,19 @@ implementation {
         }
     }
 
-    async command void Hpl.setInputReg(uint16_t channel, uint8_t data) __attribute__((noinline)) {
+    command void Hpl.setInputReg(uint16_t channel, uint8_t data) __attribute__((noinline)) {
         write(LOAD_INPUT_REG | channel | data);
     }
 
-    async command void Hpl.setDacReg(uint16_t channel, uint8_t data) __attribute__((noinline)) {
+    command void Hpl.setDacReg(uint16_t channel, uint8_t data) __attribute__((noinline)) {
         write(LOAD_DAC_REG | channel | data);
     }
 
-    async command void Hpl.loadDacReg() __attribute__((noinline)) {
+    command void Hpl.loadDacReg() __attribute__((noinline)) {
         write(LOAD_DAC_REG);
     }
 
-    async command void Hpl.shutdown() __attribute__((noinline)) {
+    command void Hpl.shutdown() __attribute__((noinline)) {
         write(0x1800);
     }
 }

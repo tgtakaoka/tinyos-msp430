@@ -39,12 +39,12 @@
  */
 
 interface HplMax7219 {
-    async command void setDigit(uint8_t digit, uint8_t segments);
-    async command void setDecodeMode(uint8_t modes);
-    async command void setIntensity(uint8_t intensity);
-    async command void setScanLimit(uint8_t digits);
-    async command void setConfig(uint8_t config);
-    async command void displayTest();
+    command void setDigit(uint8_t digit, uint8_t segments);
+    command void setDecodeMode(uint8_t modes);
+    command void setIntensity(uint8_t intensity);
+    command void setScanLimit(uint8_t digits);
+    command void setConfig(uint8_t config);
+    command void displayTest();
 }
 
 /*
