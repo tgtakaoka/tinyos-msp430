@@ -14,12 +14,13 @@ module Msp430TimerCommonP @safe()
 }
 implementation
 {
-#if defined(__MSP430_HAS_T1A2__)
-#define TIMERA0_VECTOR TIMER0_A0_VECTOR
-#define TIMERA1_VECTOR TIMER0_A1_VECTOR
-#endif
+#if defined(TIMER0_A0_VECTOR) && defined(TIMER0_A1_VECTOR)
+  TOSH_SIGNAL(TIMER0_A0_VECTOR) { signal VectorTimerA0.fired(); }
+  TOSH_SIGNAL(TIMER0_A1_VECTOR) { signal VectorTimerA1.fired(); }
+#else
   TOSH_SIGNAL(TIMERA0_VECTOR) { signal VectorTimerA0.fired(); }
   TOSH_SIGNAL(TIMERA1_VECTOR) { signal VectorTimerA1.fired(); }
+#endif
 #if defined(__MSP430_HAS_T1A2__)
   TOSH_SIGNAL(TIMER1_A0_VECTOR) { signal VectorTimer1A0.fired(); }
   TOSH_SIGNAL(TIMER1_A1_VECTOR) { signal VectorTimer1A1.fired(); }
