@@ -6,6 +6,9 @@ configuration GpioConf {
         interface GeneralIO as SIMO;
         interface GeneralIO as SOMI;
         interface GeneralIO as CLK;
+
+        interface GeneralIO as SCL;
+        interface GeneralIO as SDA;
     }
 }
 implementation {
@@ -14,6 +17,8 @@ implementation {
     components new Msp430GpioC() as SIMO0;
     components new Msp430GpioC() as SOMI0;
     components new Msp430GpioC() as CLK0;
+    components new Msp430GpioC() as SCL0;
+    components new Msp430GpioC() as SDA0;
 
     STE0  -> IOC.Port14;
     CLK0  -> IOC.Port15;
@@ -24,6 +29,12 @@ implementation {
     CLK  = CLK0;
     SIMO = SIMO0;
     SOMI = SOMI0;
+
+    SCL0 -> IOC.Port12;
+    SDA0 -> IOC.Port13;
+
+    SCL = SCL0;
+    SDA = SDA0;
 }
 
 /*
