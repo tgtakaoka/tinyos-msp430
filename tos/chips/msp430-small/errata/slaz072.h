@@ -35,14 +35,14 @@
 
 /* See SLAZ072 MSP430G2x52, G2x32, G2x12, G2x02 Device Erratasheet, Revised December 2010 */
 
-#if defined(__MSP430G2102__) || defined(__MSP430G2112__) || \
-    defined(__MSP430G2132__) || defined(__MSP430G2152__) || \
-    defined(__MSP430G2202__) || defined(__MSP430G2212__) || \
-    defined(__MSP430G2232__) || defined(__MSP430G2252__) || \
-    defined(__MSP430G2302__) || defined(__MSP430G2312__) || \
-    defined(__MSP430G2332__) || defined(__MSP430G2352__) || \
-    defined(__MSP430G2402__) || defined(__MSP430G2412__) || \
-    defined(__MSP430G2432__) || defined(__MSP430G2452__)
+#if defined(__MSP430G2102__) || defined(__MSP430G2202__) || defined(__MSP430G2302__) || \
+    defined(__MSP430G2402__) || \
+    defined(__MSP430G2112__) || defined(__MSP430G2212__) || defined(__MSP430G2312__) || \
+    defined(__MSP430G2412__) || \
+    defined(__MSP430G2132__) || defined(__MSP430G2232__) || defined(__MSP430G2332__) || \
+    defined(__MSP430G2432__) || \
+    defined(__MSP430G2152__) || defined(__MSP430G2252__) || defined(__MSP430G2352__) || \
+    defined(__MSP430G2452__)
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'A'"
 #define __MSP430_REV__ 'A'

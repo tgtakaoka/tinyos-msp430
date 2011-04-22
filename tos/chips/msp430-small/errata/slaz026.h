@@ -98,7 +98,7 @@
 #define ERRATA_SBW1
 #endif
 
-#elif defined(__MSP430F2003__) || defined(__MSP430F2013__) || defined(__MSP430F2013__)
+#elif defined(__MSP430F2003__) || defined(__MSP430F2013__)
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'B'"
 #define __MSP430_REV__ 'B'

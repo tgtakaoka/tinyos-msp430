@@ -33,7 +33,7 @@
 #ifndef _H_slaz034_h
 #define _H_slaz034_h
 
-/* See SLAZ034G MSP430F22x2/22x4 Device Erratasheet, Revised Feburuary 2011 */
+/* See SLAZ034I MSP430F22x4, MSP430F22x2 Device Erratasheet, Revised Feburuary 2011 */
 
 #if defined(__MSP430F2232__) || defined(__MSP430F2252__) || defined(__MSP430F2272__) || \
     defined(__MSP430F2234__) || defined(__MSP430F2254__) || defined(__MSP430F2274__)
@@ -81,7 +81,7 @@
 #endif
 
 #else
-#error "This errata/slaz034.h is for MSP430F22x2/22x4"
+#error "This errata/slaz034.h is for MSP430F22x4, MSP430F22x2"
 #endif
 
 #endif
