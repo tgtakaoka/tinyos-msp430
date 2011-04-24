@@ -121,7 +121,7 @@ implementation
 
   // Timer A
   TimerA = Msp430TimerA.Timer;
-  Msp430TimerA.Overflow -> Msp430TimerA.Event[5];
+  Msp430TimerA.Overflow -> Msp430TimerA.Event[10];
   Msp430TimerA.VectorTimerX0 -> Common.VectorTimerA0;
   Msp430TimerA.VectorTimerX1 -> Common.VectorTimerA1;
 
@@ -137,7 +137,7 @@ implementation
   CompareA1 = Msp430TimerA1.Compare;
   CaptureA1 = Msp430TimerA1.Capture;
   Msp430TimerA1.Timer -> Msp430TimerA.Timer;
-  Msp430TimerA1.Event -> Msp430TimerA.Event[1];
+  Msp430TimerA1.Event -> Msp430TimerA.Event[2];
 
 #if defined(__MSP430_HAS_TA3__)
   // Timer A2
@@ -145,13 +145,13 @@ implementation
   CompareA2 = Msp430TimerA2.Compare;
   CaptureA2 = Msp430TimerA2.Capture;
   Msp430TimerA2.Timer -> Msp430TimerA.Timer;
-  Msp430TimerA2.Event -> Msp430TimerA.Event[2];
+  Msp430TimerA2.Event -> Msp430TimerA.Event[4];
 #endif
 
 #if defined(__MSP430_HAS_T1A2__)
   // Timer1 A
   Timer1A = Msp430Timer1A.Timer;
-  Msp430Timer1A.Overflow -> Msp430Timer1A.Event[5];
+  Msp430Timer1A.Overflow -> Msp430Timer1A.Event[10];
   Msp430Timer1A.VectorTimerX0 -> Common.VectorTimer1A0;
   Msp430Timer1A.VectorTimerX1 -> Common.VectorTimer1A1;
 
@@ -167,13 +167,13 @@ implementation
   Compare1A1 = Msp430Timer1A1.Compare;
   Capture1A1 = Msp430Timer1A1.Capture;
   Msp430Timer1A1.Timer -> Msp430Timer1A.Timer;
-  Msp430Timer1A1.Event -> Msp430Timer1A.Event[1];
+  Msp430Timer1A1.Event -> Msp430Timer1A.Event[2];
 #endif
 
 #if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
   // Timer B
   TimerB = Msp430TimerB.Timer;
-  Msp430TimerB.Overflow -> Msp430TimerB.Event[7];
+  Msp430TimerB.Overflow -> Msp430TimerB.Event[14];
   Msp430TimerB.VectorTimerX0 -> Common.VectorTimerB0;
   Msp430TimerB.VectorTimerX1 -> Common.VectorTimerB1;
 
@@ -189,14 +189,14 @@ implementation
   CompareB1 = Msp430TimerB1.Compare;
   CaptureB1 = Msp430TimerB1.Capture;
   Msp430TimerB1.Timer -> Msp430TimerB.Timer;
-  Msp430TimerB1.Event -> Msp430TimerB.Event[1];
+  Msp430TimerB1.Event -> Msp430TimerB.Event[2];
 
   // Timer B2
   ControlB2 = Msp430TimerB2.Control;
   CompareB2 = Msp430TimerB2.Compare;
   CaptureB2 = Msp430TimerB2.Capture;
   Msp430TimerB2.Timer -> Msp430TimerB.Timer;
-  Msp430TimerB2.Event -> Msp430TimerB.Event[2];
+  Msp430TimerB2.Event -> Msp430TimerB.Event[4];
 #endif
 
 #if defined(__MSP430_HAS_TB7__)
@@ -205,28 +205,28 @@ implementation
   CompareB3 = Msp430TimerB3.Compare;
   CaptureB3 = Msp430TimerB3.Capture;
   Msp430TimerB3.Timer -> Msp430TimerB.Timer;
-  Msp430TimerB3.Event -> Msp430TimerB.Event[3];
+  Msp430TimerB3.Event -> Msp430TimerB.Event[6];
 
   // Timer B4
   ControlB4 = Msp430TimerB4.Control;
   CompareB4 = Msp430TimerB4.Compare;
   CaptureB4 = Msp430TimerB4.Capture;
   Msp430TimerB4.Timer -> Msp430TimerB.Timer;
-  Msp430TimerB4.Event -> Msp430TimerB.Event[4];
+  Msp430TimerB4.Event -> Msp430TimerB.Event[8];
 
   // Timer B5
   ControlB5 = Msp430TimerB5.Control;
   CompareB5 = Msp430TimerB5.Compare;
   CaptureB5 = Msp430TimerB5.Capture;
   Msp430TimerB5.Timer -> Msp430TimerB.Timer;
-  Msp430TimerB5.Event -> Msp430TimerB.Event[5];
+  Msp430TimerB5.Event -> Msp430TimerB.Event[10];
 
   // Timer B6
   ControlB6 = Msp430TimerB6.Control;
   CompareB6 = Msp430TimerB6.Compare;
   CaptureB6 = Msp430TimerB6.Capture;
   Msp430TimerB6.Timer -> Msp430TimerB.Timer;
-  Msp430TimerB6.Event -> Msp430TimerB.Event[6];
+  Msp430TimerB6.Event -> Msp430TimerB.Event[12];
 #endif
 }
 
