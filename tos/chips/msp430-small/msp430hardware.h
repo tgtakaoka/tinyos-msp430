@@ -38,7 +38,7 @@
 #define _H_msp430hardware_h
 
 #include <msp430.h>
-#include <signal.h>
+#include <legacymsp430.h>
 #include "msp430regtypes.h"
 #include "msp430errata.h"
 
