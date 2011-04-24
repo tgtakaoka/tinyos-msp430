@@ -5,7 +5,7 @@ PLATFORM ?= msp430g2402
 MSP_MCU = msp430g2402
 
 # Disable MSP430 hardware multiply because it makes MSPGCC die
-PFLAGS += -mdisable-hwmul
+PFLAGS += -mdisable-hwmul -mdisable-watchdog
 
 ifndef DEFAULT_PROGRAM
 DEFAULT_PROGRAM = mspdebug
