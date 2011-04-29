@@ -46,6 +46,7 @@ implementation {
     Ds1624P.Hpl -> HplDs1624C;
 
     App.Boot -> MainC;
+    App.I2CControl -> I2CC;
     App.Timer -> Timer;
     App.Ds1624 -> Ds1624P;
     App.Frac -> DisplayC.Frac;

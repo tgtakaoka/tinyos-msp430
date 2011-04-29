@@ -35,8 +35,8 @@
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 interface HplDs1624 {
-    command error_t read(uint8_t *cmd, uint8_t cmd_len, uint8_t data_len, uint8_t *data);
-    command error_t write(uint8_t *cmd, uint8_t cmd_len, uint8_t data_len, uint8_t *data);
+    command error_t read(uint8_t cmd_len, uint8_t *cmd, uint8_t data_len, uint8_t *data);
+    command error_t write(uint8_t cmd_len, uint8_t *cmd, uint8_t data_len, uint8_t *data);
 
     event void readDone(error_t error, uint8_t *cmd, uint8_t data_len, uint8_t *data);
     event void writeDone(error_t error, uint8_t *cmd, uint8_t data_len, uint8_t *data);

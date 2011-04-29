@@ -46,7 +46,6 @@ implementation {
         CONTINUE = 0x01,
         READ = 0x02,
         WRITE = 0x04,
-        WRITE_CMD_ONLY = 0x08,
     };
     norace uint8_t m_state = IDLE;
     uint8_t m_dataLen;
@@ -54,7 +53,7 @@ implementation {
     uint8_t *m_cmd;
     norace error_t m_error;
 
-    command error_t Hpl.read(uint8_t *cmd, uint8_t cmd_len, uint8_t data_len, uint8_t *data) {
+    command error_t Hpl.read(uint8_t cmd_len, uint8_t *cmd, uint8_t data_len, uint8_t *data) {
         atomic {
             if (m_state != IDLE)
                 return EBUSY;
@@ -66,17 +65,14 @@ implementation {
         }
     }
 
-    command error_t Hpl.write(uint8_t *cmd, uint8_t cmd_len, uint8_t data_len, uint8_t *data) {
+    command error_t Hpl.write(uint8_t cmd_len, uint8_t *cmd, uint8_t data_len, uint8_t *data) {
         atomic {
             uint8_t flag = I2C_START;
             if (m_state != IDLE)
                 return EBUSY;
-            if (cmd_len == 0) {
-                m_state = WRITE_CMD_ONLY;
+            if (data == NULL)
                 flag |= I2C_STOP;
-            } else {
-                m_state = WRITE;
-            }
+            m_state = WRITE;
             m_cmd = cmd;
             m_dataLen = data_len;
             m_data = data;
@@ -96,15 +92,16 @@ implementation {
             m_state |= CONTINUE;
             call I2CPacket.read(I2C_START | I2C_STOP, devAddr, m_dataLen, m_data);
             break;
-        case WRITE_CMD_ONLY:
-            m_state = IDLE;
-            post writeDone();
-            break;
         case WRITE:
-            m_state |= CONTINUE;
-            call I2CPacket.write(I2C_STOP, devAddr, m_dataLen, m_data);
+            if (m_data == NULL) {
+                goto write_done;
+            } else {
+                m_state |= CONTINUE;
+                call I2CPacket.write(I2C_STOP, devAddr, m_dataLen, m_data);
+            }
             break;
         case WRITE | CONTINUE:
+        write_done:
             m_state = IDLE;
             post writeDone();
             break;

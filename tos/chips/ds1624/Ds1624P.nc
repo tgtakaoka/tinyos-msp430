@@ -46,40 +46,40 @@ implementation {
 
     command error_t Ds1624.readTemperature(uint8_t *temperature) {
         m_buf[0] = DS1624_COMMAND_READ_TEMPERATURE;
-        return call Hpl.read(m_buf, 1, 2, temperature);
+        return call Hpl.read(1, m_buf, 2, temperature);
     }
 
     command error_t Ds1624.startConversion() {
         m_buf[0] = DS1624_COMMAND_START_CONVERT;
-        return call Hpl.write(m_buf, 1, 0, NULL);
+        return call Hpl.write(1, m_buf, 0, NULL);
     }
 
     command error_t Ds1624.stopConversion() {
         m_buf[0] = DS1624_COMMAND_STOP_CONVERT;
-        return call Hpl.write(m_buf, 1, 0, NULL);
+        return call Hpl.write(1, m_buf, 0, NULL);
     }
 
     command error_t Ds1624.readConfig() {
         m_buf[0] = DS1624_COMMAND_ACCESS_CONFIG;
-        return call Hpl.read(m_buf, 1, 1, m_buf + 1);
+        return call Hpl.read(1, m_buf, 1, m_buf + 1);
     }
 
     command error_t Ds1624.writeConfig(uint8_t config) {
         m_buf[0] = DS1624_COMMAND_ACCESS_CONFIG;
         m_buf[1] = config;
-        return call Hpl.write(m_buf, 2, 0, NULL);
+        return call Hpl.write(2, m_buf, 0, NULL);
     }
 
     command error_t Ds1624.readMemory(uint8_t memAddr, uint8_t data_len, uint8_t *data) {
         m_buf[0] = DS1624_COMMAND_ACCESS_MEMORY;
         m_buf[1] = memAddr;
-        return call Hpl.read(m_buf, 2, data_len, data);
+        return call Hpl.read(2, m_buf, data_len, data);
     }
 
     command error_t Ds1624.writeMemory(uint8_t memAddr, uint8_t data_len, uint8_t *data) {
         m_buf[0] = DS1624_COMMAND_ACCESS_MEMORY;
         m_buf[1] = memAddr;
-        return call Hpl.write(m_buf, 2, data_len, data);
+        return call Hpl.write(2, m_buf, data_len, data);
     }
 
     event void Hpl.readDone(error_t error, uint8_t *cmd, uint8_t data_len, uint8_t *data) {

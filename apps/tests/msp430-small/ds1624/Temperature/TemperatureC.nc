@@ -38,6 +38,7 @@ module TemperatureC {
     uses interface Led;
     uses interface Timer16<TMilli> as Timer;
     uses interface Boot;
+    uses interface StdControl as I2CControl;
     uses interface Ds1624;
 }
 implementation {
@@ -48,12 +49,13 @@ implementation {
 
     event void Boot.booted() {
         call Timer.startPeriodic(100);
+        call I2CControl.start();
+        call Ds1624.startConversion();
     }
 
     event void Timer.fired() {
         ++deciSec;
         if (deciSec == 10) {
-            call Ds1624.readTemperature(temp);
             deciSec = 0;
             ++sec;
             if (sec == 60) {
@@ -63,16 +65,16 @@ implementation {
                     min = 0;
                 }
             }
+            call Sec.decimal0(sec);
+            call Min.decimal0(min);
         }
-//        call Led.set(deciSec < 1);
-        call Sec.decimal0(sec);
-        call Min.decimal0(min);
-        call Temp.decimal(temp[0]);
-        call Frac.decimal0((temp[1] * 100) / 256);
+        call Ds1624.readTemperature(temp);
     }
 
     event void Ds1624.readTemperatureDone(error_t error, uint8_t *temperature) {
         call Led.toggle();
+        call Temp.decimal(temperature[0]);
+        call Frac.decimal0((temperature[1] * 100) / 256);
     }
 
     event void Ds1624.startConversionDone(error_t error) {}
