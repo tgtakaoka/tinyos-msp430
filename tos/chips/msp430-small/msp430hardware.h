@@ -385,7 +385,6 @@ enum {
 void __nesc_disable_interrupt(void) @safe()
 {
   dint();
-  nop();
 }
 
 void __nesc_enable_interrupt(void) @safe()
