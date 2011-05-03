@@ -160,9 +160,9 @@ implementation {
         atomic signalDone();
     }
 
-    async event void UsiInterrupts.transmitDone(uint8_t data) {
+    async event void UsiInterrupts.transmitDone() {
         if (m_rxBuf)
-            m_rxBuf[m_pos - 1] = data;
+            m_rxBuf[m_pos - 1] = USISRL;
 
         if (m_pos < m_len) {
             continueOp();

@@ -33,7 +33,7 @@
 #include "msp430usi.h"
 
 interface HplMsp430UsiInterrupts {
-    async event void transmitDone(uint8_t data);
+    async event void transmitDone();
     async event void startDetected();
 }
 

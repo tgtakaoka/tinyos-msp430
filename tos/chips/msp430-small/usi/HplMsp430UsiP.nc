@@ -55,8 +55,8 @@ implementation {
     MSP430REG_NORACE(USICNT);
     MSP430REG_NORACE(USISRL);
 
-    async event void UsiInterrupts.transmitDone(uint8_t temp) {
-        signal Interrupts.transmitDone(temp);
+    async event void UsiInterrupts.transmitDone() {
+        signal Interrupts.transmitDone();
     }
 
     async event void UsiInterrupts.startDetected() {
@@ -193,6 +193,16 @@ implementation {
 
     async command uint8_t Usi.rx() {
         return USISRL;
+    }
+
+    TOSH_SIGNAL(USI_VECTOR) {
+        uint8_t usictl1 = USICTL1;
+        if (usictl1 & USIIFG) {
+            signal Interrupts.transmitDone();
+        }
+        if (usictl1 & USISTTIFG) {
+            signal Interrupts.startDetected();
+        }
     }
 }
 
