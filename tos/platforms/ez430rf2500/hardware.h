@@ -42,6 +42,9 @@
 // SW
 #define PORT_PUSH_SW   Port12
 
+#undef USE_SPI_MASTER
+#undef USE_I2C_MASTER
+
 #endif // _H_hardware_h
 
 /*

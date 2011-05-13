@@ -1,5 +1,11 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
+#include "hardware.h"
+
+#ifdef USE_I2C_MASTER
+#include_next "PlatformI2CC.nc"
+#else
+
 #include "msp430usci.h"
 
 configuration PlatformI2CC {
@@ -15,6 +21,7 @@ implementation {
     UsciConf.Msp430I2CConfigure <- I2CC;
     UsciConf.I2CResource -> I2CC;
 }
+#endif
 
 /*
  * Local Variables:

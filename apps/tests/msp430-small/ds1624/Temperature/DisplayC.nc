@@ -14,15 +14,7 @@ configuration DisplayC {
 implementation {
     components MainC;
     components GpioConf as GpioC;
-#if defined(__MSP430_HAS_USCI__)
     components PlatformSpiC as SpiC;
-#else
-    components new SpiMasterC(SPI_MASTER_MODE0, SPI_MASTER_MSB) as SpiC;
-    components new NCGeneralIOC() as SOMI;
-    SpiC.SIMO -> GpioC.SIMO;
-    SpiC.SOMI -> SOMI;
-    SpiC.CLK -> GpioC.CLK;
-#endif
     components new HplMax6951C("HH:MM TT.FF");
     components new Max6951P();
     components new Led7SegsC("HH:MM TT.FF", 2, uint16_t) as F;

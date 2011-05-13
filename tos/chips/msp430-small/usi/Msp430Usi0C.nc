@@ -32,7 +32,7 @@
 
 #include "msp430usi.h"
 
-generic configuration Msp430UsiC() {
+generic configuration Msp430Usi0C() {
     provides {
         interface Resource;
         interface ResourceRequested;
@@ -54,7 +54,7 @@ implementation {
     ResourceConfigure = UsiShareP.ResourceConfigure[CLIENT_ID];
     ArbiterInfo = UsiShareP.ArbiterInfo;
   
-    components HplMsp430UsiC as HplUsiC;
+    components HplMsp430Usi0C as HplUsiC;
     HplMsp430Usi = HplUsiC;
     HplMsp430UsiInterrupts = HplUsiC;
 }

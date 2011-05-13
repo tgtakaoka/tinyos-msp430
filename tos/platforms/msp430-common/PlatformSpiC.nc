@@ -1,5 +1,8 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
+#include "hardware.h"
+
+#ifdef USE_SPI_MASTER
 #include "SpiMaster.h"
 
 configuration PlatformSpiC {
@@ -19,6 +22,7 @@ implementation {
     SpiMasterC.SOMI -> GpioC.SOMI;
     SpiMasterC.CLK -> GpioC.CLK;
 }
+#endif
 
 /*
  * Local Variables:

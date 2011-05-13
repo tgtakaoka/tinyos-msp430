@@ -40,6 +40,9 @@
 #include "msp430hardware.h"
 #include "msp430usci.h"
 
+#undef USE_SPI_MASTER
+#undef USE_I2C_MASTER
+
 #endif // _H_hardware_h
 
 /*

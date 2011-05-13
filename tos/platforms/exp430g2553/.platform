@@ -1,0 +1,38 @@
+# -*- mode:perl; -*-
+
+push( @includes, qw(
+
+      %T/platforms/exp430g2553
+      %T/platforms/exp430g-common
+      %T/platforms/msp430-common
+
+      %T/chips/msp430-small/msp430g2x53
+
+      %T/chips/msp430-small
+      %T/chips/msp430-small/pins
+      %T/chips/msp430-small/timer-vlo
+      %T/chips/msp430-small/timer
+      %T/chips/msp430-small/usci
+
+      %T/chips/msp430
+      %T/chips/msp430/pins
+      %T/chips/msp430/timer
+      %T/chips/msp430X/usci
+
+      %T/lib/gpio
+      %T/lib/timer
+      %T/lib/power
+      %T/lib/misc
+) );
+
+@opts = qw(
+      -gcc=msp430-gcc
+      -mmcu=msp430g2553
+      -fnesc-target=msp430
+      -fnesc-no-debug
+      -D__msp430_using_vlo
+);
+
+push @opts,
+    "-fnesc-scheduler=TinySchedulerC,TinySchedulerC.TaskBasic,TaskBasic,TaskBasic,runTask,postTask"
+    if !$with_scheduler_flag;

@@ -1,0 +1,20 @@
+# -*- mode: makefile-gmake; mode: flyspell-prog; -*-
+
+PLATFORM ?= exp430g2553
+
+MSP_MCU = msp430g2553
+
+# Disable MSP430 hardware multiply because it makes MSPGCC die
+PFLAGS += -mdisable-hwmul -mdisable-watchdog
+
+ifndef DEFAULT_PROGRAM
+DEFAULT_PROGRAM = mspdebug
+MSPDEBUG_DRIVER = rf2500
+endif
+
+$(call TOSMake_include_platform,msp)
+
+exp430g2553: $(BUILD_DEPS)
+	@:
+
+# vim: set noet ts=8 sw=8 syntax=make:

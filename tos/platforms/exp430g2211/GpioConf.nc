@@ -1,40 +1,49 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
+#include "hardware.h"
+
 configuration GpioConf {
     provides {
         interface GeneralIO as STE;
+#ifdef USE_SPI_MASTER
         interface GeneralIO as SIMO;
         interface GeneralIO as SOMI;
         interface GeneralIO as CLK;
+#endif
 
+#ifdef USE_I2C_MASTER
         interface GeneralIO as SCL;
         interface GeneralIO as SDA;
+#endif
     }
 }
 implementation {
     components HplMsp430GeneralIOC as IOC;
+
     components new Msp430GpioC() as STE0;
+    STE0  -> IOC.Port15;
+    STE  = STE0;
+
+#ifdef USE_SPI_MASTER
     components new Msp430GpioC() as SIMO0;
     components new Msp430GpioC() as SOMI0;
     components new Msp430GpioC() as CLK0;
-    components new Msp430GpioC() as SCL0;
-    components new Msp430GpioC() as SDA0;
-
-    STE0  -> IOC.Port14;
-    CLK0  -> IOC.Port15;
-    SIMO0 -> IOC.Port16;
-    SOMI0 -> IOC.Port17;
-
-    STE  = STE0;
+    CLK0  -> IOC.Port14;
+    SIMO0 -> IOC.Port12;
+    SOMI0 -> IOC.Port11;
     CLK  = CLK0;
     SIMO = SIMO0;
     SOMI = SOMI0;
+#endif
 
-    SCL0 -> IOC.Port12;
-    SDA0 -> IOC.Port13;
-
+#ifdef USE_I2C_MASTER
+    components new Msp430GpioC() as SCL0;
+    components new Msp430GpioC() as SDA0;
+    SCL0 -> IOC.Port16;
+    SDA0 -> IOC.Port17;
     SCL = SCL0;
     SDA = SDA0;
+#endif
 }
 
 /*

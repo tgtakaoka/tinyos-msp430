@@ -8,6 +8,10 @@ module UsartConf {
     provides interface StdControl as SpiControl;
     provides interface Msp430SpiConfigure;
     uses interface Resource as SpiResource;
+
+    provides interface StdControl as I2CControl;
+    provides interface Msp430I2CConfigure;
+    uses interface Resource as I2CResource;
 }
 implementation {
     const msp430_uart_union_config_t uart_config = {
@@ -71,6 +75,39 @@ implementation {
     async command const msp430_spi_union_config_t* Msp430SpiConfigure.getConfig() {
         return &spi_config;
     }
+
+    const msp430_i2c_union_config_t i2c_config = { 
+        {
+        rxdmaen : 0, 
+        txdmaen : 0, 
+        xa : 0, 
+        listen : 0, 
+        mst : 1,
+        i2cword : 0, 
+        i2crm : 1, 
+        i2cssel : 0x2, 
+        i2cpsc : 0, 
+        i2csclh : 0x3, 
+        i2cscll : 0x3,
+        i2coa : 0,
+        } 
+    };
+
+    command error_t I2CControl.start() {
+        return call I2CResource.immediateRequest();
+    }
+
+    command error_t I2CControl.stop() {
+        call I2CResource.release();
+        return SUCCESS;
+    }
+
+    event void I2CResource.granted() {}
+
+    async command const msp430_i2c_union_config_t* Msp430I2CConfigure.getConfig() {
+        return &i2c_config;
+    }
+
 }
 
 /*

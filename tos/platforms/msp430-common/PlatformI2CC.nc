@@ -1,5 +1,8 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
+#include "hardware.h"
+
+#ifdef USE_I2C_MASTER
 #include "I2C.h"
 #include "I2CMaster.h"
 
@@ -19,6 +22,7 @@ implementation {
     I2CMasterC.SCL -> GpioC.SCL;
     I2CMasterC.SDA -> GpioC.SDA;
 }
+#endif
 
 /*
  * Local Variables:

@@ -1,5 +1,9 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
+#ifdef USE_SPI_MASTER
+#include_next "PlatformSpiC.nc"
+#else
+
 #include "msp430usart.h"
 
 configuration PlatformSpiC {
@@ -17,6 +21,7 @@ implementation {
     UsartConf.Msp430SpiConfigure <- SpiC;
     UsartConf.SpiResource -> SpiC;
 }
+#endif
 
 /*
  * Local Variables:

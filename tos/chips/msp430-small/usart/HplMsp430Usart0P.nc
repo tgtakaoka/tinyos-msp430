@@ -158,11 +158,13 @@ implementation
   }
 
   async command void Usart.resetUsart(bool reset) {
+    atomic {
     if (reset) {
       U0CTL = SWRST;
     }
     else {
       CLR_FLAG(U0CTL, SWRST);
+    }
     }
   }
 

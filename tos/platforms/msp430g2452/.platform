@@ -5,7 +5,7 @@ push( @includes, qw(
       %T/platforms/msp430g2452
       %T/platforms/msp430-common
 
-      %T/chips/msp430-small/msp430g2xx2
+      %T/chips/msp430-small/msp430g2x52
 
       %T/chips/msp430-small
       %T/chips/msp430-small/pins

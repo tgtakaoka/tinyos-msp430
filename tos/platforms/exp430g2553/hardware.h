@@ -1,5 +1,5 @@
-/* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G Takaoka
+/* -*- mode: c; mode: flyspell-prog; -*- */
+/* Copyright (c) 2010, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,24 +30,22 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "msp430usi.h"
+#ifndef _H_hardware_h
+#define _H_hardware_h
 
-configuration HplMsp430UsiC {
-    provides interface HplMsp430Usi;
-    provides interface HplMsp430UsiInterrupts;
-}
-implementation {
-    components HplMsp430UsiP as HplUsiP;
-    HplMsp430Usi = HplUsiP;
-    HplMsp430UsiInterrupts = HplUsiP;
-  
-    components HplMsp430GeneralIOC as GIO;
-    HplUsiP.SIMO -> GIO.USISDO;
-    HplUsiP.SOMI -> GIO.USISDI;
-    HplUsiP.UCLK -> GIO.USISCLK;
-    HplUsiP.SCL -> GIO.USISCL;
-    HplUsiP.SDA -> GIO.USISDA;  
-}
+#if !defined(__MSP430__REV__)
+#define __MSP430_REV__ 'A'
+#endif
+
+#include "msp430hardware.h"
+
+// SW
+#define PORT_PUSH_SW   Port13
+
+#undef USE_SPI_MASTER
+#undef USE_I2C_MASTER
+
+#endif // _H_hardware_h
 
 /*
  * Local Variables:
