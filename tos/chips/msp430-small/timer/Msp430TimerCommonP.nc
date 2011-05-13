@@ -3,7 +3,7 @@ module Msp430TimerCommonP @safe()
 {
   provides interface Msp430TimerEvent as VectorTimerA0;
   provides interface Msp430TimerEvent as VectorTimerA1;
-#if defined(__MSP430_HAS_T1A2__)
+#if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
   provides interface Msp430TimerEvent as VectorTimer1A0;
   provides interface Msp430TimerEvent as VectorTimer1A1;
 #endif
@@ -21,7 +21,7 @@ implementation
   TOSH_SIGNAL(TIMERA0_VECTOR) { signal VectorTimerA0.fired(); }
   TOSH_SIGNAL(TIMERA1_VECTOR) { signal VectorTimerA1.fired(); }
 #endif
-#if defined(__MSP430_HAS_T1A2__)
+#if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
   TOSH_SIGNAL(TIMER1_A0_VECTOR) { signal VectorTimer1A0.fired(); }
   TOSH_SIGNAL(TIMER1_A1_VECTOR) { signal VectorTimer1A1.fired(); }
 #endif

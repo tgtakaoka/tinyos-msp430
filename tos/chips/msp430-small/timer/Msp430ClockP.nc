@@ -51,7 +51,7 @@ implementation
   MSP430REG_NORACE(IE1);
   MSP430REG_NORACE(TACTL);
   MSP430REG_NORACE(TAIV);
-#if defined(__MSP430_HAS_T1A2__)
+#if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
   MSP430REG_NORACE(TA1CTL);
   MSP430REG_NORACE(TA1IV);
 #endif
@@ -212,7 +212,7 @@ implementation
   {
     // TACTL.MC = 2; continuous mode
     TACTL = MC1 | (TACTL & ~(MC1|MC0));
-#if defined(__MSP430_HAS_T1A2__)
+#if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
     // TA1CTL.MC = 2; continuous mode
     TA1CTL = MC1 | (TA1CTL & ~(MC1|MC0));
 #endif
@@ -222,7 +222,7 @@ implementation
   {
     //TACTL.MC = 0; stop timer B
     TACTL = TACTL & ~(MC1|MC0);
-#if defined(__MSP430_HAS_T1A2__)
+#if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
     //TA1CTL.MC = 0; stop timer A
     TA1CTL &= ~(MC1|MC0);
 #endif
@@ -327,7 +327,7 @@ implementation
     // Reset timers and clear interrupt vectors
     TACTL = TACLR;
     TAIV = 0;
-#if defined(__MSP430_HAS_T1A2__)
+#if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
     TA1CTL = TACLR;
     TA1IV = 0;
 #endif

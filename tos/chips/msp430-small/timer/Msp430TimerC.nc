@@ -49,7 +49,7 @@ configuration Msp430TimerC
   provides interface Msp430Capture as CaptureA2;
 #endif
 
-#if defined(__MSP430_HAS_T1A2__)
+#if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
   provides interface Msp430Timer as Timer1A;
   provides interface Msp430TimerControl as Control1A0;
   provides interface Msp430Compare as Compare1A0;
@@ -57,6 +57,11 @@ configuration Msp430TimerC
   provides interface Msp430TimerControl as Control1A1;
   provides interface Msp430Compare as Compare1A1;
   provides interface Msp430Capture as Capture1A1;
+#if defined(__MSP430_HAS_T1A3__)
+  provides interface Msp430TimerControl as Control1A2;
+  provides interface Msp430Compare as Compare1A2;
+  provides interface Msp430Capture as Capture1A2;
+#endif
 #endif
 
 #if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
@@ -99,11 +104,14 @@ implementation
 #if defined(__MSP430_HAS_TA3__)
            , new Msp430TimerCapComP( TACCTL2_, TACCR2_ ) as Msp430TimerA2
 #endif
-#if defined(__MSP430_HAS_T1A2__)
+#if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
            , new Msp430TimerP(TA1IV_, TA1R_, TA1CTL_, TAIFG, TACLR, TAIE,
                TASSEL0, TASSEL1, FALSE) as Msp430Timer1A
            , new Msp430TimerCapComP(TACCTL0_, TACCR0_) as Msp430Timer1A0
            , new Msp430TimerCapComP(TACCTL1_, TACCR1_) as Msp430Timer1A1
+#if defined(__MSP430_HAS_T1A3__)
+           , new Msp430TimerCapComP(TACCTL2_, TACCR2_) as Msp430Timer1A2
+#endif
 #endif
 #if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
            , new Msp430TimerCapComP( TBCCTL0_, TBCCR0_ ) as Msp430TimerB0
@@ -148,7 +156,7 @@ implementation
   Msp430TimerA2.Event -> Msp430TimerA.Event[4];
 #endif
 
-#if defined(__MSP430_HAS_T1A2__)
+#if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
   // Timer1 A
   Timer1A = Msp430Timer1A.Timer;
   Msp430Timer1A.Overflow -> Msp430Timer1A.Event[10];
@@ -168,6 +176,15 @@ implementation
   Capture1A1 = Msp430Timer1A1.Capture;
   Msp430Timer1A1.Timer -> Msp430Timer1A.Timer;
   Msp430Timer1A1.Event -> Msp430Timer1A.Event[2];
+
+#if defined(__MSP430_HAS_T1A3__)
+  // Timer1 A2
+  Control1A2 = Msp430Timer1A2.Control;
+  Compare1A2 = Msp430Timer1A2.Compare;
+  Capture1A2 = Msp430Timer1A2.Capture;
+  Msp430Timer1A2.Timer -> Msp430Timer1A.Timer;
+  Msp430Timer1A2.Event -> Msp430Timer1A.Event[4];
+#endif
 #endif
 
 #if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
