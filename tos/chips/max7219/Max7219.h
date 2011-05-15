@@ -33,8 +33,8 @@
 #ifndef _H_MAX7219_H
 #define _H_MAX7219_H
 
-#define MAX7219_CONFIG_SHUTDOWN    0x01
-#define MAX7219_CONFIG_NORMAL      0x00
+#define MAX7219_CONFIG_SHUTDOWN    0x00
+#define MAX7219_CONFIG_NORMAL      0x01
 
 #endif
 

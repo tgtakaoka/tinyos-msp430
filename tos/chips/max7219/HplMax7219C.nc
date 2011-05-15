@@ -65,6 +65,7 @@ implementation {
             call Load.makeOutput();
             call SpiControl.start();
             call Hpl.setConfig(MAX7219_CONFIG_NORMAL);
+            call Hpl.displayTest(FALSE);
             call Hpl.setScanLimit(uniqueCount(resourceName));
             call Hpl.setDecodeMode(0x00); /* segment mode */
             call Hpl.setIntensity(15);
@@ -81,7 +82,7 @@ implementation {
     }
 
     command void Hpl.setDigit(uint8_t digit, uint8_t segments) {
-        write((digit << 8) | ADDRESS_DIGIT0 | segments);
+        write(((digit << 8) + ADDRESS_DIGIT0) | segments);
     }
 
     command void Hpl.setDecodeMode(uint8_t modes) {
@@ -93,15 +94,15 @@ implementation {
     }
 
     command void Hpl.setScanLimit(uint8_t digits) {
-        write(ADDRESS_SCAN_LIMIT | digits);
+        write(ADDRESS_SCAN_LIMIT | (digits - 1));
     }
 
     command void Hpl.setConfig(uint8_t config) {
         write(ADDRESS_CONFIG | config);
     }
 
-    command void Hpl.displayTest() {
-        write(ADDRESS_DISPLAY_TEST | 1);
+    command void Hpl.displayTest(bool enableTest) {
+        write(ADDRESS_DISPLAY_TEST | enableTest);
     }
 }
 

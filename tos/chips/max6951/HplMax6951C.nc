@@ -66,6 +66,7 @@ implementation {
             call Hpl.setConfig(MAX6951_CONFIG_NORMAL | MAX6951_CONFIG_BLINK_1_0S |
                                MAX6951_CONFIG_BLINK_OFF | MAX6951_CONFIG_BLINK_ASYNC |
                                MAX6951_CONFIG_CLEAR_ASYNC);
+            call Hpl.displayTest(FALSE);
             call Hpl.setScanLimit(uniqueCount(resourceName));
             call Hpl.setDecodeMode(0x00); /* segment mode */
             call Hpl.setIntensity(1);
@@ -101,8 +102,8 @@ implementation {
         write(ADDRESS_CONFIG | config);
     }
 
-    command void Hpl.displayTest() {
-        write(ADDRESS_DISPLAY_TEST | 1);
+    command void Hpl.displayTest(bool enableTest) {
+        write(ADDRESS_DISPLAY_TEST | enableTest);
     }
 }
 

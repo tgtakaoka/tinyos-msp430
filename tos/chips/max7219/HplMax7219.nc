@@ -44,7 +44,7 @@ interface HplMax7219 {
     command void setIntensity(uint8_t intensity);
     command void setScanLimit(uint8_t digits);
     command void setConfig(uint8_t config);
-    command void displayTest();
+    command void displayTest(bool enableTest);
 }
 
 /*
