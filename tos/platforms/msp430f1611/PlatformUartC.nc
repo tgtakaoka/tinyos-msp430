@@ -8,7 +8,7 @@ configuration PlatformUartC {
     provides interface UartByte;
 }
 implementation {
-#if 0
+#if 1
     components new Msp430Uart0C() as UartC;
 #else
     // USART1/UART Receiver will not work [Issue 3]
