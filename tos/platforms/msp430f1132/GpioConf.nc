@@ -21,7 +21,7 @@ implementation {
     components HplMsp430GeneralIOC as IOC;
 
     components new Msp430GpioC() as STE0;
-    STE0  -> IOC.Port15;
+    STE0  -> IOC.Port12;
     STE  = STE0;
 
 #ifdef USE_SPI_MASTER
