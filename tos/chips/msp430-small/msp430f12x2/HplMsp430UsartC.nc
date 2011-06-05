@@ -1,5 +1,6 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
+/* USART pin configuration of MSP430F12x2 */
 configuration HplMsp430UsartC {
     provides {
         interface HplMsp430GeneralIO as STE0;

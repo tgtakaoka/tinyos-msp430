@@ -37,10 +37,12 @@
 
 #if defined(__MSP430F155__) || defined(__MSP430F156__) || defined(__MSP430F157__) || \
     defined(__MSP430F167__) || defined(__MSP430F168__) || defined(__MSP430F169__)
+
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'B'"
 #define __MSP430_REV__ 'B'
 #endif
+
 #if __MSP430_REV__ == 'B' || __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' \
     || __MSP430_REV__ == 'E'
 #define ERRATA_ADC18
@@ -73,10 +75,12 @@
 #endif
 
 #elif defined(__MSP430F1610_) || defined(__MSP430F1611__) || defined(__MSP430F1612__)
+
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'A'"
 #define __MSP430_REV__ 'A'
 #endif
+
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B'
 #define ERRATA_ADC18
 #define ERRATA_ADC25

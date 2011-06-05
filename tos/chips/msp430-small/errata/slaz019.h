@@ -37,10 +37,12 @@
 
 #if defined(__MSP430C1101__) || defined(__MSP430C1111__) || defined(__MSP430C1121__) || \
     defined(__MSP430F1101__) || defined(__MSP430F1111__) || defined(__MSP430F1121__)
+
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'H'"
 #define __MSP430_REV__ 'H'
 #endif
+
 #if __MSP430_REV__ == 'H' || __MSP430_REV__ == 'I' || __MSP430_REV__ == 'J'
 #define ERRATA_BCL5
 #define ERRATA_CPU4

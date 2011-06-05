@@ -36,10 +36,12 @@
 /* See SLAZ009B MSP430F12x2, MSP430F11x2 Device Erratasheet, Revised February 2011 */
 
 #if defined(__MSP430F1122__) || defined(__MSP430F1132__)
+
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'E'"
 #define __MSP430_REV__ 'E'
 #endif
+
 #if __MSP430_REV__ == 'E' || __MSP430_REV__ == 'G'
 #define ERRATA_ADC22
 #define ERRATA_BCL5
@@ -55,10 +57,12 @@
 #endif
 
 #elif defined(__MSP430F1222__) || defined(__MSP430F1232__)
+
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'D'"
 #define __MSP430_REV__ 'D'
 #endif
+
 #if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'F'
 #define ERRATA_ADC22
 #define ERRATA_BCL5

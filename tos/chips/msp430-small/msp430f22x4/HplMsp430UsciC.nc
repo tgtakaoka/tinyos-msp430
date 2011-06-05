@@ -1,5 +1,6 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
+/* USCI pin configuration of MSP430F22x4 */
 configuration HplMsp430UsciC {
     provides {
         interface HplMsp430GeneralIO as UCA0STE;

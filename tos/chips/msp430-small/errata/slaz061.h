@@ -39,10 +39,12 @@
     defined(__MSP430G2111__) || defined(__MSP430G2211__) || \
     defined(__MSP430G2121__) || defined(__MSP430G2221__) || \
     defined(__MSP430G2131__) || defined(__MSP430G2231__)
+
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'D'"
 #define __MSP430_REV__ 'D'
 #endif
+
 #if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E'
 #define ERRATA_BCL12
 #define ERRATA_CPU4

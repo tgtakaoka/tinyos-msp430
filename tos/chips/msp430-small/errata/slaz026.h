@@ -36,10 +36,12 @@
 /* See SLAZ026N MSP430F20xx Device Erratasheet, Revised January 2011 */
 
 #if defined(__MSP430F2001__) || defined(__MSP430F2011__)
+
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'A'"
 #define __MSP430_REV__ 'A'
 #endif
+
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'C' || \
     __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || \
     __MSP430_REV__ == 'G'
@@ -69,10 +71,12 @@
 #endif
 
 #elif defined(__MSP430F2002__) || defined(__MSP430F2012__)
+
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'A'"
 #define __MSP430_REV__ 'A'
 #endif
+
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'C' || \
     __MSP430_REV__ == 'D'
 #define ERRATA_BCL12
@@ -99,10 +103,12 @@
 #endif
 
 #elif defined(__MSP430F2003__) || defined(__MSP430F2013__)
+
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'B'"
 #define __MSP430_REV__ 'B'
 #endif
+
 #if __MSP430_REV__ == 'B' || __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || \
     __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || __MSP430_REV__ == 'G'
 #define ERRATA_BCL12

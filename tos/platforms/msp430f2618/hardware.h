@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2010-2011, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,43 +30,19 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz072_h
-#define _H_slaz072_h
+#ifndef _H_hardware_h
+#define _H_hardware_h
 
-/* See SLAZ072 MSP430G2x52, G2x32, G2x12, G2x02 Device Erratasheet, Revised December 2010 */
-
-#if defined(__MSP430G2102__) || defined(__MSP430G2202__) || defined(__MSP430G2302__) || \
-    defined(__MSP430G2402__) || \
-    defined(__MSP430G2112__) || defined(__MSP430G2212__) || defined(__MSP430G2312__) || \
-    defined(__MSP430G2412__) || \
-    defined(__MSP430G2132__) || defined(__MSP430G2232__) || defined(__MSP430G2332__) || \
-    defined(__MSP430G2432__) || \
-    defined(__MSP430G2152__) || defined(__MSP430G2252__) || defined(__MSP430G2352__) || \
-    defined(__MSP430G2452__)
-
-#if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'A'"
-#define __MSP430_REV__ 'A'
+#if !defined(__MSP430__REV__)
+#define __MSP430_REV__ 'B'
 #endif
 
-#if __MSP430_REV__ == 'A'
-#define ERRATA_BCL12
-#define ERRATA_BCL14
-#define ERRATA_CPU4
-#define ERRATA_SYS15
-#define ERRATA_TA12
-#define ERRATA_TA16
-#define ERRATA_TA22
-#define ERRATA_USI4
-#define ERRATA_USI5
-#define ERRATA_XOSC5
-#endif
+#include "msp430hardware.h"
 
-#else
-#error "This errata/slaz072.h is for MSP430G2x52/G2x32/G2x12/G2x02"
-#endif
+#undef USE_SPI_MASTER
+#undef USE_I2C_MASTER
 
-#endif
+#endif // _H_hardware_h
 
 /*
  * Local Variables:

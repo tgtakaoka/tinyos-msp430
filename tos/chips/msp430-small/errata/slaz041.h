@@ -36,10 +36,12 @@
 /* See SLAZ041C MSP430F21x2 Device Erratasheet, Revised January 2010 */
 
 #if defined(__MSP430F2112__) || defined(__MSP430F2122__) || defined(__MSP430F2132__)
+
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'A'"
 #define __MSP430_REV__ 'A'
 #endif
+
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B'
 #define ERRATA_BCL12
 #define ERRATA_CPU19

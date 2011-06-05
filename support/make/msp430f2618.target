@@ -1,0 +1,21 @@
+# -*- mode: makefile-gmake; mode: flyspell-prog; -*-
+
+PLATFORM ?= msp430f2618
+
+MSP_MCU = msp430f2618
+
+# Disable MSP430 hardware multiply because it makes MSPGCC die
+PFLAGS += -mdisable-hwmul -mdisable-watchdog
+
+ifndef DEFAULT_PROGRAM
+DEFAULT_PROGRAM = tos-bsl
+endif
+
+TOS_BSL_FLAGS ?= --invert-reset --invert-test
+
+$(call TOSMake_include_platform,msp)
+
+msp430f2618: $(BUILD_DEPS)
+	@:
+
+# vim: set noet ts=8 sw=8 syntax=make:

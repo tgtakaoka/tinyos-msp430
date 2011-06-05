@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G. Takaoka
+/* Copyright (c) 2011, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,75 +30,89 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz020_h
-#define _H_slaz020_h
+#ifndef _H_slaz033_h
+#define _H_slaz033_h
 
-/* See SLAZ020H MSP430F21x1 Device Erratasheet, Revised December 2008 */
+/* See SLAZ033I MSP430F261x, MSP430F241x Device Erratasheet, Revised May 2011 */
 
-#if defined(__MSP430F2101__) || defined(__MSP430F2111__) || defined(__MSP430F2121__) || \
-    defined(__MSP430F2131__)
+#if defined(__MSP430F2416__) || defined(__MSP430F2417__) || \
+    defined(__MSP430F2418__) || defined(__MSP430F2419__) || \
+    defined(__MSP430F2616__) || defined(__MSP430F2617__) || \
+    defined(__MSP430F2618__) || defined(__MSP430F2619__)
 
 #if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'C'"
-#define __MSP430_REV__ 'C'
+#warning "__MSP430_REV__ not defined, default to 'H'"
+#define __MSP430_REV__ 'H'
 #endif
 
-/* Note: Revision F is not defined */
-#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || \
-    __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H' || __MSP430_REV__ == 'I' || \
-    __MSP430_REV__ == 'K'
+
+#if !defined(__MSP430_REV__)
+#warning "__MSP430_REV__ not defined, default to 'H'"
+#define __MSP430_REV__ 'H'
+#endif
+
+#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'D' || \
+    __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || __MSP430_REV__ == 'H'
+#define ERRATA_ADC25
 #define ERRATA_BCL12
-#define ERRATA_BCL14
-#define ERRATA_CPU4
-#define ERRATA_CPU11
-#define ERRATA_CPU12
-#define ERRATA_CPU13
+#define ERRATA_CPU8
+#define ERRATA_CPU16
 #define ERRATA_CPU19
-#define ERRATA_FLASH16
-#define ERRATA_FLASH17
-#define ERRATA_FLASH18
 #define ERRATA_FLASH19
-#define ERRATA_FLASH20
 #define ERRATA_FLASH24
 #define ERRATA_FLASH27
 #define ERRATA_FLASH36
-#define ERRATA_SYS15
+#define ERRATA_PORT10
+#define ERRATA_PORT12
 #define ERRATA_TA12
 #define ERRATA_TA16
-#define ERRATA_TA22
+#define ERRATA_TAB22
+#define ERRATA_TB2
+#define ERRATA_TB16
+#define ERRATA_USCI20
+#define ERRATA_USCI21
+#define ERRATA_USCI22
+#define ERRATA_USCI23
+#define ERRATA_USCI24
+#define ERRATA_USCI25
+#define ERRATA_USCI26
+#define ERRATA_USCI27
+#define ERRATA_USCI30
 #define ERRATA_XOSC5
+#if defined(__MSP430F2616__) || defined(__MSP430F2617__) || \
+    defined(__MSP430F2618__) || defined(__MSP430F2619__)
+#define ERRATA_DMA3
+#define ERRATA_DMA4
+#define ERRATA_SVS2
 #endif
-#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || \
-    __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H'
+#endif
+#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'D' || \
+    __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F'
+#define ERRATA_XOSC8
+#endif
+#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'D' || \
+    __MSP430_REV__ == 'E'
 #define ERRATA_BCL13
+#define ERRATA_FLASH25
 #endif
-#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || \
-    __MSP430_REV__ == 'G'
-#define ERRATA_BCL9
-#define ERRATA_BCL10
-#define ERRATA_BCL11
+#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'D'
+#define ERRATA_COMP2
+#endif
+#if __MSP430_REV__ == 'B'
+#define ERRATA_ADC19
+#endif
+#if __MSP430_REV__ == 'A'
+#define ERRATA_ADC18
 #define ERRATA_FLASH22
-#define ERRATA_PORT10
-#endif
-#if __MSP430_REV__ == 'E' || __MSP430_REV__ == 'G'
-#define ERRATA_CPU14
-#endif
-#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E'
-#define ERRATA_JTAG15
-#endif
-#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D'
-#define ERRATA_BCL6
-#define ERRATA_BCL8
-#define ERRATA_CPU6
-#define ERRATA_PORT8
-#endif
-#if __MSP430_REV__ == 'C'
-#define ERRATA_BSL5
-#define ERRATA_CPU5
+#define ERRATA_FLASH23
+#define ERRATA_TB19
+#define ERRATA_USCI16
+#define ERRATA_XOSC6
+#define
 #endif
 
 #else
-#error "This errata/slaz020.h is for MSP430F21x1"
+#error "This errata/slaz033.h is for MSP430F261x/F241x"
 #endif
 
 #endif

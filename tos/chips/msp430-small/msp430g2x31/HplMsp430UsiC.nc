@@ -1,5 +1,6 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
+/* USI pin configuration of MSP430G2x31 */
 configuration HplMsp430UsiC {
     provides {
         interface HplMsp430GeneralIO as USISCLK;

@@ -9,7 +9,7 @@ PROGRAM = mspdebug
 MSP_DEBUG ?= mspdebug
 
 ifeq ($(MSPDEBUG_DRIVER),)
-  MSPDEBUG_DRIVER=sim
+  MSPDEBUG_DRIVER=rf2500
 endif
 
 program: $(BSL_TARGETS) $(TELOS_PROGRAM_DEPS) FORCE

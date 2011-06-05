@@ -37,10 +37,12 @@
 
 #if defined(__MSP430F2232__) || defined(__MSP430F2252__) || defined(__MSP430F2272__) || \
     defined(__MSP430F2234__) || defined(__MSP430F2254__) || defined(__MSP430F2274__)
+
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'D'"
 #define __MSP430_REV__ 'D'
 #endif
+
 #if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || \
     __MSP430_REV__ == 'G'
 #define ERRATA_BCL12
