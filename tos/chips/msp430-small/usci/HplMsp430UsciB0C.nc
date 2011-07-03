@@ -107,7 +107,7 @@ implementation {
   HplMsp430UsciB = HplUsciP;
   HplMsp430UsciInterrupts = HplUsciP;
   
-  components HplMsp430UsciC as UsciC;
+  components Msp430UsciConf as UsciC;
   HplUsciP.SIMO -> UsciC.UCB0SIMO;
   HplUsciP.SOMI -> UsciC.UCB0SOMI;
   HplUsciP.UCLK -> UsciC.UCB0CLK;

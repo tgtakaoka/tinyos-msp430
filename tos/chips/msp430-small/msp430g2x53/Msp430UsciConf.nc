@@ -1,7 +1,7 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
-/* USCI pin configuration of MSP430F22x4 */
-configuration HplMsp430UsciC {
+/* USCI pin configuration of MSP430G2x53 */
+configuration Msp430UsciConf {
     provides {
         interface HplMsp430GeneralIO as UCA0STE;
         interface HplMsp430GeneralIO as UCA0SIMO;
@@ -21,19 +21,19 @@ configuration HplMsp430UsciC {
 implementation {
     components HplMsp430GeneralIOC as IOC;
 
-    UCA0STE = IOC.Port33;
-    UCA0SIMO = IOC.Port34;
-    UCA0SOMI = IOC.Port35;
-    UCA0CLK = IOC.Port30;
-    UCA0TXD = IOC.Port34;
-    UCA0RXD = IOC.Port35;
+    UCA0STE = IOC.Port15;
+    UCA0SIMO = IOC.Port12;
+    UCA0SOMI = IOC.Port11;
+    UCA0CLK = IOC.Port14;
+    UCA0TXD = IOC.Port12;
+    UCA0RXD = IOC.Port11;
 
-    UCB0STE = IOC.Port30;
-    UCB0SIMO = IOC.Port31;
-    UCB0SOMI = IOC.Port32;
-    UCB0CLK = IOC.Port33;
-    UCB0SDA = IOC.Port31;
-    UCB0SCL = IOC.Port32;
+    UCB0STE = IOC.Port14;
+    UCB0SIMO = IOC.Port17;
+    UCB0SOMI = IOC.Port16;
+    UCB0CLK = IOC.Port15;
+    UCB0SDA = IOC.Port17;
+    UCB0SCL = IOC.Port16;
 }
 
 /*

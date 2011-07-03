@@ -86,7 +86,7 @@ implementation {
   HplMsp430UsartInterrupts = HplUsartP;
   HplMsp430I2CInterrupts = HplUsartP;
   
-  components HplMsp430UsartC as UsartC;
+  components Msp430UsartConf as UsartC;
   HplUsartP.SIMO -> UsartC.SIMO0;
   HplUsartP.SOMI -> UsartC.SOMI0;
   HplUsartP.UCLK -> UsartC.UCLK0;

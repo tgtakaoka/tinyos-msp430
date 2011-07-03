@@ -82,7 +82,7 @@ configuration HplMsp430Usart1C {
 implementation {
 
   components HplMsp430Usart1P as HplUsartP;
-  components HplMsp430UsartC as UsartC;
+  components Msp430UsartConf as UsartC;
 
   AsyncStdControl = HplUsartP;
   HplMsp430Usart = HplUsartP;

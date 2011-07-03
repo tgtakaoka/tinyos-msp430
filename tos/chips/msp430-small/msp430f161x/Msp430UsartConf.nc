@@ -1,7 +1,7 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
-/* USART pin configuration of MSP430F12x2 */
-configuration HplMsp430UsartC {
+/* USART pin configuration of MSP430F161x */
+configuration Msp430UsartConf {
     provides {
         interface HplMsp430GeneralIO as STE0;
         interface HplMsp430GeneralIO as SIMO0;
@@ -9,6 +9,15 @@ configuration HplMsp430UsartC {
         interface HplMsp430GeneralIO as UCLK0;
         interface HplMsp430GeneralIO as UTXD0;
         interface HplMsp430GeneralIO as URXD0;
+        interface HplMsp430GeneralIO as SDA;
+        interface HplMsp430GeneralIO as SCL;
+
+        interface HplMsp430GeneralIO as STE1;
+        interface HplMsp430GeneralIO as SIMO1;
+        interface HplMsp430GeneralIO as SOMI1;
+        interface HplMsp430GeneralIO as UCLK1;
+        interface HplMsp430GeneralIO as UTXD1;
+        interface HplMsp430GeneralIO as URXD1;
     }
 }
 implementation {
@@ -20,6 +29,15 @@ implementation {
     UCLK0 = IOC.Port33;
     UTXD0 = IOC.Port34;
     URXD0 = IOC.Port35;
+    SDA = IOC.Port31;
+    SCL = IOC.Port33;
+
+    STE1 = IOC.Port50;
+    SIMO1 = IOC.Port51;
+    SOMI1 = IOC.Port52;
+    UCLK1 = IOC.Port53;
+    UTXD1 = IOC.Port36;
+    URXD1 = IOC.Port37;
 }
 
 /*
