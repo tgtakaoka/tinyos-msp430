@@ -33,7 +33,7 @@
 #ifndef _H_slaz009_h
 #define _H_slaz009_h
 
-/* See SLAZ009B MSP430F12x2, MSP430F11x2 Device Erratasheet, Revised February 2011 */
+/* See SLAZ009C MSP430F12x2, MSP430F11x2 Device Erratasheet, Revised April 2011 */
 
 #if defined(__MSP430F1122__) || defined(__MSP430F1132__)
 
@@ -50,7 +50,7 @@
 #define ERRATA_RES4
 #define ERRATA_TA12
 #define ERRATA_TA16
-#define ERRATA_TAB22
+#define ERRATA_TA22
 #define ERRATA_US13
 #define ERRATA_US15
 #define ERRATA_WDG2
@@ -71,7 +71,7 @@
 #define ERRATA_RES4
 #define ERRATA_TA12
 #define ERRATA_TA16
-#define ERRATA_TAB22
+#define ERRATA_TA22
 #define ERRATA_US13
 #define ERRATA_US15
 #define ERRATA_WDG2

@@ -33,7 +33,7 @@
 #ifndef _H_slaz034_h
 #define _H_slaz034_h
 
-/* See SLAZ034I MSP430F22x4, MSP430F22x2 Device Erratasheet, Revised Feburuary 2011 */
+/* See SLAZ034K MSP430F22x4, MSP430F22x2 Device Erratasheet, Revised June 2011 */
 
 #if defined(__MSP430F2232__) || defined(__MSP430F2252__) || defined(__MSP430F2272__) || \
     defined(__MSP430F2234__) || defined(__MSP430F2254__) || defined(__MSP430F2274__)
@@ -44,7 +44,8 @@
 #endif
 
 #if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || \
-    __MSP430_REV__ == 'G'
+    __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H' || __MSP430_REV__ == 'I' || \
+    __MSP430_REV__ == 'J'
 #define ERRATA_BCL12
 #define ERRATA_CPU19
 #define ERRATA_FLASH24

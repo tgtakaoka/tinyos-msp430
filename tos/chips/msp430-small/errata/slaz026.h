@@ -33,7 +33,7 @@
 #ifndef _H_slaz026_h
 #define _H_slaz026_h
 
-/* See SLAZ026N MSP430F20xx Device Erratasheet, Revised January 2011 */
+/* See SLAZ026P MSP430F20xx Device Erratasheet, Revised June 2011 */
 
 #if defined(__MSP430F2001__) || defined(__MSP430F2011__)
 
@@ -78,7 +78,7 @@
 #endif
 
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'C' || \
-    __MSP430_REV__ == 'D'
+    __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F'
 #define ERRATA_BCL12
 #define ERRATA_CPU4
 #define ERRATA_FLASH16

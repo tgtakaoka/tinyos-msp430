@@ -33,7 +33,7 @@
 #ifndef _H_slaz018_h
 #define _H_slaz018_h
 
-/* See SLAZ018C MSP430F15x/16x/161x Device Erratasheet, Revised February 2010 */
+/* See SLAZ018D MSP430F15x/16x/161x Device Erratasheet, Revised June 2011 */
 
 #if defined(__MSP430F155__) || defined(__MSP430F156__) || defined(__MSP430F157__) || \
     defined(__MSP430F167__) || defined(__MSP430F168__) || defined(__MSP430F169__)
@@ -86,7 +86,7 @@
 #define ERRATA_ADC25
 #define ERRATA_BCL5
 #define ERRATA_CPU4
-#define ERRATA_DMA9
+#define ERRATA_CPU41
 #define ERRATA_I2C7
 #define ERRATA_I2C8
 #define ERRATA_I2C9
@@ -105,6 +105,7 @@
 #define ERRATA_WDG2
 #endif
 #if __MSP430_REV__ == 'A'
+#define ERRATA_DMA9
 #define ERRATA_SVS2
 #define ERRATA_US14
 #endif

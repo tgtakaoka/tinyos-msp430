@@ -33,7 +33,7 @@
 #ifndef _H_slaz041_h
 #define _H_slaz041_h
 
-/* See SLAZ041C MSP430F21x2 Device Erratasheet, Revised January 2010 */
+/* See SLAZ041D MSP430F21x2 Device Erratasheet, Revised May 2011 */
 
 #if defined(__MSP430F2112__) || defined(__MSP430F2122__) || defined(__MSP430F2132__)
 
@@ -65,6 +65,7 @@
 #endif
 #if __MSP430_REV__ == 'A'
 #define ERRATA_BCL13
+#define ERRATA_USCI30
 #endif
 
 #else
