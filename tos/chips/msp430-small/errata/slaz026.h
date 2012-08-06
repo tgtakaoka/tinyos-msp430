@@ -33,7 +33,7 @@
 #ifndef _H_slaz026_h
 #define _H_slaz026_h
 
-/* See SLAZ026P MSP430F20xx Device Erratasheet, Revised June 2011 */
+/* See SLAZ026S MSP430F20xx Device Erratasheet, Revised April 2012 */
 
 #if defined(__MSP430F2001__) || defined(__MSP430F2011__)
 
@@ -42,12 +42,17 @@
 #define __MSP430_REV__ 'A'
 #endif
 
+#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || \
+    __MSP430_REV__ == 'G'
+#define ERRATA_BCL14
+#endif
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'C' || \
     __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || \
     __MSP430_REV__ == 'G'
 #define ERRATA_BCL12
 #define ERRATA_CPU4
 #define ERRATA_FLASH16
+#define ERRATA_SYS15
 #define ERRATA_TA12
 #define ERRATA_TA16
 #define ERRATA_TA22
@@ -77,17 +82,26 @@
 #define __MSP430_REV__ 'A'
 #endif
 
+#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || \
+    __MSP430_REV__ == 'G'
+#define ERRATA_BCL14
+#endif
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'C' || \
-    __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F'
+    __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || \
+    __MSP430_REV__ == 'G'
 #define ERRATA_BCL12
 #define ERRATA_CPU4
 #define ERRATA_FLASH16
+#define ERRATA_SYS15
 #define ERRATA_TA12
 #define ERRATA_TA16
 #define ERRATA_TA22
 #define ERRATA_USI4
 #define ERRATA_USI5
 #define ERRATA_XOSC5
+#endif
+#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'C' || \
+    __MSP430_REV__ == 'D'
 #define ERRATA_XOSC8
 #endif
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'C'
@@ -100,6 +114,7 @@
 #endif
 #if __MSP430_REV__ == 'A'
 #define ERRATA_SBW1
+#define ERRATA_TA17
 #endif
 
 #elif defined(__MSP430F2003__) || defined(__MSP430F2013__)
@@ -109,12 +124,17 @@
 #define __MSP430_REV__ 'B'
 #endif
 
+#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || \
+    __MSP430_REV__ == 'G'
+#define ERRATA_BCL14
+#endif
 #if __MSP430_REV__ == 'B' || __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || \
     __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || __MSP430_REV__ == 'G'
 #define ERRATA_BCL12
 #define ERRATA_CPU4
 #define ERRATA_FLASH16
 #define ERRATA_SDA3
+#define ERRATA_SYS15
 #define ERRATA_TA12
 #define ERRATA_TA16
 #define ERRATA_TA22

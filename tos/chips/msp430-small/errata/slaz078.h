@@ -33,7 +33,7 @@
 #ifndef _H_slaz078_h
 #define _H_slaz078_h
 
-/* See SLAZ078 MSP430FR573x, MSP430FR572x Device Erratasheet, Revised April 2011 */
+/* See SLAZ078B MSP430FR573x, MSP430FR572x Device Erratasheet, Revised February 2012 */
 
 #if defined(__MSP430FR5720__) || defined(__MSP430FR5721__) || defined(__MSP430FR5722__) || \
     defined(__MSP430FR5723__) || defined(__MSP430FR5724__) || defined(__MSP430FR5725__) || \
@@ -45,11 +45,11 @@
     defined(__MSP430FR5739__) || \
 
 #if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'D'"
-#define __MSP430_REV__ 'D'
+#warning "__MSP430_REV__ not defined, default to 'F'"
+#define __MSP430_REV__ 'F'
 #endif
 
-#if __MSP430_REV__ == 'D'
+#if __MSP430_REV__ == 'F' || __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H'
 #define ERRATA_CPU40
 #define ERRATA_EEM8
 #define ERRATA_MPY1
