@@ -50,14 +50,11 @@ implementation
 {
   MSP430REG_NORACE(IE1);
   MSP430REG_NORACE(TACTL);
-  MSP430REG_NORACE(TAIV);
 #if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
   MSP430REG_NORACE(TA1CTL);
-  MSP430REG_NORACE(TA1IV);
 #endif
 #if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
   MSP430REG_NORACE(TBCTL);
-  MSP430REG_NORACE(TBIV);
 #endif
 
   enum
@@ -108,8 +105,10 @@ implementation
     // .DCOR = 0; select internal resistor for DCO
     BCSCTL2 = DIVS1;
 #else /* __MSP430_HAS_BC2__ */
+#if 0
     P2SEL |= 0xc0;                      // P2.6=XIN, P2.7=XOUT
     P2DIR = 0x80 | (P2DIR & ~0xc0);     // some chips need P2.7 set as output
+#endif
 
 #if defined(CALBC1_16MHZ_)
 #if defined(__msp430_using_vlo)
@@ -326,14 +325,11 @@ implementation
   {
     // Reset timers and clear interrupt vectors
     TACTL = TACLR;
-    TAIV = 0;
 #if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
     TA1CTL = TACLR;
-    TA1IV = 0;
 #endif
 #if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
     TBCTL = TBCLR;
-    TBIV = 0;
 #endif
 
     atomic
