@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G. Takaoka
+/* Copyright (c) 2013, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,75 +30,49 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz020_h
-#define _H_slaz020_h
+#ifndef _H_slaz163_h
+#define _H_slaz163_h
 
-/* See SLAZ020M MSP430F21x1 Device Erratasheet, Revised July 2011 */
+/* See SLAZ163B MSP430F2132 Device Erratasheet, Revised January 2013 */
 
-#if defined(__MSP430F2101__) || defined(__MSP430F2111__) || defined(__MSP430F2121__) || \
-    defined(__MSP430F2131__)
+#if defined(__MSP430F2132__)
 
 #if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'C'"
-#define __MSP430_REV__ 'C'
+#warning "__MSP430_REV__ not defined, default to 'A'"
+#define __MSP430_REV__ 'A'
 #endif
 
-/* Note: Revision F is not defined */
-#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || \
-    __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H' || __MSP430_REV__ == 'I' || \
-    __MSP430_REV__ == 'K' || __MSP430_REV__ == 'L'
+#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B'
 #define ERRATA_BCL12
-#define ERRATA_BCL14
-#define ERRATA_CPU4
-#define ERRATA_CPU11
-#define ERRATA_CPU12
-#define ERRATA_CPU13
 #define ERRATA_CPU19
-#define ERRATA_FLASH16
-#define ERRATA_FLASH17
-#define ERRATA_FLASH18
+#define ERRATA_EEM20
 #define ERRATA_FLASH19
-#define ERRATA_FLASH20
 #define ERRATA_FLASH24
 #define ERRATA_FLASH27
 #define ERRATA_FLASH36
+#define ERRATA_PORT12
 #define ERRATA_SYS15
 #define ERRATA_TA12
 #define ERRATA_TA16
-#define ERRATA_TA22
+#define ERRATA_TAB22
+#define ERRATA_USCI20
+#define ERRATA_USCI21
+#define ERRATA_USCI22
+#define ERRATA_USCI23
+#define ERRATA_USCI24
+#define ERRATA_USCI25
+#define ERRATA_USCI26
+#define ERRATA_USCI28
+#define ERRATA_USCI30
 #define ERRATA_XOSC5
+#define ERRATA_XOSC8
 #endif
-#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || \
-    __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H'
+#if __MSP430_REV__ == 'A'
 #define ERRATA_BCL13
-#endif
-#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || \
-    __MSP430_REV__ == 'G'
-#define ERRATA_BCL9
-#define ERRATA_BCL10
-#define ERRATA_BCL11
-#define ERRATA_FLASH22
-#define ERRATA_PORT10
-#endif
-#if __MSP430_REV__ == 'E' || __MSP430_REV__ == 'G'
-#define ERRATA_CPU14
-#endif
-#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E'
-#define ERRATA_JTAG15
-#endif
-#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D'
-#define ERRATA_BCL6
-#define ERRATA_BCL8
-#define ERRATA_CPU6
-#define ERRATA_PORT8
-#endif
-#if __MSP430_REV__ == 'C'
-#define ERRATA_BSL5
-#define ERRATA_CPU5
 #endif
 
 #else
-#error "This errata/slaz020.h is for MSP430F21x1"
+#error "This errata/slaz163.h is for MSP430F2132"
 #endif
 
 #endif

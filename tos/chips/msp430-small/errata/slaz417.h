@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2013, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,35 +30,39 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz078_h
-#define _H_slaz078_h
+#ifndef _H_slaz417_h
+#define _H_slaz417_h
 
-/* See SLAZ078B MSP430FR573x, MSP430FR572x Device Erratasheet, Revised February 2012 */
+/* See SLAZ417B MSP430G2231 Device Erratasheet, Revised January 2013 */
 
-#if defined(__MSP430FR5720__) || defined(__MSP430FR5721__) || defined(__MSP430FR5722__) || \
-    defined(__MSP430FR5723__) || defined(__MSP430FR5724__) || defined(__MSP430FR5725__) || \
-    defined(__MSP430FR5726__) || defined(__MSP430FR5727__) || defined(__MSP430FR5728__) || \
-    defined(__MSP430FR5729__) || \
-    defined(__MSP430FR5730__) || defined(__MSP430FR5731__) || defined(__MSP430FR5732__) || \
-    defined(__MSP430FR5733__) || defined(__MSP430FR5734__) || defined(__MSP430FR5735__) || \
-    defined(__MSP430FR5736__) || defined(__MSP430FR5737__) || defined(__MSP430FR5738__) || \
-    defined(__MSP430FR5739__) || \
+#if defined(__MSP430G2231__)
 
 #if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'F'"
-#define __MSP430_REV__ 'F'
+#warning "__MSP430_REV__ not defined, default to 'D'"
+#define __MSP430_REV__ 'D'
 #endif
 
-#if __MSP430_REV__ == 'F' || __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H'
-#define ERRATA_CPU40
-#define ERRATA_EEM8
-#define ERRATA_MPY1
-#define ERRATA_SYS17
-#define ERRATA_USCI30
+#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || \
+    __MSP430_REV__ == 'G'
+#define ERRATA_BCL12
+#define ERRATA_BCL14
+#define ERRATA_CPU4
+#define ERRATA_EEM20
+#define ERRATA_FLASH16
+#define ERRATA_SYS15
+#define ERRATA_TA12
+#define ERRATA_TA16
+#define ERRATA_TAB22
+#define ERRATA_USI4
+#define ERRATA_USI5
+#define ERRATA_XOSC5
+#endif
+#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E'
+#define ERRATA_XOSC8
 #endif
 
 #else
-#error "This errata/slaz078.h is for MSP430FR573x/572x"
+#error "This errata/slaz417.h is for MSP430G2231"
 #endif
 
 #endif

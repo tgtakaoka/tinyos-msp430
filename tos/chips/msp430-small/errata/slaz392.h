@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G. Takaoka
+/* Copyright (c) 2013, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,55 +30,31 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz009_h
-#define _H_slaz009_h
+#ifndef _H_slaz392_h
+#define _H_slaz392_h
 
-/* See SLAZ009C MSP430F12x2, MSP430F11x2 Device Erratasheet, Revised April 2011 */
+/* See SLAZ392D MSP430FR5739 Device Erratasheet, Revised January 2013 */
 
-#if defined(__MSP430F1122__) || defined(__MSP430F1132__)
-
-#if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'E'"
-#define __MSP430_REV__ 'E'
-#endif
-
-#if __MSP430_REV__ == 'E' || __MSP430_REV__ == 'G'
-#define ERRATA_ADC22
-#define ERRATA_BCL5
-#define ERRATA_CPU4
-#define ERRATA_PORT3
-#define ERRATA_RES4
-#define ERRATA_TA12
-#define ERRATA_TA16
-#define ERRATA_TA22
-#define ERRATA_US13
-#define ERRATA_US15
-#define ERRATA_WDG2
-#endif
-
-#elif defined(__MSP430F1222__) || defined(__MSP430F1232__)
+#if defined(__MSP430FR5739__)
 
 #if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'D'"
-#define __MSP430_REV__ 'D'
+#warning "__MSP430_REV__ not defined, default to 'H'"
+#define __MSP430_REV__ 'H'
 #endif
 
-#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'F'
-#define ERRATA_ADC22
-#define ERRATA_BCL5
-#define ERRATA_CPU4
-#define ERRATA_PORT3
-#define ERRATA_RES4
-#define ERRATA_TA12
-#define ERRATA_TA16
-#define ERRATA_TA22
-#define ERRATA_US13
-#define ERRATA_US15
-#define ERRATA_WDG2
+#if __MSP430_REV__ == 'H'
+#define ERRATA_CPU40
+#define ERRATA_DMA9
+#define ERRATA_DMA10
+#define ERRATA_EEM19
+#define ERRATA_MPY1
+#define ERRATA_PORT16
+#define ERRATA_PORT19
+#define ERRATA_XOSC13
 #endif
 
 #else
-#error "This errata/slaz009.h is for MSP430F12x2, MSP430F11x2"
+#error "This errata/slaz392.h is for MSP430FR5739"
 #endif
 
 #endif

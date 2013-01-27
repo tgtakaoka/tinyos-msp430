@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G. Takaoka
+/* Copyright (c) 2013, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,39 +30,64 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz061_h
-#define _H_slaz061_h
+#ifndef _H_slaz169_h
+#define _H_slaz169_h
 
-/* See SLAZ061B MSP430G2x01, G2x11, G2x21, G2x31 Device Erratasheet, Revised December 2010 */
+/* See SLAZ169B MSP430F2274 Device Erratasheet, Revised January 2013 */
 
-#if defined(__MSP430G2001__) || defined(__MSP430G2101__) || defined(__MSP430G2201__) || \
-    defined(__MSP430G2111__) || defined(__MSP430G2211__) || \
-    defined(__MSP430G2121__) || defined(__MSP430G2221__) || \
-    defined(__MSP430G2131__) || defined(__MSP430G2231__)
+#if defined(__MSP430F2274__)
 
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'D'"
 #define __MSP430_REV__ 'D'
 #endif
 
-#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E'
+#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || \
+    __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H' || __MSP430_REV__ == 'I' || \
+    __MSP430_REV__ == 'J'
 #define ERRATA_BCL12
-#define ERRATA_CPU4
-#define ERRATA_FLASH16
+#define ERRATA_CPU19
+#define ERRATA_EEM20
+#define ERRATA_FLASH24
+#define ERRATA_FLASH27
+#define ERRATA_FLASH36
+#define ERRATA_PORT10
+#define ERRATA_SYS15
 #define ERRATA_TA12
 #define ERRATA_TA16
-#define ERRATA_TA22
-#if defined(__MSP430G2121__) || defined(__MSP430G2221__) || \
-    defined(__MSP430G2131__) || defined(__MSP430G2231__)
-#define ERRATA_USI4
-#define ERRATA_USI5
-#endif
+#define ERRATA_TAB22
+#define ERRATA_TB2
+#define ERRATA_TB16
+#define ERRATA_USCI20
+#define ERRATA_USCI21
+#define ERRATA_USCI22
+#define ERRATA_USCI23
+#define ERRATA_USCI24
+#define ERRATA_USCI25
+#define ERRATA_USCI26
+#define ERRATA_USCI27
 #define ERRATA_XOSC5
+#endif
+#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || \
+    __MSP430_REV__ == 'G'
 #define ERRATA_XOSC8
+#endif
+#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F'
+#define ERRATA_BCL13
+#endif
+#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E'
+#define ERRATA_CPU14
+#define ERRATA_FLASH22
+#define ERRATA_JTAG14
+#define ERRATA_USCI16
+#endif
+#if __MSP430_REV__ == 'D'
+#define ERRATA_FLASH21
+#define ERRATA_JTAG13
 #endif
 
 #else
-#error "This errata/slaz061.h is for MSP430G2x01/G2x11/G2x21/G2x31"
+#error "This errata/slaz169.h is for MSP430F2274"
 #endif
 
 #endif

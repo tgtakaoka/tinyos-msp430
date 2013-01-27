@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2013, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,66 +30,50 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz058_h
-#define _H_slaz058_h
+#ifndef _H_slaz146_h
+#define _H_slaz146_h
 
-/* See SLAZ058D MSP430F51x2 Device Erratasheet, Revised August 2011 */
+/* See SLAZ146 MSP430F1611 Device Erratasheet, Revised October 2012 */
 
-#if defined(__MSP430F5131__) || defined(__MSP430F5132__) || \
-    defined(__MSP430F5151__) || defined(__MSP430F5152__) || \
-    defined(__MSP430F5171__) || defined(__MSP430F5172__)
+#if defined(__MSP430F1611__)
 
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'A'"
 #define __MSP430_REV__ 'A'
 #endif
 
-#if __MSP430_REV__ == 'C'
-#define ERRATA_CPU40
-#define ERRATA_DMA4
-#define ERRATA_EEM11
-#define ERRATA_EEM17
-#define ERRATA_EEM19
-#define ERRATA_EEM21
-#define ERRATA_JTAG21
-#define ERRATA_PMM14
-#define ERRATA_PMM15
-#define ERRATA_PORT15
-#define ERRATA_PORT16
-#define ERRATA_SYS12
-#define ERRATA_SYS15
-#define ERRATA_UCS9
-#define ERRATA_UCS11
-#define ERRATA_USCI26
-#define ERRATA_USCI31
-#endif
-
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B'
-#if defined(__MSP430F5132__) || defined(__MSP430F5152__) || defined(__MSP430F5172__)
-#define ERRATA_ADC30
-#define ERRATA_ADC31
+#define ERRATA_ADC18
+#define ERRATA_ADC25
+#define ERRATA_BCL5
+#define ERRATA_CPU4
+#define ERRATA_CPU41
+#define ERRATA_I2C7
+#define ERRATA_I2C8
+#define ERRATA_I2C9
+#define ERRATA_I2C10
+#define ERRATA_I2C11
+#define ERRATA_I2C12
+#define ERRATA_I2C13
+#define ERRATA_I2C14
+#define ERRATA_I2C15
+#define ERRATA_I2C16
+#define ERRATA_MPY2
+#define ERRATA_TA12
+#define ERRATA_TA16
+#define ERRATA_TAB22
+#define ERRATA_TB2
+#define ERRATA_TB16
+#define ERRATA_US15
+#define ERRATA_WDG2
 #endif
-#define ERRATA_FLASH37
-#define ERRATA_MPY1
-#define ERRATA_PMM11
-#define ERRATA_PMM12
-#define ERRATA_USCI10
-#define ERRATA_USCI30
-#endif
-
 #if __MSP430_REV__ == 'A'
-#if defined(__MSP430F5132__) || defined(__MSP430F5152__) || defined(__MSP430F5172__)
-#define ERRATA_ADC26
-#endif
-#define ERRATA_CPU39
-#define ERRATA_EEM8
-#define ERRATA_EEM13
-#define ERRATA_SYS10
-#define ERRATA_UCS7
+#define ERRATA_SVS2
+#define ERRATA_US14
 #endif
 
 #else
-#error "This errata/slaz058.h is for MSP430F51x1/51x2"
+#error "This errata/slaz146.h is for MSP430F1611"
 #endif
 
 #endif

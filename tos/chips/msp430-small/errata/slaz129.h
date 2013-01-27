@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2013, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,45 +30,35 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz075_h
-#define _H_slaz075_h
+#ifndef _H_slaz129_h
+#define _H_slaz129_h
 
-/* See SLAZ075 MSP430G2x53, G2x33, G2x13, G2x03 Device Erratasheet, Revised April 2011 */
+/* See SLAZ129A MSP430F1132 Device Erratasheet, Revised October 2012 */
 
-#if defined(__MSP430G2203__) || defined(__MSP430G2303__) || defined(__MSP430G2403__) || \
-    defined(__MSP430G2113__) || defined(__MSP430G2213__) || defined(__MSP430G2313__) || \
-    defined(__MSP430G2413__) || defined(__MSP430G2513__) || \
-    defined(__MSP430G2233__) || defined(__MSP430G2333__) || defined(__MSP430G2433__) || \
-    defined(__MSP430G2533__) || \
-    defined(__MSP430G2153__) || defined(__MSP430G2253__) || defined(__MSP430G2353__) || \
-    defined(__MSP430G2453__) || defined(__MSP430G2553__)
+#if defined(__MSP430F1132__)
 
 #if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'A'"
-#define __MSP430_REV__ 'A'
+#warning "__MSP430_REV__ not defined, default to 'E'"
+#define __MSP430_REV__ 'E'
 #endif
 
-#if __MSP430_REV__ == 'A'
-#define ERRATA_BCL12
+#if __MSP430_REV__ == 'E' || __MSP430_REV__ == 'G'
+#define ERRATA_ADC22
+#define ERRATA_BCL5
 #define ERRATA_CPU4
 #define ERRATA_EEM20
-#define ERRATA_SYS15
+#define ERRATA_PORT3
+#define ERRATA_RES4
 #define ERRATA_TA12
 #define ERRATA_TA16
-#define ERRATA_TA22
-#define ERRATA_USCI20
-#define ERRATA_USCI22
-#define ERRATA_USCI23
-#define ERRATA_USCI24
-#define ERRATA_USCI25
-#define ERRATA_USCI26
-#define ERRATA_USCI29
-#define ERRATA_USCI30
-#define ERRATA_XOSC5
+#define ERRATA_TAB22
+#define ERRATA_US13
+#define ERRATA_US15
+#define ERRATA_WDG2
 #endif
 
 #else
-#error "This errata/slaz075.h is for MSP430G2x53/G2x33/G2x3/G2x03"
+#error "This errata/slaz129.h is for MSP430F1132"
 #endif
 
 #endif

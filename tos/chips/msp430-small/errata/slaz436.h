@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2013, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,12 +30,12 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz022_h
-#define _H_slaz022_h
+#ifndef _H_slaz436_h
+#define _H_slaz436_h
 
-/* See SLAZ022A MSP430F42x0 Device Erratasheet, Revised June 2007 */
+/* See SLAZ436B MSP430G2452 Device Erratasheet, Revised January 2013 */
 
-#if defined(__MSP430F4250__) || defined(__MSP430F4260__) || defined(__MSP430F4270__)
+#if defined(__MSP430G2452__)
 
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'A'"
@@ -43,23 +43,21 @@
 #endif
 
 #if __MSP430_REV__ == 'A'
+#define ERRATA_BCL12
+#define ERRATA_BCL14
 #define ERRATA_CPU4
-#define ERRATA_DAC2
-#define ERRATA_DAC3
-#define ERRATA_FLL3
-#define ERRATA_LCDA1
-#define ERRATA_LCDA2
-#define ERRATA_LCDA3
-#define ERRATA_PORT6
-#define ERRATA_SDA1
-#define ERRATA_SDA3
+#define ERRATA_EEM20
+#define ERRATA_SYS15
 #define ERRATA_TA12
 #define ERRATA_TA16
-#define ERRATA_WDG2
+#define ERRATA_TAB22
+#define ERRATA_USI4
+#define ERRATA_USI5
+#define ERRATA_XOSC5
 #endif
 
 #else
-#error "This errata/slaz022.h is for MSP430F42x0"
+#error "This errata/slaz436.h is for MSP430G2452"
 #endif
 
 #endif

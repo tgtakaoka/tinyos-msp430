@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2013, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,61 +30,73 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz067_h
-#define _H_slaz067_h
+#ifndef _H_slaz301_h
+#define _H_slaz301_h
 
-/* See SLAZ067E MSP430F530x, MSP430F5310 Device Erratasheet, Revised August 2011 */
+/* See SLAZ301C MSP430F5510 Device Erratasheet, Revised January 2013 */
 
-#if defined(__MSP430F5304__) || defined(__MSP430F5308__) || defined(__MSP430F5309__) || \
-    defined(__MSP430F5310__)
+#if defined(__MSP430F5510__)
 
 #if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'A'"
-#define __MSP430_REV__ 'A'
+#warning "__MSP430_REV__ not defined, default to 'C'"
+#define __MSP430_REV__ 'C'
+#endif
+
+#if __MSP430_REV_ == 'D'
+#define ERRATA_BSL6
+#endif
+#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D'
+#define ERRATA_BSL7
+#define ERRATA_CPU39
+#define ERRATA_CPU40
+#define ERRATA_DMA4
+#define ERRATA_DMA10
+#define ERRATA_EEM11
+#define ERRATA_EEM13
+#define ERRATA_EEM17
+#define ERRATA_EEM19
+#define ERRATA_EEM21
+#define ERRATA_JTAG20
+#define ERRATA_MPY1
+#define ERRATA_PMAP1
+#define ERRATA_PMM9
+#define ERRATA_PMM11
+#define ERRATA_PMM12
+#define ERRATA_PMM14
+#define ERRATA_PMM15
+#define ERRATA_PMM18
+#define ERRATA_PORT15
+#define ERRATA_PORT16
+#define ERRATA_PORT19
+#define ERRATA_RTC3
+#define ERRATA_RTC6
+#define ERRATA_SYS12
+#define ERRATA_SYS16
+#define ERRATA_SYS18
+#define ERRATA_UCS7
+#define ERRATA_UCS9
+#define ERRATA_UCS11
+#define ERRATA_USB9
+#define ERRATA_USCI26
+#define ERRATA_USCI31
+#define ERRATA_WDG4
 #endif
 
 #if __MSP430_REV__ == 'C'
 #define ERRATA_ADC30
 #define ERRATA_ADC31
-#define ERRATA_CPU35
-#define ERRATA_CPU39
-#define ERRATA_CPU40
-#define ERRATA_DMA4
-#define ERRATA_EEM11
-#define ERRATA_EEM13
-#define ERRATA_EEM17
 #define ERRATA_FLASH37
-#define ERRATA_JTAG20
-#define ERRATA_MPY1
-#define ERRATA_PMAP1
-#define ERRATA_PMM9
 #define ERRATA_PMM10
-#define ERRATA_PMM11
-#define ERRATA_PMM12
-#define ERRATA_PMM14
-#define ERRATA_PMM15
-#define ERRATA_PORT15
-#define ERRATA_RTC4
-#define ERRATA_SYS16
+#define ERRATA_PMM17
 #define ERRATA_TAB23
-#define ERRATA_UCS6
-#define ERRATA_UCS7
-#define ERRATA_UCS9
-#define ERRATA_UCS10
-#define ERRATA_USCI26
-#define ERRATA_WDG4
-#endif
-
-#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B'
-#define ERRATA_ADC26
-#endif
-
-#if __MSP430_REV__ == 'A'
-#define ERRATA_SYS10
+#define ERRATA_USC6
+#define ERRATA_USC10
+#define ERRATA_USB8
+#define ERRATA_USCI30
 #endif
 
 #else
-#error "This errata/slaz067.h is for MSP430F530x/5310"
+#error "This errata/slaz301.h is for MSP430F5510"
 #endif
 
 #endif
