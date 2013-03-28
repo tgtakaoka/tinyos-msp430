@@ -30,81 +30,39 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_msp430errata_h
-#define _H_msp430errata_h
+#ifndef _H_slaz441_h
+#define _H_slaz441_h
 
-#if defined(__MSP430F1121__)
-#include "errata/slaz019.h"
+/* See SLAZ441A MSP430G2553 Device Erratasheet, Revised January 2013 */
 
-#elif defined(__MSP430F1132__)
-#include "errata/slaz129.h"
+#if defined(__MSP430G2955__)
 
-#elif defined(__MSP430F1232__)
-#include "errata/slaz133.h"
+#if !defined(__MSP430_REV__)
+#warning "__MSP430_REV__ not defined, default to 'A'"
+#define __MSP430_REV__ 'A'
+#endif
 
-#elif defined(__MSP430F1611__)
-#include "errata/slaz146.h"
-
-#elif defined(__MSP430F2012__)
-#include "errata/slaz155.h"
-
-#elif defined(__MSP430F2013__)
-#include "errata/slaz156.h"
-
-#elif defined(__MSP430F2131__)
-#include "errata/slaz162.h"
-
-#elif defined(__MSP430F2132__)
-#include "errata/slaz163.h"
-
-#elif defined(__MSP430F2274__)
-#include "errata/slaz169.h"
-
-#elif defined(__MSP430F2418__)
-#include "errata/slaz178.h"
-
-#elif defined(__MSP430F2617__)
-#include "errata/slaz187.h"
-
-#elif defined(__MSP430F2618__)
-#include "errata/slaz188.h"
-
-#elif defined(__MSP430F4270__)
-#include "errata/slaz202.h"
-
-#elif defined(__MSP430F5172__)
-#include "errata/slaz251.h"
-
-#elif defined(__MSP430F5310__)
-#include "errata/slaz267.h"
-
-#elif defined(__MSP430F5510__)
-#include "errata/slaz301.h"
-
-#elif defined(__MSP430FR5739__)
-#include "errata/slaz392.h"
-
-#elif defined(__MSP430G2211__)
-#include "errata/slaz413.h"
-
-#elif defined(__MSP430G2231__)
-#include "errata/slaz417.h"
-
-#elif defined(__MSP430G2402__)
-#include "errata/slaz430.h"
-
-#elif defined(__MSP430G2452__)
-#include "errata/slaz436.h"
-
-#elif defined(__MSP430G2553__)
-#include "errata/slaz440.h"
-
-#elif defined(__MSP430G2955__)
-#include "errata/slaz441.h"
+#if __MSP430_REV__ == 'A'
+#define ERRATA_BCL12
+#define ERRATA_CPU4
+#define ERRATA_SYS15
+#define ERRATA_TA12
+#define ERRATA_TA16
+#define ERRATA_TA21
+#define ERRATA_TAB22
+#define ERRATA_USCI20
+#define ERRATA_USCI22
+#define ERRATA_USCI23
+#define ERRATA_USCI24
+#define ERRATA_USCI25
+#define ERRATA_USCI26
+#define ERRATA_USCI29
+#define ERRATA_USCI30
+#define ERRATA_XOSC5
+#endif
 
 #else
-#error "Couldn't find a errata for the specified device"
-
+#error "This errata/slaz441.h is for MSP430G2955"
 #endif
 
 #endif
