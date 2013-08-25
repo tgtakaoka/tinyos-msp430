@@ -34,7 +34,7 @@
 #define _H_msp430errata_h
 
 #if defined(__MSP430F1121__)
-#include "errata/slaz019.h"
+#include "errata/slaz127.h"
 
 #elif defined(__MSP430F1132__)
 #include "errata/slaz129.h"

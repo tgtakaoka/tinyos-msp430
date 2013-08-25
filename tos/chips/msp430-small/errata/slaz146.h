@@ -33,7 +33,7 @@
 #ifndef _H_slaz146_h
 #define _H_slaz146_h
 
-/* See SLAZ146 MSP430F1611 Device Erratasheet, Revised October 2012 */
+/* See SLAZ146B MSP430F1611 Device Erratasheet, Revised May 2013 */
 
 #if defined(__MSP430F1611__)
 
@@ -61,9 +61,11 @@
 #define ERRATA_MPY2
 #define ERRATA_TA12
 #define ERRATA_TA16
+#define ERRATA_TA21
 #define ERRATA_TAB22
 #define ERRATA_TB2
 #define ERRATA_TB16
+#define ERRATA_TB24
 #define ERRATA_US15
 #define ERRATA_WDG2
 #endif

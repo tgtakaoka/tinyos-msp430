@@ -33,7 +33,7 @@
 #ifndef _H_slaz169_h
 #define _H_slaz169_h
 
-/* See SLAZ169B MSP430F2274 Device Erratasheet, Revised January 2013 */
+/* See SLAZ169E MSP430F2274 Device Erratasheet, Revised June 2013 */
 
 #if defined(__MSP430F2274__)
 
@@ -55,9 +55,11 @@
 #define ERRATA_SYS15
 #define ERRATA_TA12
 #define ERRATA_TA16
+#define ERRATA_TA21
 #define ERRATA_TAB22
 #define ERRATA_TB2
 #define ERRATA_TB16
+#define ERRATA_TB24
 #define ERRATA_USCI20
 #define ERRATA_USCI21
 #define ERRATA_USCI22
@@ -66,6 +68,7 @@
 #define ERRATA_USCI25
 #define ERRATA_USCI26
 #define ERRATA_USCI27
+#define ERRATA_USCI35
 #define ERRATA_XOSC5
 #endif
 #if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || \

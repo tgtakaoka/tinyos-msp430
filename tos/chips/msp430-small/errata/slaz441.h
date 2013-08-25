@@ -33,7 +33,7 @@
 #ifndef _H_slaz441_h
 #define _H_slaz441_h
 
-/* See SLAZ441A MSP430G2553 Device Erratasheet, Revised January 2013 */
+/* See SLAZ441B MSP430G2553 Device Erratasheet, Revised June 2013 */
 
 #if defined(__MSP430G2955__)
 
@@ -58,6 +58,7 @@
 #define ERRATA_USCI26
 #define ERRATA_USCI29
 #define ERRATA_USCI30
+#define ERRATA_USCI35
 #define ERRATA_XOSC5
 #endif
 

@@ -33,7 +33,7 @@
 #ifndef _H_slaz133_h
 #define _H_slaz133_h
 
-/* See SLAZ133A MSP430F1232 Device Erratasheet, Revised October 2012 */
+/* See SLAZ133C MSP430F1232 Device Erratasheet, Revised October 2012 */
 
 #if defined(__MSP430F1232__)
 
@@ -42,7 +42,8 @@
 #define __MSP430_REV__ 'D'
 #endif
 
-#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'F'
+#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'F' \
+    __MSP430_REV__ == 'H'
 #define ERRATA_ADC22
 #define ERRATA_BCL5
 #define ERRATA_CPU4
@@ -51,6 +52,7 @@
 #define ERRATA_RES4
 #define ERRATA_TA12
 #define ERRATA_TA16
+#define ERRATA_TA21
 #define ERRATA_TAB22
 #define ERRATA_US13
 #define ERRATA_US15

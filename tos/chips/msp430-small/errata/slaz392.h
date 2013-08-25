@@ -33,7 +33,7 @@
 #ifndef _H_slaz392_h
 #define _H_slaz392_h
 
-/* See SLAZ392D MSP430FR5739 Device Erratasheet, Revised January 2013 */
+/* See SLAZ392G MSP430FR5739 Device Erratasheet, Revised July 2013 */
 
 #if defined(__MSP430FR5739__)
 
@@ -47,9 +47,12 @@
 #define ERRATA_DMA9
 #define ERRATA_DMA10
 #define ERRATA_EEM19
+#define ERRATA_EEM23
 #define ERRATA_MPY1
 #define ERRATA_PORT16
 #define ERRATA_PORT19
+#define ERRATA_USCI37
+#define ERRATA_WDG6
 #define ERRATA_XOSC13
 #endif
 

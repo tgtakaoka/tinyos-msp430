@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G. Takaoka
+/* Copyright (c) 2013, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,13 +30,12 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz019_h
-#define _H_slaz019_h
+#ifndef _H_slaz127_h
+#define _H_slaz127_h
 
-/* See SLAZ019A MSP430x11x1(A) Device Erratasheet, Revised September 2010 */
+/* See SLAZ127A MSP430F1121A Device Erratasheet, Revised October 2012 */
 
-#if defined(__MSP430C1101__) || defined(__MSP430C1111__) || defined(__MSP430C1121__) || \
-    defined(__MSP430F1101__) || defined(__MSP430F1111__) || defined(__MSP430F1121__)
+#if defined(__MSP430F1121__)
 
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'H'"
@@ -45,20 +44,20 @@
 
 #if __MSP430_REV__ == 'H' || __MSP430_REV__ == 'I' || __MSP430_REV__ == 'J'
 #define ERRATA_BCL5
+#define ERRATA_BSL5
 #define ERRATA_CPU4
 #define ERRATA_PORT3
 #define ERRATA_RES4
 #define ERRATA_TA12
 #define ERRATA_TA16
-#define ERRATA_TA22
-#if defined(__MSP430F1101__) || defined(__MSP430F1111__) || defined(__MSP430F1121__)
-#define ERRATA_BSL5
+#define ERRATA_TA21
+#define ERRATA_TAB22
 #define ERRATA_WDG2
 #endif
 #endif
 
 #else
-#error "This errata/slaz019.h is for MSP430x11x1(A)"
+#error "This errata/slaz127.h is for MSP430F1121A"
 #endif
 
 #endif

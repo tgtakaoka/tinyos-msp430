@@ -33,7 +33,7 @@
 #ifndef _H_slaz156_h
 #define _H_slaz156_h
 
-/* See SLAZ156B MSP430F2013 Device Erratasheet, Revised January 2013 */
+/* See SLAZ156C MSP430F2013 Device Erratasheet, Revised February 2013 */
 
 #if defined(__MSP430F2013__)
 
@@ -55,6 +55,7 @@
 #define ERRATA_SYS15
 #define ERRATA_TA12
 #define ERRATA_TA16
+#define ERRATA_TA21
 #define ERRATA_TAB22
 #define ERRATA_USI4
 #define ERRATA_USI5

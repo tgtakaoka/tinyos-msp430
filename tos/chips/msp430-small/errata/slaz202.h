@@ -33,7 +33,7 @@
 #ifndef _H_slaz202_h
 #define _H_slaz202_h
 
-/* See SLAZ202A MSP430F4270 Device Erratasheet, Revised October 2012 */
+/* See SLAZ202B MSP430F4270 Device Erratasheet, Revised February 2013 */
 
 #if defined(__MSP430F4270__)
 
@@ -59,6 +59,7 @@
 #define ERRATA_SDA7
 #define ERRATA_TA12
 #define ERRATA_TA16
+#define ERRATA_TA21
 #define ERRATA_TAB22
 #define ERRATA_WDG2
 #endif

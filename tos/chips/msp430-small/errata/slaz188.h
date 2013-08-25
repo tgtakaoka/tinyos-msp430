@@ -33,7 +33,7 @@
 #ifndef _H_slaz188_h
 #define _H_slaz188_h
 
-/* See SLAZ188B MSP430F2618 Device Erratasheet, Revised January 2013 */
+/* See SLAZ188F MSP430F2618 Device Erratasheet, Revised July 2013 */
 
 #if defined(__MSP430F2618__)
 
@@ -55,14 +55,17 @@
 #define ERRATA_FLASH24
 #define ERRATA_FLASH27
 #define ERRATA_FLASH36
+#define ERRATA_JTAG23
 #define ERRATA_PORT10
 #define ERRATA_PORT12
 #define ERRATA_SVS2
 #define ERRATA_TA12
 #define ERRATA_TA16
+#define ERRATA_TA21
 #define ERRATA_TAB22
 #define ERRATA_TB2
 #define ERRATA_TB16
+#define ERRATA_TB24
 #define ERRATA_USCI20
 #define ERRATA_USCI21
 #define ERRATA_USCI22
@@ -72,6 +75,7 @@
 #define ERRATA_USCI26
 #define ERRATA_USCI27
 #define ERRATA_USCI30
+#define ERRATA_USCI35
 #define ERRATA_XOSC5
 #endif
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'D' || \

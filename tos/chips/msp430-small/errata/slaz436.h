@@ -33,7 +33,7 @@
 #ifndef _H_slaz436_h
 #define _H_slaz436_h
 
-/* See SLAZ436B MSP430G2452 Device Erratasheet, Revised January 2013 */
+/* See SLAZ436D MSP430G2452 Device Erratasheet, Revised May 2013 */
 
 #if defined(__MSP430G2452__)
 
@@ -42,7 +42,7 @@
 #define __MSP430_REV__ 'A'
 #endif
 
-#if __MSP430_REV__ == 'A'
+#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B'
 #define ERRATA_BCL12
 #define ERRATA_BCL14
 #define ERRATA_CPU4
@@ -50,6 +50,7 @@
 #define ERRATA_SYS15
 #define ERRATA_TA12
 #define ERRATA_TA16
+#define ERRATA_TA21
 #define ERRATA_TAB22
 #define ERRATA_USI4
 #define ERRATA_USI5

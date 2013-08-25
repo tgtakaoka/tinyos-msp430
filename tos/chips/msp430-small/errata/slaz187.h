@@ -30,12 +30,12 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz178_h
-#define _H_slaz178_h
+#ifndef _H_slaz187_h
+#define _H_slaz187_h
 
-/* See SLAZ178F MSP430F2418 Device Erratasheet, Revised July 2013 */
+/* See SLAZ187F MSP430F2617 Device Erratasheet, Revised July 2013 */
 
-#if defined(__MSP430F2418__)
+#if defined(__MSP430F2617__)
 
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'A'"
@@ -49,6 +49,8 @@
 #define ERRATA_BCL15
 #define ERRATA_CPU8
 #define ERRATA_CPU16
+#define ERRATA_DMA3
+#define ERRATA_DMA4
 #define ERRATA_FLASH19
 #define ERRATA_FLASH24
 #define ERRATA_FLASH27
@@ -75,6 +77,7 @@
 #define ERRATA_USCI30
 #define ERRATA_USCI35
 #define ERRATA_XOSC5
+#endif
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'D' || \
     __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F'
 #define ERRATA_XOSC8
@@ -101,7 +104,7 @@
 #endif
 
 #else
-#error "This errata/slaz178.h is for MSP430F2418"
+#error "This errata/slaz187.h is for MSP430F2617"
 #endif
 
 #endif
