@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2013, Tadashi G. Takaoka
+/* Copyright (c) 2014, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,34 +30,83 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz301_h
-#define _H_slaz301_h
+#ifndef _H_slaz314_h
+#define _H_slaz314_h
 
-/* See SLAZ301G MSP430F5510 Device Erratasheet, Revised July 2013 */
+/* See SLAZ314J MSP430F5529 Device Erratasheet, Revised January 2014 */
 
-#if defined(__MSP430F5510__)
+#if defined(__MSP430F5529__)
 
 #if !defined(__MSP430_REV__)
 #warning "__MSP430_REV__ not defined, default to 'C'"
 #define __MSP430_REV__ 'C'
 #endif
 
-#if __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E'
+#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D'
+#define ERRATA_FLASH35
+#endif
+
+#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E'
+#define ERRATA_ADC27
+#define ERRATA_FLASH_37
+#define ERRATA_PMM10
+#define ERRATA_PMM17
+#define ERRATA_SYS10
+#define ERRATA_SYS12
+#define ERRATA_UCS10
+#define ERRATA_USB4
+#define ERRATA_USB6
+#define ERRATA_USB8
+#endif
+
+#if __MSP430_REV__ == 'E'
+#define ERRATA_ADC25
+#endif
+
+#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' \
+    __MSP430_REV__ == 'F' || __MSP430_REV__ == 'G'
+#define ERRATA_USC6
+#define ERRATA_USB9
+#endif
+
+#if __MSP430_REV__ == 'F' || __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H'
 #define ERRATA_BSL6
 #endif
-#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E'
+
+#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' \
+    __MSP430_REV__ == 'F' || __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H' \
+    __MSP430_REV__ == 'I'
+#define ERRATA_ADC25
 #define ERRATA_BSL7
+#define ERRATA_CPU26
+#define ERRATA_CPU27
+#define ERRATA_CPU28
+#define ERRATA_CPU29
+#define ERRATA_CPU30
+#define ERRATA_CPU31
+#define ERRATA_CPU32
+#define ERRATA_CPU33
+#define ERRATA_CPU34
+#define ERRATA_CPU35
+#define ERRATA_CPU37
 #define ERRATA_CPU39
 #define ERRATA_CPU40
 #define ERRATA_CPU43
 #define ERRATA_DMA4
+#define ERRATA_DMA8
 #define ERRATA_DMA10
+#define ERRATA_EEM9
 #define ERRATA_EEM11
 #define ERRATA_EEM13
+#define ERRATA_EEM14
+#define ERRATA_EEM15
+#define ERRATA_EEM16
 #define ERRATA_EEM17
 #define ERRATA_EEM19
 #define ERRATA_EEM21
 #define ERRATA_EEM23
+#define ERRATA_FLASH33
+#define ERRATA_FLASH34
 #define ERRATA_JTAG20
 #define ERRATA_MPY1
 #define ERRATA_PMAP1
@@ -73,35 +122,25 @@
 #define ERRATA_PORT19
 #define ERRATA_RTC3
 #define ERRATA_RTC6
-#define ERRATA_SYS12
 #define ERRATA_SYS16
 #define ERRATA_SYS18
 #define ERRATA_UCS7
 #define ERRATA_UCS9
 #define ERRATA_UCS11
-#define ERRATA_USB9
 #define ERRATA_USB10
 #define ERRATA_USCI26
 #define ERRATA_USCI31
+#define ERRATA_USCI34
 #define ERRATA_USCI35
 #define ERRATA_WDG4
 #endif
 
-#if __MSP430_REV__ == 'C'
-#define ERRATA_ADC30
-#define ERRATA_ADC31
-#define ERRATA_FLASH37
-#define ERRATA_PMM10
-#define ERRATA_PMM17
-#define ERRATA_TAB23
-#define ERRATA_USC6
-#define ERRATA_USC10
-#define ERRATA_USB8
-#define ERRATA_USCI30
+#if __MSP430_REV__ == 'I'
+#define ERRATA_USB11
 #endif
 
 #else
-#error "This errata/slaz301.h is for MSP430F5510"
+#error "This errata/slaz314.h is for MSP430F5529"
 #endif
 
 #endif
