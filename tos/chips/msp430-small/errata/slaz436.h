@@ -33,7 +33,7 @@
 #ifndef _H_slaz436_h
 #define _H_slaz436_h
 
-/* See SLAZ436D MSP430G2452 Device Erratasheet, Revised May 2013 */
+/* See SLAZ436E MSP430G2452 Device Erratasheet, Revised October 2013 */
 
 #if defined(__MSP430G2452__)
 

@@ -33,7 +33,7 @@
 #ifndef _H_slaz430_h
 #define _H_slaz430_h
 
-/* See SLAZ430B MSP430G2402 Device Erratasheet, Revised January 2013 */
+/* See SLAZ430E MSP430G2402 Device Erratasheet, Revised October 2013 */
 
 #if defined(__MSP430G2402__)
 
@@ -50,6 +50,7 @@
 #define ERRATA_SYS15
 #define ERRATA_TA12
 #define ERRATA_TA16
+#define ERRATA_TA21
 #define ERRATA_TAB22
 #define ERRATA_USI4
 #define ERRATA_USI5
