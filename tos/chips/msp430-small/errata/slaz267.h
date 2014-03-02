@@ -33,7 +33,7 @@
 #ifndef _H_slaz267_h
 #define _H_slaz267_h
 
-/* See SLAZ267G MSP430F5310 Device Erratasheet, Revised July 2013 */
+/* See SLAZ267I MSP430F5310 Device Erratasheet, Revised January 2014 */
 
 #if defined(__MSP430F5310__)
 
@@ -43,6 +43,7 @@
 #endif
 
 #if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E'
+#define ERRATA_ADC39
 #define ERRATA_BSL7
 #define ERRATA_CPU39
 #define ERRATA_CPU40

@@ -33,7 +33,7 @@
 #ifndef _H_slaz163_h
 #define _H_slaz163_h
 
-/* See SLAZ163D MSP430F2132 Device Erratasheet, Revised June 2013 */
+/* See SLAZ163F MSP430F2132 Device Erratasheet, Revised January 2014 */
 
 #if defined(__MSP430F2132__)
 
@@ -44,6 +44,7 @@
 
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B'
 #define ERRATA_BCL12
+#define ERRATA_BCL16
 #define ERRATA_CPU19
 #define ERRATA_EEM20
 #define ERRATA_FLASH19

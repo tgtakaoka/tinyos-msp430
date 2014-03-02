@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2013, Tadashi G. Takaoka
+/* Copyright (c) 2014, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,59 +30,52 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz156_h
-#define _H_slaz156_h
+#ifndef _H_slaz147_h
+#define _H_slaz147_h
 
-/* See SLAZ156D MSP430F2013 Device Erratasheet, Revised October 2013 */
+/* See SLAZ147B MSP430F1612 Device Erratasheet, Revised May 2013 */
 
-#if defined(__MSP430F2013__)
+#if defined(__MSP430F1612__)
 
 #if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'B'"
-#define __MSP430_REV__ 'B'
+#warning "__MSP430_REV__ not defined, default to 'A'"
+#define __MSP430_REV__ 'A'
 #endif
 
-#if __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || __MSP430_REV__ == 'G'
-#define ERRATA_BCL14
-#endif
-#if __MSP430_REV__ == 'B' || __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || \
-    __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || __MSP430_REV__ == 'G'
-#define ERRATA_BCL12
+#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B'
+#define ERRATA_ADC18
+#define ERRATA_ADC25
+#define ERRATA_BCL5
 #define ERRATA_CPU4
-#define ERRATA_EEM20
-#define ERRATA_FLASH16
-#define ERRATA_SDA3
-#define ERRATA_SYS15
+#define ERRATA_CPU41
+#define ERRATA_I2C7
+#define ERRATA_I2C8
+#define ERRATA_I2C9
+#define ERRATA_I2C10
+#define ERRATA_I2C11
+#define ERRATA_I2C12
+#define ERRATA_I2C13
+#define ERRATA_I2C14
+#define ERRATA_I2C15
+#define ERRATA_I2C16
+#define ERRATA_MPY2
 #define ERRATA_TA12
 #define ERRATA_TA16
 #define ERRATA_TA21
 #define ERRATA_TAB22
-#define ERRATA_USI4
-#define ERRATA_USI5
-#define ERRATA_XOSC5
+#define ERRATA_TB2
+#define ERRATA_TB16
+#define ERRATA_TB24
+#define ERRATA_US15
+#define ERRATA_WDG2
 #endif
-#if __MSP430_REV__ == 'B' || __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || \
-    __MSP430_REV__ == 'E'
-#define ERRATA_XOSC8
-#endif
-#if __MSP430_REV__ == 'B' || __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D'
-#define ERRATA_BCL9
-#define ERRATA_BCL10
-#define ERRATA_BCL11
-#define ERRATA_BCL13
-#define ERRATA_FLASH22
-#define ERRATA_PORT10
-#endif
-#if __MSP430_REV__ == 'B'
-#define ERRATA_SDA2
-#define ERRATA_TA17
-#define ERRATA_USI1
-#define ERRATA_USI2
-#define ERRATA_USI3
+#if __MSP430_REV__ == 'A'
+#define ERRATA_SVS2
+#define ERRATA_US14
 #endif
 
 #else
-#error "This errata/slaz156.h is for MSP430F2013"
+#error "This errata/slaz147.h is for MSP430F1612"
 #endif
 
 #endif

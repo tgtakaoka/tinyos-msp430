@@ -33,7 +33,7 @@
 #ifndef _H_slaz169_h
 #define _H_slaz169_h
 
-/* See SLAZ169E MSP430F2274 Device Erratasheet, Revised June 2013 */
+/* See SLAZ169F MSP430F2274 Device Erratasheet, Revised October 2013 */
 
 #if defined(__MSP430F2274__)
 
@@ -46,6 +46,7 @@
     __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H' || __MSP430_REV__ == 'I' || \
     __MSP430_REV__ == 'J'
 #define ERRATA_BCL12
+#define ERRATA_BCL16
 #define ERRATA_CPU19
 #define ERRATA_EEM20
 #define ERRATA_FLASH24

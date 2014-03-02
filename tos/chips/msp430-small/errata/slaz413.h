@@ -33,7 +33,7 @@
 #ifndef _H_slaz413_h
 #define _H_slaz413_h
 
-/* See SLAZ413B MSP430G2211 Device Erratasheet, Revised February 2013 */
+/* See SLAZ413C MSP430G2211 Device Erratasheet, Revised October 2013 */
 
 #if defined(__MSP430G2211__)
 

@@ -33,7 +33,7 @@
 #ifndef _H_slaz301_h
 #define _H_slaz301_h
 
-/* See SLAZ301G MSP430F5510 Device Erratasheet, Revised July 2013 */
+/* See SLAZ301I MSP430F5510 Device Erratasheet, Revised January 2014 */
 
 #if defined(__MSP430F5510__)
 
@@ -46,6 +46,7 @@
 #define ERRATA_BSL6
 #endif
 #if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E'
+#define ERRATA_ADC39
 #define ERRATA_BSL7
 #define ERRATA_CPU39
 #define ERRATA_CPU40
