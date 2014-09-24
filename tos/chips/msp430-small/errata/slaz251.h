@@ -33,7 +33,7 @@
 #ifndef _H_slaz251_h
 #define _H_slaz251_h
 
-/* See SLAZ251I MSP430F5172 Device Erratasheet, Revised January 2014 */
+/* See SLAZ251J MSP430F5172 Device Erratasheet, Revised May 2014 */
 
 #if defined(__MSP430F5172__)
 
@@ -44,6 +44,7 @@
 
 #if __MSP430_REV__ == 'C'
 #define ERRATA_ADC39
+#define ERRATA_ADC42
 #define ERRATA_BSL7
 #define ERRATA_CPU40
 #define ERRATA_CPU43
@@ -71,6 +72,7 @@
 #define ERRATA_USCI26
 #define ERRATA_USCI31
 #define ERRATA_USCI35
+#define ERRATA_USCI39
 #endif
 
 #else

@@ -33,7 +33,7 @@
 #ifndef _H_slaz187_h
 #define _H_slaz187_h
 
-/* See SLAZ187F MSP430F2617 Device Erratasheet, Revised July 2013 */
+/* See SLAZ187G MSP430F2617 Device Erratasheet, Revised May 2014 */
 
 #if defined(__MSP430F2617__)
 
@@ -49,6 +49,7 @@
 #define ERRATA_BCL15
 #define ERRATA_CPU8
 #define ERRATA_CPU16
+#define ERRATA_DAC4
 #define ERRATA_DMA3
 #define ERRATA_DMA4
 #define ERRATA_FLASH19
@@ -58,7 +59,6 @@
 #define ERRATA_JTAG23
 #define ERRATA_PORT10
 #define ERRATA_PORT12
-#define ERRATA_SVS2
 #define ERRATA_TA12
 #define ERRATA_TA16
 #define ERRATA_TA21

@@ -33,7 +33,7 @@
 #ifndef _H_slaz202_h
 #define _H_slaz202_h
 
-/* See SLAZ202B MSP430F4270 Device Erratasheet, Revised February 2013 */
+/* See SLAZ202C MSP430F4270 Device Erratasheet, Revised May 2014 */
 
 #if defined(__MSP430F4270__)
 

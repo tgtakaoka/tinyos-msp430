@@ -33,7 +33,7 @@
 #ifndef _H_slaz314_h
 #define _H_slaz314_h
 
-/* See SLAZ314J MSP430F5529 Device Erratasheet, Revised January 2014 */
+/* See SLAZ314L MSP430F5529 Device Erratasheet, Revised August 2014 */
 
 #if defined(__MSP430F5529__)
 
@@ -77,6 +77,7 @@
     __MSP430_REV__ == 'F' || __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H' \
     __MSP430_REV__ == 'I'
 #define ERRATA_ADC25
+#define ERRATA_ADC42
 #define ERRATA_BSL7
 #define ERRATA_CPU26
 #define ERRATA_CPU27
@@ -128,10 +129,12 @@
 #define ERRATA_UCS9
 #define ERRATA_UCS11
 #define ERRATA_USB10
+#define ERRATA_USB12
 #define ERRATA_USCI26
 #define ERRATA_USCI31
 #define ERRATA_USCI34
 #define ERRATA_USCI35
+#define ERRATA_USCI39
 #define ERRATA_WDG4
 #endif
 

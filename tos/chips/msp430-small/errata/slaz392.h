@@ -33,7 +33,7 @@
 #ifndef _H_slaz392_h
 #define _H_slaz392_h
 
-/* See SLAZ392I MSP430FR5739 Device Erratasheet, Revised January 2014 */
+/* See SLAZ392J MSP430FR5739 Device Erratasheet, Revised May 2014 */
 
 #if defined(__MSP430FR5739__)
 
@@ -44,6 +44,7 @@
 
 #if __MSP430_REV__ == 'H'
 #define ERRATA_ADC39
+#define ERRATA_ADC42
 #define ERRATA_CPU40
 #define ERRATA_DMA9
 #define ERRATA_DMA10

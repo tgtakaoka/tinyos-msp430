@@ -33,7 +33,7 @@
 #ifndef _H_slaz178_h
 #define _H_slaz178_h
 
-/* See SLAZ178F MSP430F2418 Device Erratasheet, Revised July 2013 */
+/* See SLAZ178G MSP430F2418 Device Erratasheet, Revised May 2014 */
 
 #if defined(__MSP430F2418__)
 
@@ -56,7 +56,6 @@
 #define ERRATA_JTAG23
 #define ERRATA_PORT10
 #define ERRATA_PORT12
-#define ERRATA_SVS2
 #define ERRATA_TA12
 #define ERRATA_TA16
 #define ERRATA_TA21
