@@ -43,7 +43,7 @@
 #endif
 
 #if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'F' \
-    __MSP430_REV__ == 'H'
+    || __MSP430_REV__ == 'H'
 #define ERRATA_ADC22
 #define ERRATA_BCL5
 #define ERRATA_CPU4

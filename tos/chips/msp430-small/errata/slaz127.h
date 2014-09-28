@@ -54,7 +54,6 @@
 #define ERRATA_TAB22
 #define ERRATA_WDG2
 #endif
-#endif
 
 #else
 #error "This errata/slaz127.h is for MSP430F1121A"
