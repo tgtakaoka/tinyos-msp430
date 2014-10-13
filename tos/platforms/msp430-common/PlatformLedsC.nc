@@ -35,42 +35,44 @@
 
 configuration PlatformLedsC {
     provides {
+#if 0 < PLATFORM_LED_COUNT
         interface GeneralIO as Led0;
+#if 1 < PLATFORM_LED_COUNT
         interface GeneralIO as Led1;
+#if 2 < PLATFORM_LED_COUNT
         interface GeneralIO as Led2;
+#endif
+#endif
+#endif
     }
     uses interface Init;
 }
 implementation {
     components HplMsp430GeneralIOC as GpioC;
+#if 0 < PLATFORM_LED_COUNT
     components new Msp430GpioC() as Led0Port;
-    components new Msp430GpioC() as Led1Port;
-    components new Msp430GpioC() as Led2Port;
     components new InvertGeneralIOC() as Led0Inv;
+    Led0 = Led0Inv;
+    Led0Inv.Inverted -> Led0Port;
+    Led0Port -> GpioC.PORT_LED0;
+#if 1 < PLATFORM_LED_COUNT
+    components new Msp430GpioC() as Led1Port;
     components new InvertGeneralIOC() as Led1Inv;
+    Led1 = Led1Inv;
+    Led1Inv.Inverted -> Led1Port;
+    Led1Port -> GpioC.PORT_LED1;
+#if 2 < PLATFORM_LED_COUNT
+    components new Msp430GpioC() as Led2Port;
     components new InvertGeneralIOC() as Led2Inv;
+    Led2 = Led2Inv;
+    Led2Inv.Inverted -> Led2Port;
+    Led2Port -> GpioC.PORT_LED2;
+#endif
+#endif
+#endif
     components PlatformP;
 
     Init = PlatformP.LedsInit;
-
-    Led0 = Led0Inv;
-    Led0Inv.Inverted -> Led0Port;
-    Led1 = Led1Inv;
-    Led1Inv.Inverted -> Led1Port;
-    Led2 = Led2Inv;
-    Led2Inv.Inverted -> Led2Port;
-
-    Led0Port -> GpioC.PORT_LED0;
-#if PLATFORM_LED_COUNT >= 2
-    Led1Port -> GpioC.PORT_LED1;
-#else
-    Led1Port -> GpioC.PORT_LED0;
-#endif
-#if PLATFORM_LED_COUNT >= 3
-    Led2Port -> GpioC.PORT_LED2;
-#else
-    Led2Port -> GpioC.PORT_LED0;
-#endif
 }
 
 /*

@@ -40,17 +40,29 @@ module PlatformLedP {
 implementation {
     async command void Led.on[uint8_t led_id]() {
         switch (led_id) {
+#if 0 < PLATFORM_LED_COUNT
         case 0: call Leds.led0On(); break;
+#if 1 < PLATFORM_LED_COUNT
         case 1: call Leds.led1On(); break;
+#if 2 < PLATFORM_LED_COUNT
         case 2: call Leds.led2On(); break;
+#endif
+#endif
+#endif
         }
     }
 
     async command void Led.off[uint8_t led_id]() {
         switch (led_id) {
+#if 0 < PLATFORM_LED_COUNT
         case 0: call Leds.led0Off(); break;
+#if 1 < PLATFORM_LED_COUNT
         case 1: call Leds.led1Off(); break;
+#if 2 < PLATFORM_LED_COUNT
         case 2: call Leds.led2Off(); break;
+#endif
+#endif
+#endif
         }
     }
 
@@ -64,9 +76,15 @@ implementation {
 
     async command void Led.toggle[uint8_t led_id]() {
         switch (led_id) {
+#if 0 < PLATFORM_LED_COUNT
         case 0: call Leds.led0Toggle(); break;
+#if 1 < PLATFORM_LED_COUNT
         case 1: call Leds.led1Toggle(); break;
+#if 2 < PLTFORM_LED_COUNT
         case 2: call Leds.led2Toggle(); break;
+#endif
+#endif
+#endif
         }
     }
 
