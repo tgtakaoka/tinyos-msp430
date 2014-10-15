@@ -30,13 +30,13 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "SpiMaster.h"
+#include "BitBangSpiMaster.h"
 
 /** An software SPI master implementation using GPIO.
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-generic module SpiMasterC(const int mode, const int bit_endian) {
+generic module BitBangSpiMasterC(const int mode, const int bit_endian) {
     provides {
         interface StdControl as SpiControl;
         interface SpiByte;

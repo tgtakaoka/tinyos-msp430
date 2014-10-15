@@ -2,7 +2,7 @@
 
 #include "hardware.h"
 
-#ifdef USE_I2C_MASTER
+#ifdef USE_BIT_BANG_I2C_MASTER
 #include_next "PlatformI2CC.nc"
 #else
 

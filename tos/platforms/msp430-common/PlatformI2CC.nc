@@ -2,9 +2,9 @@
 
 #include "hardware.h"
 
-#ifdef USE_I2C_MASTER
+#ifdef USE_BIT_BANG_I2C_MASTER
 #include "I2C.h"
-#include "I2CMaster.h"
+#include "BitBangI2CMaster.h"
 
 configuration PlatformI2CC {
     provides {
@@ -14,13 +14,13 @@ configuration PlatformI2CC {
 }
 implementation {
     components GpioConf as GpioC;
-    components new I2CMasterC(TI2CBasicAddr, I2C_MASTER_BASIC_ADDR);
+    components new BitBangI2CMasterC(TI2CBasicAddr, I2C_MASTER_BASIC_ADDR);
 
-    I2CPacket = I2CMasterC;
-    I2CControl = I2CMasterC;
+    I2CPacket = BitBangI2CMasterC;
+    I2CControl = BitBangI2CMasterC;
 
-    I2CMasterC.SCL -> GpioC.SCL;
-    I2CMasterC.SDA -> GpioC.SDA;
+    BitBangI2CMasterC.SCL -> GpioC.SCL;
+    BitBangI2CMasterC.SDA -> GpioC.SDA;
 }
 #endif
 

@@ -1,6 +1,6 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
-#ifdef USE_SPI_MASTER
+#ifdef USE_BIT_BANG_SPI_MASTER
 #include_next "PlatformSpiC.nc"
 #else
 

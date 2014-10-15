@@ -2,8 +2,8 @@
 
 #include "hardware.h"
 
-#ifdef USE_SPI_MASTER
-#include "SpiMaster.h"
+#ifdef USE_BIT_BANG_SPI_MASTER
+#include "BitBangSpiMaster.h"
 
 configuration PlatformSpiC {
     provides {
@@ -13,14 +13,14 @@ configuration PlatformSpiC {
 }
 implementation {
     components GpioConf as GpioC;
-    components new SpiMasterC(SPI_MASTER_MODE0, SPI_MASTER_MSB);
+    components new BitBangSpiMasterC(SPI_MASTER_MODE0, SPI_MASTER_MSB);
 
-    SpiByte = SpiMasterC;
-    SpiControl = SpiMasterC;
+    SpiByte = BitBangSpiMasterC;
+    SpiControl = BitBangSpiMasterC;
 
-    SpiMasterC.SIMO -> GpioC.SIMO;
-    SpiMasterC.SOMI -> GpioC.SOMI;
-    SpiMasterC.CLK -> GpioC.CLK;
+    BitBangSpiMasterC.SIMO -> GpioC.SIMO;
+    BitBangSpiMasterC.SOMI -> GpioC.SOMI;
+    BitBangSpiMasterC.CLK -> GpioC.CLK;
 }
 #endif
 

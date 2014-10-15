@@ -30,14 +30,14 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "I2CMaster.h"
+#include "BitBangI2CMaster.h"
 
 /** An software I2C master implementation using GPIO.
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 
-generic module I2CMasterC(typedef addr_size, int addressing) {
+generic module BitBangI2CMasterC(typedef addr_size, int addressing) {
     provides {
         interface StdControl as I2CControl;
         interface I2CPacket<addr_size>;

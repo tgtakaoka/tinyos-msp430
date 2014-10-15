@@ -30,15 +30,10 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef SPI_MASTER_H
-#define SPI_MASTER_H
+#ifndef BIT_BANG_I2C_MASTER_H
+#define BIT_BANG_I2C_MASTER_H
 
-#define SPI_MASTER_MODE0 0      /* CPOL=0 CPHA=0 */
-#define SPI_MASTER_MODE1 1      /* CPOL=0 CPHA=1 */
-#define SPI_MASTER_MODE2 2      /* CPOL=1 CPHA=0 */
-#define SPI_MASTER_MODE3 3      /* CPOL=1 CPHA=1 */
-
-#define SPI_MASTER_MSB 0        /* MSB first */
-#define SPI_MASTER_LSB 1        /* LSB first */
+#define I2C_MASTER_BASIC_ADDR 0    /* 7-bit addressing */
+#define I2C_MASTER_EXTENDED_ADDR 1 /* 10-bit addressing */
 
 #endif

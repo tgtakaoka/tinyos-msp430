@@ -1,6 +1,6 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
-#include "SpiMaster.h"
+#include "BitBangSpiMaster.h"
 
 configuration DisplayC {
     provides {
