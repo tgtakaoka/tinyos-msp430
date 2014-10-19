@@ -3,7 +3,7 @@
 push( @includes, qw(
 
       %T/platforms/exp430g2553
-      %T/platforms/exp430g-common
+      %T/platforms/exp430g2-common
       %T/platforms/msp430-common
 
       %T/chips/msp430-small/msp430g2x53
