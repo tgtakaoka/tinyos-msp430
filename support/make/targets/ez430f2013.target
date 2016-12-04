@@ -1,0 +1,16 @@
+# -*- mode: makefile-gmake; mode: flyspell-prog; -*-
+
+TARGET = ez430f2013
+
+# Disable MSP430 hardware multiply because it makes MSPGCC die
+PFLAGS += -mmpy=none -mdisable-watchdog
+
+MSPDEBUG_DRIVER="uif -d /dev/ttyUSB0"
+$(call TOSMake_include,msp430-small/mspdebug.extra)
+$(call TOSMake_include_platform,ez430f2013)
+$(call TOSMake_include_make_platform,msp)
+
+ez430f2013: $(BUILD_DEPS)
+	@:
+
+# vim: set noet ts=8 sw=8 syntax=make:

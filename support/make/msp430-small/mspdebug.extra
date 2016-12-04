@@ -1,0 +1,17 @@
+# -*- mode: makefile; mode: flyspell-prog; -*-
+
+# mspdebug arguments:
+#
+#   mspdebug [MSPDEBUG_DRIVER=<mspdebug-drvier>]
+
+TOSMAKE_PROGRAMMER_TYPE = mspdebug
+
+MSPDEBUG ?= mspdebug
+MSPDEBUG_DRIVER ?= rf2500
+
+program: setid FORCE
+	@echo -e '$(INFO_STRING) installing $(TARGET) binary using $(MSPDEBUG) $(MSPDEBUG_DRIVER)'
+	$(MSPDEBUG) $(MSPDEBUG_FLAGS) $(MSPDEBUG_DRIVER) "prog $(INSTALL_IHEX)"
+	rm -f $(subst .ihex.,.exe.,$(INSTALL_IHEX)) $(INSTALL_IHEX) 
+
+# vim: set noet ts=8 sw=8 syntax=make:
