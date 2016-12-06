@@ -50,6 +50,7 @@ implementation {
     Led0Inv.Inverted -> Led0Port;
     Led0Port -> GpioC.PORT_LED0;
 #else
+#warning Platform has no LED0
     components new NCGeneralIOC() as DummyLed0;
     Led0 = DummyLed0;
 #endif
@@ -60,6 +61,7 @@ implementation {
     Led1Inv.Inverted -> Led1Port;
     Led1Port -> GpioC.PORT_LED1;
 #else
+#warning Platform has no LED1
     components new NCGeneralIOC() as DummyLed1;
     Led1 = DummyLed1;
 #endif
@@ -70,6 +72,7 @@ implementation {
     Led2Inv.Inverted -> Led2Port;
     Led2Port -> GpioC.PORT_LED2;
 #else
+#warning Platform has no LED2
     components new NCGeneralIOC() as DummyLed2;
     Led2 = DummyLed2;
 #endif
