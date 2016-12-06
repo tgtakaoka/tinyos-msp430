@@ -41,7 +41,7 @@ implementation {
     HplMsp430Usi = HplUsiP;
     HplMsp430UsiInterrupts = HplUsiP;
   
-    components Msp430UsiC as UsiC;
+    components Msp430UsiConf as UsiC;
     HplUsiP.SIMO -> UsiC.USISDO;
     HplUsiP.SOMI -> UsiC.USISDI;
     HplUsiP.UCLK -> UsiC.USISCLK;

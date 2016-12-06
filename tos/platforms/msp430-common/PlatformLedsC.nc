@@ -35,40 +35,43 @@
 
 configuration PlatformLedsC {
     provides {
-#if 0 < PLATFORM_LED_COUNT
         interface GeneralIO as Led0;
-#if 1 < PLATFORM_LED_COUNT
         interface GeneralIO as Led1;
-#if 2 < PLATFORM_LED_COUNT
         interface GeneralIO as Led2;
-#endif
-#endif
-#endif
     }
     uses interface Init;
 }
 implementation {
     components HplMsp430GeneralIOC as GpioC;
-#if 0 < PLATFORM_LED_COUNT
+#ifdef PORT_LED0
     components new Msp430GpioC() as Led0Port;
     components new InvertGeneralIOC() as Led0Inv;
     Led0 = Led0Inv;
     Led0Inv.Inverted -> Led0Port;
     Led0Port -> GpioC.PORT_LED0;
-#if 1 < PLATFORM_LED_COUNT
+#else
+    components new NCGeneralIOC() as DummyLed0;
+    Led0 = DummyLed0;
+#endif
+#ifdef PORT_LED1
     components new Msp430GpioC() as Led1Port;
     components new InvertGeneralIOC() as Led1Inv;
     Led1 = Led1Inv;
     Led1Inv.Inverted -> Led1Port;
     Led1Port -> GpioC.PORT_LED1;
-#if 2 < PLATFORM_LED_COUNT
+#else
+    components new NCGeneralIOC() as DummyLed1;
+    Led1 = DummyLed1;
+#endif
+#ifdef PORT_LED2
     components new Msp430GpioC() as Led2Port;
     components new InvertGeneralIOC() as Led2Inv;
     Led2 = Led2Inv;
     Led2Inv.Inverted -> Led2Port;
     Led2Port -> GpioC.PORT_LED2;
-#endif
-#endif
+#else
+    components new NCGeneralIOC() as DummyLed2;
+    Led2 = DummyLed2;
 #endif
     components PlatformP;
 
