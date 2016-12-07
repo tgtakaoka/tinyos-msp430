@@ -28,9 +28,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE
  */
-
-/*
- * Copyright (c) 2005-2006 Arch Rock Corporation
+ 
+ /**
+ * Copyright (c) 2005-2006 Arched Rock Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the
  *   distribution.
- * - Neither the name of the Arch Rock Corporation nor the names of
+ * - Neither the name of the Arched Rock Corporation nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
  *
@@ -60,65 +60,40 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
-/*
- * "Copyright (c) 2000-2005 The Regents of the University  of California.
- * All rights reserved.
- *
- * Permission to use, copy, modify, and distribute this software and
- * its documentation for any purpose, without fee, and without written
- * agreement is hereby granted, provided that the above copyright
- * notice, the following two paragraphs and the author appear in all
- * copies of this software.
- *
- * IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY
- * PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
- * DAMAGES ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
- * DOCUMENTATION, EVEN IF THE UNIVERSITY OF CALIFORNIA HAS BEEN
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE
- * PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
- * CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
- * UPDATES, ENHANCEMENTS, OR MODIFICATIONS."
- */
-
 /**
- * An HPL abstraction of USCIA0 on the MSP430
- *
- * @author Jonathan Hui <jhui@archrock.com>
- * @author Joe Polastre
+ * @author Jonathan Hui <jhui@archedrock.com>
  * @author Xavier Orduna <xorduna@dexmatech.com>
- * @version $Revision: 1.6 $ $Date: 2008/05/15 23:57:13 $
+ * @version $Revision: 1.4 $ $Date: 2006/12/12 18:23:11 $
  */
 
-#include "msp430usci.h"
+configuration Msp430SpiNoDmaA1P {
 
-#define USING_USCIA0 1
+  provides interface Resource[ uint8_t id ];
+  provides interface ResourceConfigure[uint8_t id ];
+  provides interface SpiByte;
+  provides interface SpiPacket[ uint8_t id ];
 
-
-configuration HplMsp430UsciA0C {
-  
-  provides interface HplMsp430UsciA;
-  provides interface HplMsp430UsciInterrupts;
+  uses interface Resource as UsciResource[ uint8_t id ];
+  uses interface Msp430SpiConfigure[ uint8_t id ];
+  uses interface HplMsp430UsciInterrupts as UsciInterrupts;
 
 }
 
 implementation {
-  
-  components HplMsp430UsciA0P as HplUsciP;
-  HplMsp430UsciA = HplUsciP;
-  HplMsp430UsciInterrupts = HplUsciP;
-  
-  components Msp430UsciConf as UsciC;
-  HplUsciP.SIMO -> UsciC.UCA0SIMO;
-  HplUsciP.SOMI -> UsciC.UCA0SOMI;
-  HplUsciP.UCLK -> UsciC.UCA0CLK;
-  HplUsciP.URXD -> UsciC.UCA0RXD;
-  HplUsciP.UTXD -> UsciC.UCA0TXD;  
 
-  components HplMsp430UsciAB0RawInterruptsP as UsciRawInterrupts;
-  HplUsciP.UsciRawInterrupts -> UsciRawInterrupts.UsciA;  
-  
+  components new Msp430SpiNoDmaAP() as SpiP;
+  Resource = SpiP.Resource;
+  ResourceConfigure = SpiP.ResourceConfigure;
+  Msp430SpiConfigure = SpiP.Msp430SpiConfigure;
+  SpiByte = SpiP.SpiByte;
+  SpiPacket = SpiP.SpiPacket;
+  UsciResource = SpiP.UsciResource;
+  UsciInterrupts = SpiP.UsciInterrupts;
+
+  components HplMsp430UsciA1C as UsciC;
+  SpiP.Usci -> UsciC;
+
+  components LedsC as Leds;
+  SpiP.Leds -> Leds;
+
 }

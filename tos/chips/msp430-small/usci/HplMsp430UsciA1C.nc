@@ -85,7 +85,7 @@
  */
 
 /**
- * An HPL abstraction of USCIA0 on the MSP430
+ * An HPL abstraction of USCIA1 on the MSP430
  *
  * @author Jonathan Hui <jhui@archrock.com>
  * @author Joe Polastre
@@ -95,10 +95,10 @@
 
 #include "msp430usci.h"
 
-#define USING_USCIA0 1
+#define USING_USCIA1 1
 
 
-configuration HplMsp430UsciA0C {
+configuration HplMsp430UsciA1C {
   
   provides interface HplMsp430UsciA;
   provides interface HplMsp430UsciInterrupts;
@@ -107,18 +107,18 @@ configuration HplMsp430UsciA0C {
 
 implementation {
   
-  components HplMsp430UsciA0P as HplUsciP;
+  components HplMsp430UsciA1P as HplUsciP;
   HplMsp430UsciA = HplUsciP;
   HplMsp430UsciInterrupts = HplUsciP;
   
   components Msp430UsciConf as UsciC;
-  HplUsciP.SIMO -> UsciC.UCA0SIMO;
-  HplUsciP.SOMI -> UsciC.UCA0SOMI;
-  HplUsciP.UCLK -> UsciC.UCA0CLK;
-  HplUsciP.URXD -> UsciC.UCA0RXD;
-  HplUsciP.UTXD -> UsciC.UCA0TXD;  
+  HplUsciP.SIMO -> UsciC.UCA1SIMO;
+  HplUsciP.SOMI -> UsciC.UCA1SOMI;
+  HplUsciP.UCLK -> UsciC.UCA1CLK;
+  HplUsciP.URXD -> UsciC.UCA1RXD;
+  HplUsciP.UTXD -> UsciC.UCA1TXD;  
 
-  components HplMsp430UsciAB0RawInterruptsP as UsciRawInterrupts;
+  components HplMsp430UsciAB1RawInterruptsP as UsciRawInterrupts;
   HplUsciP.UsciRawInterrupts -> UsciRawInterrupts.UsciA;  
   
 }

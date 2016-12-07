@@ -1,4 +1,3 @@
-
 /* -*- mode: c; mode: flyspell-prog; -*- */
 /* Copyright (c) 2010, Tadashi G. Takaoka
  * All rights reserved.

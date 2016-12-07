@@ -30,7 +30,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//#ifndef _PLATFORM_LED_H_
+#ifndef _PLATFORM_LED_H_
 #define _PLATFORM_LED_H_
 
 // LED
@@ -38,7 +38,7 @@
 #define PORT_LED0           Port10  // RED
 #define PLATFORM_LED_RED    0       // LED1
 
-//#endif // _PLATFORM_LED_H_
+#endif // _PLATFORM_LED_H_
 
 /*
  * Local Variables:

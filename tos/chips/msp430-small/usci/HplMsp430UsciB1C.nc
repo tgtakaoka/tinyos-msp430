@@ -28,8 +28,8 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE
  */
-
-/*
+ 
+ /*
  * Copyright (c) 2005-2006 Arch Rock Corporation
  * All rights reserved.
  *
@@ -85,7 +85,7 @@
  */
 
 /**
- * An HPL abstraction of USCIA0 on the MSP430
+ * An HPL abstraction of USCIB1 on the MSP430.
  *
  * @author Jonathan Hui <jhui@archrock.com>
  * @author Joe Polastre
@@ -95,30 +95,24 @@
 
 #include "msp430usci.h"
 
-#define USING_USCIA0 1
-
-
-configuration HplMsp430UsciA0C {
+configuration HplMsp430UsciB1C {
   
-  provides interface HplMsp430UsciA;
+  provides interface HplMsp430UsciB;
   provides interface HplMsp430UsciInterrupts;
-
 }
 
 implementation {
   
-  components HplMsp430UsciA0P as HplUsciP;
-  HplMsp430UsciA = HplUsciP;
+  components HplMsp430UsciB1P as HplUsciP;
+  HplMsp430UsciB = HplUsciP;
   HplMsp430UsciInterrupts = HplUsciP;
   
   components Msp430UsciConf as UsciC;
-  HplUsciP.SIMO -> UsciC.UCA0SIMO;
-  HplUsciP.SOMI -> UsciC.UCA0SOMI;
-  HplUsciP.UCLK -> UsciC.UCA0CLK;
-  HplUsciP.URXD -> UsciC.UCA0RXD;
-  HplUsciP.UTXD -> UsciC.UCA0TXD;  
-
-  components HplMsp430UsciAB0RawInterruptsP as UsciRawInterrupts;
-  HplUsciP.UsciRawInterrupts -> UsciRawInterrupts.UsciA;  
+  HplUsciP.SIMO -> UsciC.UCB1SIMO;
+  HplUsciP.SOMI -> UsciC.UCB1SOMI;
+  HplUsciP.UCLK -> UsciC.UCB1CLK;
+  
+  components HplMsp430UsciAB1RawInterruptsP as UsciRawInterrupts;
+  HplUsciP.UsciRawInterrupts -> UsciRawInterrupts.UsciB;
   
 }

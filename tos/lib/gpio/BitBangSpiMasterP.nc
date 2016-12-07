@@ -36,7 +36,7 @@
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-generic module BitBangSpiMasterC(const int mode, const int bit_endian) {
+generic module BitBangSpiMasterP(const int mode, const int bit_endian) {
     provides {
         interface StdControl as SpiControl;
         interface SpiByte;

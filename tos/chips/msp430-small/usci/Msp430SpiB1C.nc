@@ -28,9 +28,9 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE
  */
-
-/*
- * Copyright (c) 2005-2006 Arch Rock Corporation
+ 
+ /**
+ * Copyright (c) 2005-2006 Arched Rock Corporation
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the
  *   distribution.
- * - Neither the name of the Arch Rock Corporation nor the names of
+ * - Neither the name of the Arched Rock Corporation nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
  *
@@ -60,65 +60,47 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
-/*
- * "Copyright (c) 2000-2005 The Regents of the University  of California.
- * All rights reserved.
- *
- * Permission to use, copy, modify, and distribute this software and
- * its documentation for any purpose, without fee, and without written
- * agreement is hereby granted, provided that the above copyright
- * notice, the following two paragraphs and the author appear in all
- * copies of this software.
- *
- * IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY
- * PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
- * DAMAGES ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
- * DOCUMENTATION, EVEN IF THE UNIVERSITY OF CALIFORNIA HAS BEEN
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE
- * PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
- * CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
- * UPDATES, ENHANCEMENTS, OR MODIFICATIONS."
- */
-
 /**
- * An HPL abstraction of USCIA0 on the MSP430
+ * An implementation of the SPI on USCIB1 for the MSP430. The current
+ * implementation defaults not using the DMA and performing the SPI
+ * transfers in software. To utilize the DMA, use Msp430SpiDma1P in
+ * place of Msp430SpiNoDma1P.
  *
- * @author Jonathan Hui <jhui@archrock.com>
- * @author Joe Polastre
+ * @author Jonathan Hui <jhui@archedrock.com>
+ * @author Mark Hays
  * @author Xavier Orduna <xorduna@dexmatech.com>
- * @version $Revision: 1.6 $ $Date: 2008/05/15 23:57:13 $
+ * @version $Revision: 1.6 $ $Date: 2008/05/21 22:11:57 $
  */
 
 #include "msp430usci.h"
 
-#define USING_USCIA0 1
+generic configuration Msp430SpiB1C() {
 
+  provides interface Resource;
+  provides interface ResourceRequested;
+  provides interface SpiByte;
+  provides interface SpiPacket;
 
-configuration HplMsp430UsciA0C {
-  
-  provides interface HplMsp430UsciA;
-  provides interface HplMsp430UsciInterrupts;
-
+  uses interface Msp430SpiConfigure;
 }
 
 implementation {
-  
-  components HplMsp430UsciA0P as HplUsciP;
-  HplMsp430UsciA = HplUsciP;
-  HplMsp430UsciInterrupts = HplUsciP;
-  
-  components Msp430UsciConf as UsciC;
-  HplUsciP.SIMO -> UsciC.UCA0SIMO;
-  HplUsciP.SOMI -> UsciC.UCA0SOMI;
-  HplUsciP.UCLK -> UsciC.UCA0CLK;
-  HplUsciP.URXD -> UsciC.UCA0RXD;
-  HplUsciP.UTXD -> UsciC.UCA0TXD;  
 
-  components HplMsp430UsciAB0RawInterruptsP as UsciRawInterrupts;
-  HplUsciP.UsciRawInterrupts -> UsciRawInterrupts.UsciA;  
-  
+  enum {
+    CLIENT_ID = unique( MSP430_SPI0_BUS ),
+  };
+
+  components Msp430SpiNoDmaB1P as SpiP;
+
+  Resource = SpiP.Resource[ CLIENT_ID ];
+  SpiByte = SpiP.SpiByte;
+  SpiPacket = SpiP.SpiPacket[ CLIENT_ID ];
+  Msp430SpiConfigure = SpiP.Msp430SpiConfigure[ CLIENT_ID ];
+
+  components new Msp430UsciB1C() as UsciC;
+  ResourceRequested = UsciC;
+  SpiP.ResourceConfigure[ CLIENT_ID ] <- UsciC.ResourceConfigure;
+  SpiP.UsciResource[ CLIENT_ID ] -> UsciC.Resource;
+  SpiP.UsciInterrupts -> UsciC.HplMsp430UsciInterrupts;
+
 }

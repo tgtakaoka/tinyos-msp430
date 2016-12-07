@@ -42,6 +42,10 @@
 // SW
 #define PORT_PUSH_SW   Port13
 
+#define USE_BIT_BANG_SPI_MASTER
+#undef  USE_USI_SPI_MASTER Msp430Spi0C
+#define USE_BIT_BANG_I2C_MASTER
+
 #endif // _H_hardware_h
 
 /*

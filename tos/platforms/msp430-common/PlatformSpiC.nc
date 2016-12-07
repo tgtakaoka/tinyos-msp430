@@ -2,8 +2,15 @@
 
 #include "hardware.h"
 
-#ifdef USE_BIT_BANG_SPI_MASTER
+#if defined(USE_BIT_BANG_SPI_MASTER)
 #include "BitBangSpiMaster.h"
+#elif defined(USE_USI_SPI_MASTER)
+#include "msp430usi.h"
+#elif defined(USE_USCI_SPI_MASTER)
+#include "msp430usci.h"
+#elif defined(USE_USART_SPI_MASTER)
+#include "msp430usart.h"
+#endif
 
 configuration PlatformSpiC {
     provides {
@@ -12,18 +19,35 @@ configuration PlatformSpiC {
     }
 }
 implementation {
-    components GpioConf as GpioC;
+#if defined(USE_BIT_BANG_SPI_MASTER)
     components new BitBangSpiMasterP(SPI_MASTER_MODE0, SPI_MASTER_MSB)
         as SpiMaster;
-
-    SpiByte = SpiMaster;
+    components GpioConf as SpiC;
+    SpiMaster.SIMO -> SpiC.SIMO;
+    SpiMaster.SOMI -> SpiC.SOMI;
+    SpiMaster.CLK -> SpiC.CLK;
     SpiControl = SpiMaster;
-
-    SpiMaster.SIMO -> GpioC.SIMO;
-    SpiMaster.SOMI -> GpioC.SOMI;
-    SpiMaster.CLK -> GpioC.CLK;
-}
+#elif defined(USE_USI_SPI_MASTER)
+    components new USE_USI_SPI_MASTER() as SpiMaster;
+    components UsiConf as SpiC;
+    SpiControl = SpiC.SpiControl;
+    SpiC.Msp430SpiConfigure <- SpiMaster;
+    SpiC.SpiResource -> SpiMaster;
+#elif defined(USE_USCI_SPI_MASTER)
+    components new USE_USCI_SPI_MASTER() as SpiMaster;
+    components UsciConf as SpiC;
+    SpiControl = SpiC.SpiControl;
+    SpiC.Msp430SpiConfigure <- SpiMaster;
+    SpiC.SpiResource -> SpiMaster;
+#elif defined(USE_USART_SPI_MASTER)
+    components new USE_USART_SPI_MASTER() as SpiMaster;
+    components UsartConf as SpiC;
+    SpiControl = SpiC.SpiControl;
+    SpiC.Msp430SpiConfigure <- SpiMaster;
+    SpiC.SpiResource -> SpiMaster;
 #endif
+    SpiByte = SpiMaster;
+}
 
 /*
  * Local Variables:
