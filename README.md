@@ -43,7 +43,13 @@ To do
 * support msp430f5172 (38pin, 25MHz, 32KB Flash, 2KB RAM)
 * support msp430f5310 (48pin, 25MHz, 32kB Flash, 6KB RAM)
 * support msp430f5510 (48pin, 25MHz, 32kB Flash, 6KB RAM, USB)
-* support msp430fr5739 (38pin, 24MHz, 16KB FRAM, 1KB SRAM)
+* support msp430fr2111 (16pin, 16MHz, 3.75KB FRAM, 1KB RAM)
+* support msp430fr2311 (20pin, 16MHz, 3.75KB FRAM, 1KB RAM)
+* support msp430fr2633 (32pin, 16MHz, 15.5KB FRAM, 4KB RAM)
+* support msp430fr5739 (38pin, 24MHz, 16KB FRAM, 1KB RAM)
+* support msp430g2955 (38pin, 16MHz, 56KB Flash, 4KB RAM)
+* support msp430i2041 (28pin, 16MHz, 32KB Flash, 2KB RAM)
+* support msp430afe253 (24pin, 12MHz, 16KB Flash, 512B RAM)
 * support MSP-EXP430FR5739
 
 Completed
