@@ -33,7 +33,7 @@
 #ifndef _H_slaz155_h
 #define _H_slaz155_h
 
-/* See SLAZ155E MSP430F2012 Device Erratasheet, Revised May 2014 */
+/* See SLAZ155F MSP430F2012 Device Erratasheet, Revised April 2015 */
 
 #if defined(__MSP430F2012__)
 

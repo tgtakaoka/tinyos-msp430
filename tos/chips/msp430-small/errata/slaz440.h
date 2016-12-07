@@ -33,7 +33,7 @@
 #ifndef _H_slaz440_h
 #define _H_slaz440_h
 
-/* See SLAZ440E MSP430G2553 Device Erratasheet, Revised May 2014 */
+/* See SLAZ440G MSP430G2553 Device Erratasheet, Revised April 2015 */
 
 #if defined(__MSP430G2553__)
 
@@ -60,6 +60,7 @@
 #define ERRATA_USCI29
 #define ERRATA_USCI30
 #define ERRATA_USCI35
+#define ERRATA_USCI40
 #define ERRATA_XOSC5
 #endif
 

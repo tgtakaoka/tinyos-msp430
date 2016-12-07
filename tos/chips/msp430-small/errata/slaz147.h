@@ -33,7 +33,7 @@
 #ifndef _H_slaz147_h
 #define _H_slaz147_h
 
-/* See SLAZ147C MSP430F1612 Device Erratasheet, Revised May 2014 */
+/* See SLAZ147E MSP430F1612 Device Erratasheet, Revised April 2015 */
 
 #if defined(__MSP430F1612__)
 

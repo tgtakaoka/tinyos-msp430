@@ -33,7 +33,7 @@
 #ifndef _H_slaz314_h
 #define _H_slaz314_h
 
-/* See SLAZ314L MSP430F5529 Device Erratasheet, Revised August 2014 */
+/* See SLAZ314T MSP430F5529 Device Erratasheet, Revised August 2016 */
 
 #if defined(__MSP430F5529__)
 
@@ -60,12 +60,12 @@
 #endif
 
 #if __MSP430_REV__ == 'E'
-#define ERRATA_ADC25
+#define ERRATA_ADC29
 #endif
 
 #if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' \
     __MSP430_REV__ == 'F' || __MSP430_REV__ == 'G'
-#define ERRATA_USC6
+#define ERRATA_UCS6
 #define ERRATA_USB9
 #endif
 
@@ -76,9 +76,15 @@
 #if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' \
     __MSP430_REV__ == 'F' || __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H' \
     __MSP430_REV__ == 'I'
+#define ERRATA_BSL7
+#endif
+
+#if __MSP430_REV__ == 'C' || __MSP430_REV__ == 'D' || __MSP430_REV__ == 'E' \
+    __MSP430_REV__ == 'F' || __MSP430_REV__ == 'G' || __MSP430_REV__ == 'H' \
+    __MSP430_REV__ == 'I' || __MSP430_REV__ == 'K'
 #define ERRATA_ADC25
 #define ERRATA_ADC42
-#define ERRATA_BSL7
+#define ERRATA_COMP10
 #define ERRATA_CPU26
 #define ERRATA_CPU27
 #define ERRATA_CPU28
@@ -92,7 +98,6 @@
 #define ERRATA_CPU37
 #define ERRATA_CPU39
 #define ERRATA_CPU40
-#define ERRATA_CPU43
 #define ERRATA_DMA4
 #define ERRATA_DMA8
 #define ERRATA_DMA10
@@ -109,6 +114,8 @@
 #define ERRATA_FLASH33
 #define ERRATA_FLASH34
 #define ERRATA_JTAG20
+#define ERRATA_JTAG26
+#define ERRATA_JTAG27
 #define ERRATA_MPY1
 #define ERRATA_PMAP1
 #define ERRATA_PMM9
@@ -135,11 +142,13 @@
 #define ERRATA_USCI34
 #define ERRATA_USCI35
 #define ERRATA_USCI39
+#define ERRATA_USCI40
 #define ERRATA_WDG4
 #endif
 
 #if __MSP430_REV__ == 'I'
 #define ERRATA_USB11
+#define ERRATA_USB13
 #endif
 
 #else
