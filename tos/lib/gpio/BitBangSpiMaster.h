@@ -31,7 +31,7 @@
  */
 
 #ifndef BIT_BANG_SPI_MASTER_H
-#define BIT_BANG_I2C_MASTER_H
+#define BIT_BANG_SPI_MASTER_H
 
 #define SPI_MASTER_MODE0 0      /* CPOL=0 CPHA=0 */
 #define SPI_MASTER_MODE1 1      /* CPOL=0 CPHA=1 */
