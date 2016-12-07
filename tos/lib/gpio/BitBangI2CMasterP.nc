@@ -37,7 +37,7 @@
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 
-generic module BitBangI2CMasterC(typedef addr_size, int addressing) {
+generic module BitBangI2CMasterP(typedef addr_size, int addressing) {
     provides {
         interface StdControl as I2CControl;
         interface I2CPacket<addr_size>;

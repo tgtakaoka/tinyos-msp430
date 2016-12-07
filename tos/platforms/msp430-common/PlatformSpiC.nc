@@ -13,14 +13,15 @@ configuration PlatformSpiC {
 }
 implementation {
     components GpioConf as GpioC;
-    components new BitBangSpiMasterC(SPI_MASTER_MODE0, SPI_MASTER_MSB);
+    components new BitBangSpiMasterP(SPI_MASTER_MODE0, SPI_MASTER_MSB)
+        as SpiMaster;
 
-    SpiByte = BitBangSpiMasterC;
-    SpiControl = BitBangSpiMasterC;
+    SpiByte = SpiMaster;
+    SpiControl = SpiMaster;
 
-    BitBangSpiMasterC.SIMO -> GpioC.SIMO;
-    BitBangSpiMasterC.SOMI -> GpioC.SOMI;
-    BitBangSpiMasterC.CLK -> GpioC.CLK;
+    SpiMaster.SIMO -> GpioC.SIMO;
+    SpiMaster.SOMI -> GpioC.SOMI;
+    SpiMaster.CLK -> GpioC.CLK;
 }
 #endif
 

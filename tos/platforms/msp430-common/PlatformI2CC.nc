@@ -14,13 +14,14 @@ configuration PlatformI2CC {
 }
 implementation {
     components GpioConf as GpioC;
-    components new BitBangI2CMasterC(TI2CBasicAddr, I2C_MASTER_BASIC_ADDR);
+    components new BitBangI2CMasterP(TI2CBasicAddr, I2C_MASTER_BASIC_ADDR)
+        as I2CMaster;
 
-    I2CPacket = BitBangI2CMasterC;
-    I2CControl = BitBangI2CMasterC;
+    I2CPacket = I2CMaster;
+    I2CControl = I2CMaster;
 
-    BitBangI2CMasterC.SCL -> GpioC.SCL;
-    BitBangI2CMasterC.SDA -> GpioC.SDA;
+    I2CMaster.SCL -> GpioC.SCL;
+    I2CMaster.SDA -> GpioC.SDA;
 }
 #endif
 

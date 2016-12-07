@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2010, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,79 +30,69 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Max7219.h"
-
-/** An HPL module of MAX7219 8-Digit LED Display Drivers
+/** An interface to arbitrary digits of 7 segments LEDs.
  *
  * Provides the ability to turn off and set integer value as zero
  * suppressed decimal, zero filled decimal, hexadecimal number.
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-
-generic module HplMax7219C(char resourceName[]) {
-    provides interface HplMax7219 as Hpl;
-    uses {
-        interface StdControl as SpiControl;
-        interface SpiByte;
-        interface GeneralIO as Load;
-        interface Boot;
-    }
+generic module Led7SegsP(char name[], int numDigits, typedef size_type @integer()) {
+    provides interface Led7Segs<size_type>;
+    uses interface Led7Seg[int digits];
 }
 implementation {
     enum {
-        ADDRESS_DIGIT0       = 0x0100,
-        ADDRESS_DECODE_MODE  = 0x0900,
-        ADDRESS_INTENSITY    = 0x0a00,
-        ADDRESS_SCAN_LIMIT   = 0x0b00,
-        ADDRESS_CONFIG       = 0x0c00,
-        ADDRESS_DISPLAY_TEST = 0x0f00,
+        OFFSET = uniqueN(name, numDigits),
     };
 
-    void event Boot.booted() {
-        atomic {
-            call Load.set();
-            call Load.makeOutput();
-            call SpiControl.start();
-            call Hpl.setConfig(MAX7219_CONFIG_NORMAL);
-            call Hpl.displayTest(FALSE);
-            call Hpl.setScanLimit(uniqueCount(resourceName));
-            call Hpl.setDecodeMode(0x00); /* segment mode */
-            call Hpl.setIntensity(15);
+    command int Led7Segs.offset() {
+        return OFFSET;
+    }
+
+    command int Led7Segs.digits() {
+        return numDigits;
+    }
+
+    command void Led7Segs.off() {
+        int i;
+        for (i = 0; i < numDigits; i++) {
+            call Led7Seg.off[OFFSET + i]();
         }
     }
 
-    void write(uint16_t commands) {
-        atomic {
-            call Load.clr();
-            call SpiByte.write(commands >> 8);
-            call SpiByte.write(commands);
-            call Load.set();
+    command void Led7Segs.decimal(size_type val) {
+        int i;
+        bool suppress = FALSE;
+        for (i = 0; i < numDigits; i++) {
+            if (suppress) {
+                call Led7Seg.off[OFFSET + i]();
+            } else {
+                call Led7Seg.hexadecimal[OFFSET + i](val % 10);
+            }
+            if ((val /= 10) == 0)
+                suppress = TRUE;
         }
     }
 
-    command void Hpl.setDigit(uint8_t digit, uint8_t segments) {
-        write(((digit << 8) + ADDRESS_DIGIT0) | segments);
+    command void Led7Segs.decimal0(size_type val) {
+        int i;
+        for (i = 0; i < numDigits; i++) {
+            call Led7Seg.hexadecimal[OFFSET + i](val % 10);
+            val /= 10;
+        }
     }
 
-    command void Hpl.setDecodeMode(uint8_t modes) {
-        write(ADDRESS_DECODE_MODE | modes);
+    command void Led7Segs.hexadecimal(size_type val) {
+        int i;
+        for (i = 0; i < numDigits; i++) {
+            call Led7Seg.hexadecimal[OFFSET + i](val % 16);
+            val /= 16;
+        }
     }
 
-    command void Hpl.setIntensity(uint8_t intensity) {
-        write(ADDRESS_INTENSITY | intensity);
-    }
-
-    command void Hpl.setScanLimit(uint8_t digits) {
-        write(ADDRESS_SCAN_LIMIT | (digits - 1));
-    }
-
-    command void Hpl.setConfig(uint8_t config) {
-        write(ADDRESS_CONFIG | config);
-    }
-
-    command void Hpl.displayTest(bool enableTest) {
-        write(ADDRESS_DISPLAY_TEST | enableTest);
+    command void Led7Segs.segments(int digit, unsigned segments) {
+        call Led7Seg.segments[OFFSET + digit](segments & 0xff);
     }
 }
 

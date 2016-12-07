@@ -34,7 +34,7 @@
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-generic module InvertGeneralIOC() {
+generic module InvertGeneralIOP() {
     provides interface GeneralIO;
     uses interface GeneralIO as Inverted;
 }

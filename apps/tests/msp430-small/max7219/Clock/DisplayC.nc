@@ -11,22 +11,22 @@ implementation {
     components MainC;
     components GpioConf as GpioC;
     components PlatformSpiC as SpiC;
-    components new HplMax7219C("HH:MM:SS");
+    components new HplMax7219P("HH:MM:SS");
     components new Max7219P();
-    components new Led7SegsC("HH:MM:SS", 2, uint16_t) as S;
-    components new Led7SegsC("HH:MM:SS", 2, uint16_t) as M;
-    components new Led7SegsC("HH:MM:SS", 2, uint16_t) as H;
+    components new Led7SegsP("HH:MM:SS", 2, uint16_t) as S;
+    components new Led7SegsP("HH:MM:SS", 2, uint16_t) as M;
+    components new Led7SegsP("HH:MM:SS", 2, uint16_t) as H;
 
     Sec = S;
     Min = M;
     Hour = H;
 
-    HplMax7219C.Boot -> MainC.Boot;
-    HplMax7219C.Load -> GpioC.STE;
-    HplMax7219C.SpiByte -> SpiC;
-    HplMax7219C.SpiControl -> SpiC;
+    HplMax7219P.Boot -> MainC.Boot;
+    HplMax7219P.Load -> GpioC.STE;
+    HplMax7219P.SpiByte -> SpiC;
+    HplMax7219P.SpiControl -> SpiC;
 
-    Max7219P.Hpl -> HplMax7219C;
+    Max7219P.Hpl -> HplMax7219P;
 
     S.Led7Seg -> Max7219P;
     M.Led7Seg -> Max7219P;

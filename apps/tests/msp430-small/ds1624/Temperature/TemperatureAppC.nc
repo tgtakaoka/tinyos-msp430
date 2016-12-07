@@ -39,11 +39,11 @@ implementation {
     components LedC;
     components PlatformI2CC as I2CC;
     components new Timer16MilliC() as Timer;
-    components new HplDs1624C(0x9e >> 1);
+    components new HplDs1624P(0x9e >> 1);
     components new Ds1624P();
 
-    HplDs1624C -> I2CC.I2CPacket;
-    Ds1624P.Hpl -> HplDs1624C;
+    HplDs1624P -> I2CC.I2CPacket;
+    Ds1624P.Hpl -> HplDs1624P;
 
     App.Boot -> MainC;
     App.I2CControl -> I2CC;

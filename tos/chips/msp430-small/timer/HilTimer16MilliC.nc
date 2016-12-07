@@ -49,16 +49,16 @@ configuration HilTimer16MilliC
 implementation
 {
   components new AlarmMilli16C();
-  components new AlarmToTimer16C(TMilli);
-  components new VirtualizeTimer16C(TMilli,uniqueCount(UQ_TIMER16_MILLI));
+  components new AlarmToTimer16P(TMilli);
+  components new VirtualizeTimer16P(TMilli,uniqueCount(UQ_TIMER16_MILLI));
   components new CounterToLocalTimeC(TMilli);
   components CounterMilli32C;
 
   Init = AlarmMilli16C;
-  Timer16Milli = VirtualizeTimer16C;
+  Timer16Milli = VirtualizeTimer16P;
   LocalTime = CounterToLocalTimeC;
 
-  VirtualizeTimer16C.TimerFrom -> AlarmToTimer16C;
-  AlarmToTimer16C.Alarm -> AlarmMilli16C;
+  VirtualizeTimer16P.TimerFrom -> AlarmToTimer16P;
+  AlarmToTimer16P.Alarm -> AlarmMilli16C;
   CounterToLocalTimeC.Counter -> CounterMilli32C;
 }

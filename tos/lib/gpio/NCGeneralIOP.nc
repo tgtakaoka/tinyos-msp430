@@ -30,69 +30,32 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An interface to arbitrary digits of 7 segments LEDs.
- *
- * Provides the ability to turn off and set integer value as zero
- * suppressed decimal, zero filled decimal, hexadecimal number.
+/** An generic module to no-connection GeneralIO.
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-generic module Led7SegsC(char name[], int numDigits, typedef size_type @integer()) {
-    provides interface Led7Segs<size_type>;
-    uses interface Led7Seg[int digits];
+generic module NCGeneralIOP() {
+    provides interface GeneralIO;
 }
 implementation {
-    enum {
-        OFFSET = uniqueN(name, numDigits),
-    };
-
-    command int Led7Segs.offset() {
-        return OFFSET;
+    async command void GeneralIO.set() {
     }
-
-    command int Led7Segs.digits() {
-        return numDigits;
+    async command void GeneralIO.clr() {
     }
-
-    command void Led7Segs.off() {
-        int i;
-        for (i = 0; i < numDigits; i++) {
-            call Led7Seg.off[OFFSET + i]();
-        }
+    async command void GeneralIO.toggle() {
     }
-
-    command void Led7Segs.decimal(size_type val) {
-        int i;
-        bool suppress = FALSE;
-        for (i = 0; i < numDigits; i++) {
-            if (suppress) {
-                call Led7Seg.off[OFFSET + i]();
-            } else {
-                call Led7Seg.hexadecimal[OFFSET + i](val % 10);
-            }
-            if ((val /= 10) == 0)
-                suppress = TRUE;
-        }
+    async command bool GeneralIO.get() {
+        return FALSE;
     }
-
-    command void Led7Segs.decimal0(size_type val) {
-        int i;
-        for (i = 0; i < numDigits; i++) {
-            call Led7Seg.hexadecimal[OFFSET + i](val % 10);
-            val /= 10;
-        }
+    async command void GeneralIO.makeInput() {
     }
-
-    command void Led7Segs.hexadecimal(size_type val) {
-        int i;
-        for (i = 0; i < numDigits; i++) {
-            call Led7Seg.hexadecimal[OFFSET + i](val % 16);
-            val /= 16;
-        }
+    async command bool GeneralIO.isInput() {
+        return FALSE;
     }
-
-    command void Led7Segs.segments(int digit, unsigned segments) {
-        call Led7Seg.segments[OFFSET + digit](segments & 0xff);
+    async command void GeneralIO.makeOutput() {
+    }
+    async command bool GeneralIO.isOutput() {
+        return FALSE;
     }
 }
 

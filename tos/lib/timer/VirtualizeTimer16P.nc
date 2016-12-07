@@ -32,7 +32,7 @@
  */
 
 /**
- * VirtualizeTimer16C uses a single Timer16 to create up to 255 virtual timers.
+ * VirtualizeTimer16P uses a single Timer16 to create up to 255 virtual timers.
  *
  * <p>See TEP102 for more details.
  *
@@ -43,7 +43,7 @@
  * @author Cory Sharp <cssharp@eecs.berkeley.edu>
  */
 
-generic module VirtualizeTimer16C(typedef precision_tag, int max_timers) @safe()
+generic module VirtualizeTimer16P(typedef precision_tag, int max_timers) @safe()
 {
   provides interface Timer16<precision_tag> as Timer16[uint8_t num];
   uses interface Timer16<precision_tag> as TimerFrom;

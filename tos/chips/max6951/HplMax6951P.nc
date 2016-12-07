@@ -40,7 +40,7 @@
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 
-generic module HplMax6951C(char resourceName[]) {
+generic module HplMax6951P(char resourceName[]) {
     provides interface HplMax6951 as Hpl;
     uses {
         interface StdControl as SpiControl;

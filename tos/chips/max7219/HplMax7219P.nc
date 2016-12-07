@@ -30,58 +30,79 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Max549.h"
+#include "Max7219.h"
 
-/** An HPL module of MAX549 2ch 8-bit DAC
+/** An HPL module of MAX7219 8-Digit LED Display Drivers
+ *
+ * Provides the ability to turn off and set integer value as zero
+ * suppressed decimal, zero filled decimal, hexadecimal number.
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-generic module HplMax549P() {
-    provides interface HplMax549 as Hpl;
+
+generic module HplMax7219P(char resourceName[]) {
+    provides interface HplMax7219 as Hpl;
     uses {
         interface StdControl as SpiControl;
         interface SpiByte;
-        interface GeneralIO as CS;
+        interface GeneralIO as Load;
         interface Boot;
     }
 }
 implementation {
     enum {
-        LOAD_INPUT_REG = 0x0000,
-        LOAD_DAC_REG   = 0x0800,
+        ADDRESS_DIGIT0       = 0x0100,
+        ADDRESS_DECODE_MODE  = 0x0900,
+        ADDRESS_INTENSITY    = 0x0a00,
+        ADDRESS_SCAN_LIMIT   = 0x0b00,
+        ADDRESS_CONFIG       = 0x0c00,
+        ADDRESS_DISPLAY_TEST = 0x0f00,
     };
-
-    void write(unsigned data) {
-        atomic {
-            call CS.clr();
-            call SpiByte.write(data >> 8);
-            call SpiByte.write(data);
-            call CS.set();
-        }
-    }
 
     void event Boot.booted() {
         atomic {
-            call CS.set();
-            call CS.makeOutput();
+            call Load.set();
+            call Load.makeOutput();
             call SpiControl.start();
+            call Hpl.setConfig(MAX7219_CONFIG_NORMAL);
+            call Hpl.displayTest(FALSE);
+            call Hpl.setScanLimit(uniqueCount(resourceName));
+            call Hpl.setDecodeMode(0x00); /* segment mode */
+            call Hpl.setIntensity(15);
         }
     }
 
-    command void Hpl.setInputReg(uint16_t channel, uint8_t data) __attribute__((noinline)) {
-        write(LOAD_INPUT_REG | channel | data);
+    void write(uint16_t commands) {
+        atomic {
+            call Load.clr();
+            call SpiByte.write(commands >> 8);
+            call SpiByte.write(commands);
+            call Load.set();
+        }
     }
 
-    command void Hpl.setDacReg(uint16_t channel, uint8_t data) __attribute__((noinline)) {
-        write(LOAD_DAC_REG | channel | data);
+    command void Hpl.setDigit(uint8_t digit, uint8_t segments) {
+        write(((digit << 8) + ADDRESS_DIGIT0) | segments);
     }
 
-    command void Hpl.loadDacReg() __attribute__((noinline)) {
-        write(LOAD_DAC_REG);
+    command void Hpl.setDecodeMode(uint8_t modes) {
+        write(ADDRESS_DECODE_MODE | modes);
     }
 
-    command void Hpl.shutdown() __attribute__((noinline)) {
-        write(0x1800);
+    command void Hpl.setIntensity(uint8_t intensity) {
+        write(ADDRESS_INTENSITY | intensity);
+    }
+
+    command void Hpl.setScanLimit(uint8_t digits) {
+        write(ADDRESS_SCAN_LIMIT | (digits - 1));
+    }
+
+    command void Hpl.setConfig(uint8_t config) {
+        write(ADDRESS_CONFIG | config);
+    }
+
+    command void Hpl.displayTest(bool enableTest) {
+        write(ADDRESS_DISPLAY_TEST | enableTest);
     }
 }
 

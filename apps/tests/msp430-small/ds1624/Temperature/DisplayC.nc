@@ -15,24 +15,24 @@ implementation {
     components MainC;
     components GpioConf as GpioC;
     components PlatformSpiC as SpiC;
-    components new HplMax6951C("HH:MM TT.FF");
+    components new HplMax6951P("HH:MM TT.FF");
     components new Max6951P();
-    components new Led7SegsC("HH:MM TT.FF", 2, uint16_t) as F;
-    components new Led7SegsC("HH:MM TT.FF", 2, uint16_t) as T;
-    components new Led7SegsC("HH:MM TT.FF", 2, uint16_t) as S;
-    components new Led7SegsC("HH:MM TT.FF", 2, uint16_t) as M;
+    components new Led7SegsP("HH:MM TT.FF", 2, uint16_t) as F;
+    components new Led7SegsP("HH:MM TT.FF", 2, uint16_t) as T;
+    components new Led7SegsP("HH:MM TT.FF", 2, uint16_t) as S;
+    components new Led7SegsP("HH:MM TT.FF", 2, uint16_t) as M;
 
     Frac = F;
     Temp = T;
     Sec = S;
     Min = M;
 
-    HplMax6951C.Boot -> MainC.Boot;
-    HplMax6951C.CS -> GpioC.STE;
-    HplMax6951C.SpiByte -> SpiC;
-    HplMax6951C.SpiControl -> SpiC;
+    HplMax6951P.Boot -> MainC.Boot;
+    HplMax6951P.CS -> GpioC.STE;
+    HplMax6951P.SpiByte -> SpiC;
+    HplMax6951P.SpiControl -> SpiC;
 
-    Max6951P.Hpl -> HplMax6951C;
+    Max6951P.Hpl -> HplMax6951P;
 
     F.Led7Seg -> Max6951P;
     T.Led7Seg -> Max6951P;

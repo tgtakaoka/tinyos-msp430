@@ -36,7 +36,7 @@
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-generic module HplDs1624C(uint8_t devAddr) {
+generic module HplDs1624P(uint8_t devAddr) {
     provides interface HplDs1624 as Hpl;
     uses interface I2CPacket<TI2CBasicAddr>;
 }
