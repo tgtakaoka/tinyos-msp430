@@ -29,7 +29,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE
  */
  
- /*
+/*
  * Copyright (c) 2005-2006 Arch Rock Corporation
  * All rights reserved.
  *
@@ -60,61 +60,40 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE
  */
 
-/*
- * "Copyright (c) 2000-2005 The Regents of the University  of California.
- * All rights reserved.
- *
- * Permission to use, copy, modify, and distribute this software and
- * its documentation for any purpose, without fee, and without written
- * agreement is hereby granted, provided that the above copyright
- * notice, the following two paragraphs and the author appear in all
- * copies of this software.
- *
- * IN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY
- * PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
- * DAMAGES ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS
- * DOCUMENTATION, EVEN IF THE UNIVERSITY OF CALIFORNIA HAS BEEN
- * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES,
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE SOFTWARE
- * PROVIDED HEREUNDER IS ON AN "AS IS" BASIS, AND THE UNIVERSITY OF
- * CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
- * UPDATES, ENHANCEMENTS, OR MODIFICATIONS."
- */
-
 /**
- * An HPL abstraction of USCIB1 on the MSP430.
- *
  * @author Jonathan Hui <jhui@archrock.com>
- * @author Joe Polastre
  * @author Xavier Orduna <xorduna@dexmatech.com>
- * @version $Revision: 1.6 $ $Date: 2008/05/15 23:57:13 $
+ * @version $Revision: 1.5 $ $Date: 2008/05/21 22:11:57 $
  */
 
+#include <I2C.h>
 #include "msp430usci.h"
 
-configuration HplMsp430UsciB1C {
+generic configuration Msp430I2C1C() {
   
-  provides interface HplMsp430UsciB;
-  provides interface HplMsp430UsciInterrupts;
+  provides interface Resource;
+  provides interface ResourceRequested;
+  provides interface I2CPacket<TI2CBasicAddr> as I2CBasicAddr;
+  
+  uses interface Msp430I2CConfigure;
+  
 }
 
 implementation {
   
-  components HplMsp430UsciB1P as HplUsciP;
-  HplMsp430UsciB = HplUsciP;
-  HplMsp430UsciInterrupts = HplUsciP;
+  enum {
+    CLIENT_ID = unique( MSP430_I2C1_BUS ),
+  };
   
-  components Msp430UsciConf as UsciC;
-  HplUsciP.SIMO -> UsciC.UCB1SIMO;
-  HplUsciP.SOMI -> UsciC.UCB1SOMI;
-  HplUsciP.UCLK -> UsciC.UCB1CLK;
-  HplUsciP.USDA -> UsciC.UCB1SDA;
-  HplUsciP.USCL -> UsciC.UCB1SCL;
+  components Msp430I2C1P as I2CP;
+  Resource = I2CP.Resource[ CLIENT_ID ];
+  I2CBasicAddr = I2CP.I2CBasicAddr;
+  Msp430I2CConfigure = I2CP.Msp430I2CConfigure[ CLIENT_ID ];
   
-  components HplMsp430UsciAB1RawInterruptsP as UsciRawInterrupts;
-  HplUsciP.UsciRawInterrupts -> UsciRawInterrupts.UsciB;
+  components new Msp430UsciB1C() as UsciC;
+  ResourceRequested = UsciC;
+  I2CP.ResourceConfigure[ CLIENT_ID ] <- UsciC.ResourceConfigure;
+  I2CP.UsciResource[ CLIENT_ID ] -> UsciC.Resource;
+  I2CP.Interrupts -> UsciC.HplMsp430UsciInterrupts;
   
 }

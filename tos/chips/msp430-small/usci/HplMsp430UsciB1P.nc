@@ -273,9 +273,6 @@ implementation
 
   async command void Usci.enableI2C() {
     atomic {
-		//this should be removed, only for z1
-      P5OUT |= 0x06;
-      P5REN |= 0x06;
       call USDA.selectModuleFunc(); 
       call USCL.selectModuleFunc();
     }  

@@ -71,6 +71,9 @@ module HplMsp430UsciB0P @safe() {
   uses interface HplMsp430GeneralIO as SIMO;
   uses interface HplMsp430GeneralIO as SOMI;
   uses interface HplMsp430GeneralIO as UCLK;
+  uses interface HplMsp430GeneralIO as USDA;
+  uses interface HplMsp430GeneralIO as USCL;
+
   uses interface HplMsp430UsciRawInterrupts as UsciRawInterrupts;
 }
 
@@ -268,26 +271,20 @@ implementation
     return isI2C();
   }
 
-
-  /* CHECK ME!
-   * b1p messes with usda and uscl.  shouldn't b0p do the same?
-   */
   async command void Usci.enableI2C() {
     atomic {
-      call SIMO.selectModuleFunc(); 
-      call SOMI.selectModuleFunc();
-      call UCLK.selectModuleFunc();
-    }  
+      call USDA.selectModuleFunc();
+      call USCL.selectModuleFunc();
+    }
   }
-  
+
   async command void Usci.disableI2C() {
     atomic {
-      call SIMO.selectIOFunc();
-      call SOMI.selectIOFunc();
-      call UCLK.selectIOFunc();
-    }  
+      call USDA.selectIOFunc();
+      call USCL.selectIOFunc();
+    }
   }
-  
+
   void configI2C(const msp430_i2c_union_config_t* config) {
     UCB0CTL1 = (config->i2cRegisters.uctl1 | UCSWRST);
     UCB0CTL0 = (config->i2cRegisters.uctl0 | UCSYNC);
@@ -352,8 +349,8 @@ implementation
   async command bool Usci.getTransmitReceiveMode() { return (UCB0CTL1 & UCTR); }
 
   /* get/set Slave Address, i2cSA */
-  async command uint16_t Usci.getSlaveAddress()            { return UCB0I2CSA; }
-  async command void Usci.setSlaveAddress( uint16_t addr ) { UCB0I2CSA = addr; }
+  async command uint16_t Usci.getSlaveAddress()            { atomic { return UCB0I2CSA; } }
+  async command void Usci.setSlaveAddress( uint16_t addr ) { atomic { UCB0I2CSA = addr; } }
 
   /* enable/disable NACK interrupt */
   async command void Usci.disableNACKInt() { UCB0I2CIE &= ~UCNACKIE; }
