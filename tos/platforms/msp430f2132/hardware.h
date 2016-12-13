@@ -45,7 +45,7 @@
 //#define USE_USCI_SPI_MASTER Msp430SpiB0C
 #undef  USE_BIT_BANG_I2C_MASTER
 #define USE_USCI_I2C_MASTER Msp430I2C0C
-#define USE_USCI_UART Msp430Uart0xC
+#define USE_USCI_UART Msp430Uart0C
 
 #endif // _H_hardware_h
 
