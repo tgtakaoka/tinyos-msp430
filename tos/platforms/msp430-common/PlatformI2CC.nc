@@ -9,6 +9,8 @@
 #include "msp430usci.h"
 #elif defined(USE_USART_I2C_MASTER)
 #include "msp430usart.h"
+#else
+#error "This platform has no I2C Master defined"
 #endif
 
 configuration PlatformI2CC {

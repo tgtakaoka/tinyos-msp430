@@ -4,6 +4,8 @@
 #include "msp430usci.h"
 #elif defined(USE_USART_UART)
 #include "msp430usart.h"
+#else
+#error "This platform has no UART defined"
 #endif
 
 configuration PlatformUartC {

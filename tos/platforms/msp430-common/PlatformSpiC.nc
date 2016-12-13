@@ -10,6 +10,8 @@
 #include "msp430usci.h"
 #elif defined(USE_USART_SPI_MASTER)
 #include "msp430usart.h"
+#else
+#error "This platform has no SPI Master defined"
 #endif
 
 configuration PlatformSpiC {
