@@ -31,7 +31,6 @@
  */
 
 module ClockC {
-    uses interface Led7Segs<uint16_t> as Hour;
     uses interface Led7Segs<uint16_t> as Min;
     uses interface Led7Segs<uint16_t> as Sec;
     uses interface Led;
@@ -42,7 +41,6 @@ implementation {
     uint8_t deciSec;
     uint8_t sec;
     uint8_t min;
-    uint8_t hour;
 
     event void Boot.booted() {
         call Timer.startPeriodic(100);
@@ -58,16 +56,12 @@ implementation {
                 min++;
                 if (min == 60) {
                     min = 0;
-                    hour++;
-                    if (hour == 24)
-                        hour = 0;
                 }
             }
+            call Sec.decimal0(sec);
+            call Min.decimal0(min);
         }
         call Led.set(deciSec < 1);
-        call Sec.decimal0(sec);
-        call Min.decimal0(min);
-        call Hour.decimal0(hour);
     }
 }
 

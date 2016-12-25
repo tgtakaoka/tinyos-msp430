@@ -63,11 +63,11 @@ implementation {
                         hour = 0;
                 }
             }
+            call Sec.decimal0(sec);
+            call Min.decimal0(min);
+            call Hour.decimal0(hour);
         }
         call Led.set(deciSec < 1);
-        call Sec.decimal0(sec);
-        call Min.decimal0(min);
-        call Hour.decimal0(hour);
     }
 }
 
