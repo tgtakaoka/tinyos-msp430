@@ -1,5 +1,5 @@
 /* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2013, Tadashi G. Takaoka
+/* Copyright (c) 2017, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,79 +30,58 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz178_h
-#define _H_slaz178_h
+#ifndef _H_slaz391_h
+#define _H_slaz391_h
 
-/* See SLAZ178L MSP430F2418 Device Erratasheet, Revised December 2016 */
+/* See SLAZ391W MSP430FR5738 Device Erratasheet, Revised December 2016 */
 
-#if defined(__MSP430F2418__)
+#if defined(__MSP430FR5738__)
 
 #if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'A'"
-#define __MSP430_REV__ 'A'
+#warning "__MSP430_REV__ not defined, default to 'H'"
+#define __MSP430_REV__ 'H'
 #endif
 
-#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'D' || \
-    __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F' || __MSP430_REV__ == 'H'
-#define ERRATA_ADC25
-#define ERRATA_BCL12
-#define ERRATA_BCL15
-#define ERRATA_CPU8
-#define ERRATA_CPU16
-#define ERRATA_FLASH19
-#define ERRATA_FLASH24
-#define ERRATA_FLASH27
-#define ERRATA_FLASH36
-#define ERRATA_JTAG23
+#if __MSP430_REV__ == 'H' || __MSP430_REV__ == 'J'
+#define ERRATA_ADC38
+#define ERRATA_ADC39
+#define ERRATA_ADC42
+#define ERRATA_COMP10
+#define ERRATA_COMP11
+#define ERRATA_CPU21
+#define ERRATA_CPU22
+#define ERRATA_CPU40
+#define ERRATA_CPU46
+#define ERRATA_CS12
+#define ERRATA_DMA7
+#define ERRATA_DMA9
+#define ERRATA_DMA10
+#define ERRATA_DMA14
+#define ERRATA_EEM19
+#define ERRATA_EEM23
+#define ERRATA_EEM25
+#define ERRATA_EEM30
+#define ERRATA_EEM31
+#define ERRATA_GC3
 #define ERRATA_JTAG27
-#define ERRATA_PORT10
-#define ERRATA_PORT12
-#define ERRATA_TA12
-#define ERRATA_TA16
-#define ERRATA_TA21
-#define ERRATA_TAB22
-#define ERRATA_TB2
-#define ERRATA_TB16
-#define ERRATA_TB24
-#define ERRATA_USCI20
-#define ERRATA_USCI21
-#define ERRATA_USCI22
-#define ERRATA_USCI23
-#define ERRATA_USCI24
-#define ERRATA_USCI25
-#define ERRATA_USCI26
-#define ERRATA_USCI27
-#define ERRATA_USCI30
-#define ERRATA_USCI35
-#define ERRATA_USCI40
-#define ERRATA_XOSC5
-#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'D' || \
-    __MSP430_REV__ == 'E' || __MSP430_REV__ == 'F'
-#define ERRATA_XOSC8
-#endif
-#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'D' || \
-    __MSP430_REV__ == 'E'
-#define ERRATA_BCL13
-#define ERRATA_FLASH25
-#endif
-#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B' || __MSP430_REV__ == 'D'
-#define ERRATA_COMP2
-#endif
-#if __MSP430_REV__ == 'B'
-#define ERRATA_ADC19
-#endif
-#if __MSP430_REV__ == 'A'
-#define ERRATA_ADC18
-#define ERRATA_FLASH22
-#define ERRATA_FLASH23
-#define ERRATA_TB19
-#define ERRATA_USCI16
-#define ERRATA_XOSC6
-#define
+#define ERRATA_MPY1
+#define ERRATA_PORT16
+#define ERRATA_PORT19
+#define ERRATA_PORT26
+#define ERRATA_RTC14
+#define ERRATA_TA23
+#define ERRATA_USCI36
+#define ERRATA_USCI37
+#define ERRATA_USCI41
+#define ERRATA_USCI42
+#define ERRATA_USCI44
+#define ERRATA_USCI47
+#define ERRATA_WDG6
+#define ERRATA_XOSC13
 #endif
 
 #else
-#error "This errata/slaz178.h is for MSP430F2418"
+#error "This errata/slaz391.h is for MSP430FR5738"
 #endif
 
 #endif

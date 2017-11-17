@@ -33,7 +33,7 @@
 #ifndef _H_slaz129_h
 #define _H_slaz129_h
 
-/* See SLAZ129E MSP430F1132 Device Erratasheet, Revised April 2015 */
+/* See SLAZ129F MSP430F1132 Device Erratasheet, Revised December 2016 */
 
 #if defined(__MSP430F1132__)
 

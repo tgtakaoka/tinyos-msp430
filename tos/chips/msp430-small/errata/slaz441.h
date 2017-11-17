@@ -33,7 +33,7 @@
 #ifndef _H_slaz441_h
 #define _H_slaz441_h
 
-/* See SLAZ441F MSP430G2955 Device Erratasheet, Revised September 2016 */
+/* See SLAZ441G MSP430G2955 Device Erratasheet, Revised December 2016 */
 
 #if defined(__MSP430G2955__)
 
