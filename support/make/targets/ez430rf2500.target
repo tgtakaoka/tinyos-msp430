@@ -1,15 +1,12 @@
 # -*- mode: makefile-gmake; mode: flyspell-prog; -*-
 
 TARGET = ez430rf2500
+MSP_MCU = msp430f2274
 
 # Disable MSP430 hardware multiply because it makes MSPGCC die
 PFLAGS += -mmpy=none -mdisable-watchdog
 
-$(call TOSMake_include,msp430-small/mspdebug.extra)
 $(call TOSMake_include_platform,ez430rf2500)
-$(call TOSMake_include_make_platform,msp)
-
-ez430rf2500: $(BUILD_DEPS)
-	@:
+$(call TOSMake_include_make_platform,msp430-small)
 
 # vim: set noet ts=8 sw=8 syntax=make:

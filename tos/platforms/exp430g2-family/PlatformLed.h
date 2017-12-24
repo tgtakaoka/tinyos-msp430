@@ -34,7 +34,7 @@
 #define _PLATFORM_LED_H_
 
 // LED
-#define PLATFORM_LED_COUNT  3
+#define PLATFORM_LED_COUNT  2
 #define PORT_LED0           Port10  // RED
 #define PORT_LED1           Port16  // GREEN
 #define PLATFORM_LED_RED    0       // LED1

@@ -1,0 +1,10 @@
+# -*- mode: makefile-gmake; mode: flyspell-prog; -*-
+
+PFLAGS += -I%T/platforms/raw430-family
+PFLAGS += -I%T/platforms/$(TARGET)
+
+ifdef MSP_BSL_FLAGS
+$(call TOSMake_include,msp/bsl.extra)
+else
+$(call TOSMake_include,msp430-small/mspdebug.extra)
+endif

@@ -1,5 +1,0 @@
-# -*- mode: makefile-gmake; mode: flyspell-prog; -*-
-
-PFLAGS += -I%T/platforms/msp430raw-family
-
-$(call TOSMake_include,msp430-small/mspdebug.extra)
