@@ -3,9 +3,6 @@
 TARGET = ez430rf2500
 MSP_MCU = msp430f2274
 
-# Disable MSP430 hardware multiply because it makes MSPGCC die
-PFLAGS += -mmpy=none -mdisable-watchdog
-
 $(call TOSMake_include_platform,ez430rf2500)
 $(call TOSMake_include_make_platform,msp430-small)
 
