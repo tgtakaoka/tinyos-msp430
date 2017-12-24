@@ -1,0 +1,8 @@
+# -*- mode: makefile-gmake; mode: flyspell-prog; -*-
+
+PFLAGS += -I%T/platforms/ez430f-family
+PFLAGS += -I%T/chips/msp430-small/timer-vlo
+PFLAGS += -D__msp430_using_vlo
+
+MSPDEBUG_DRIVER="uif -d /dev/ttyUSB0"
+$(call TOSMake_include,msp430-small/mspdebug.extra)

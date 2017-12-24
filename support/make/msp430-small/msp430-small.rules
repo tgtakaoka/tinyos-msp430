@@ -1,0 +1,4 @@
+#-*-Makefile-*- vim:syntax=make
+
+$(call TOSMake_include,msp430-small/mcu/$(MSP_MCU).extra)
+$(call TOSMake_include_make_platform,msp)

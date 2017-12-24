@@ -1,0 +1,10 @@
+# -*-Makefile-*- vim:syntax=make
+
+PFLAGS += -I%T/chips/msp430-small/msp430f20x3
+PFLAGS += -I%T/chips/msp430-small/usi
+
+PFLAGS += -mmcu=msp430f2013
+# Disable MSP430 hardware multiply because it makes MSPGCC die
+PFLAGS += -mmpy=none -mdisable-watchdog
+PFLAGS += -fnesc-target=msp430
+PFLAGS += -fnesc-no-debug
