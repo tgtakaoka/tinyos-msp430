@@ -1,6 +1,8 @@
 tinyos-msp430
 =============
 
+NEWS: Compiling with GNU gcc 7.2 is supported.
+
 This project ports TinyOS to small MSP430 chips that are not supported
 officially.
 
@@ -31,6 +33,7 @@ Supported chips
 To do
 -----
 
+* support configurable clock and timer
 * support USART (UART, SPI, I2C)
 * support USCI (UART, SPI, I2C)
 * support USI (SPI, I2C)
@@ -45,16 +48,19 @@ To do
 * support msp430f5510 (48pin, 25MHz, 32kB Flash, 6KB RAM, USB)
 * support msp430fr2111 (16pin, 16MHz, 3.75KB FRAM, 1KB RAM)
 * support msp430fr2311 (20pin, 16MHz, 3.75KB FRAM, 1KB RAM)
+* support msp430fr2533 (32pin, 16MHz, 15.5KB FRAM, 2KB RAM)
 * support msp430fr2633 (32pin, 16MHz, 15.5KB FRAM, 4KB RAM)
 * support msp430fr5739 (38pin, 24MHz, 16KB FRAM, 1KB RAM)
 * support msp430g2955 (38pin, 16MHz, 56KB Flash, 4KB RAM)
 * support msp430i2041 (28pin, 16MHz, 32KB Flash, 2KB RAM)
 * support msp430afe253 (24pin, 12MHz, 16KB Flash, 512B RAM)
+* support MSP-EXP430FR2311
 * support MSP-EXP430FR5739
 
 Completed
 ---------
 
+* support GNU gcc 7.2
 * 0.5 using mspgcc uniarch toolchain (gcc 4.5.2)
 * 0.4 support SPI on USI, USCI, USART and GPIO.
 * 0.3 support msp430g2402, msp430g2452
