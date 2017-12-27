@@ -55,7 +55,6 @@
 #define READ_SR __get_SR_register()
 #endif
 #include "msp430regtypes.h"
-#include "msp430errata.h"
 
 #ifdef __MSP430_TI_HEADERS__
 

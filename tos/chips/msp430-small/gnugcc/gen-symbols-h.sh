@@ -15,8 +15,11 @@ sed -e 's/unsigned long int/uint32_t/' \
 echo "##### Generate msp430mcu.h from ${include}/msp430.h" 1>&2
 awk '
     { print; }
-    /^#include/ { sub("\.h", "_symbols.h", $2); print; }' \
-    ${include}/msp430.h > msp430mcu.h
+    /^#include/ && match($0, /msp430[^.]+/) {
+        mcu = substr($0, RSTART, RLENGTH)
+        printf "#include \"%s_symbols.h\"\n", mcu
+        printf "#include \"errata/%s_errata.h\"\n", mcu
+    }' ${include}/msp430.h > msp430mcu.h
 
 target_dirs=($TINYOS_ROOT_DIR/support/make/targets)
 [[ -n $TINYOS_ROOT_DIR_ADDITIONAL ]] \
