@@ -250,21 +250,7 @@
 
 #undef norace
 
-#if defined(__GNUC__)
-
-#define MSP430REG_NORACE_EXPAND(type,name,addr) \
-    norace extern volatile type name __asm__(#addr)
-
-#define MSP430REG_NORACE3(type,name,addr) \
-    MSP430REG_NORACE_EXPAND(type,name,addr)
-
-#define MSP430REG_NORACE2(rename,name) \
-    MSP430REG_NORACE3(TYPE_##name,rename,name)
-
-#define MSP430REG_NORACE(name) \
-    MSP430REG_NORACE3(TYPE_##name,name,name)
-
-#else /* __GNUC__ */
+#if defined(__MSPGCC__)
 
 #define MSP430REG_NORACE_EXPAND(type,name,addr) \
 norace static volatile type name asm(#addr)
@@ -282,7 +268,28 @@ MSP430REG_NORACE3(TYPE_##name,rename,name##_)
 #define MSP430REG_NORACE(name) \
 MSP430REG_NORACE3(TYPE_##name,name,name##_)
 
-#endif /* __GNUC__ */
+#else /* __MSPGCC__ */
+
+#define MSP430REG_NORACE_EXPAND(type,name,addr) \
+    norace extern volatile type name __asm__(#addr)
+
+#define MSP430REG_NORACE3(type,name,addr) \
+    MSP430REG_NORACE_EXPAND(type,name,addr)
+
+#define MSP430REG_NORACE2(rename,name) \
+    MSP430REG_NORACE3(TYPE_##name,rename,name)
+
+#define MSP430REG_NORACE(name) \
+    MSP430REG_NORACE3(TYPE_##name,name,name)
+
+#define UART0RX_VECTOR  USART0RX_VECTOR
+#define UART0TX_VECTOR  USART0TX_VECTOR
+#define UART1RX_VECTOR  USART1RX_VECTOR
+#define UART1TX_VECTOR  USART1TX_VECTOR
+#define UARTRX_VECTOR   USARTRX_VECTOR
+#define UARTTX_VECTOR   USARTTX_VECTOR
+
+#endif /* __MSPGCC__ */
 
 // Avoid the type-punned pointer warnings from gcc 3.3, which are warning about
 // creating potentially broken object code.  Union casts are the appropriate work

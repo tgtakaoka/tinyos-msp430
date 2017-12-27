@@ -1,5 +1,5 @@
 # -*-Makefile-*- vim:syntax=make
 
-PFLAGS += -I%T/chips/msp430-small/msp430f21x2
+PFLAGS += -I%T/chips/msp430-small/mcu/msp430f21x2
 PFLAGS += -I%T/chips/msp430-small/usci
 PFLAGS += -I%T/chips/msp430/x2xxx/usci

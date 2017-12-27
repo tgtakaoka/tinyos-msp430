@@ -1,13 +1,7 @@
-/**
- * Copyright (c) 2010 Eric B. Decker
- * All rights reserved.
- * 
+/*
+ * Copyright (c) 2010-2011 Eric B. Decker
  * Copyright (c) 2009-2010 DEXMA SENSORS SL
- * All rights reserved.
- *
- * Copyright (c) 2005-2006 Arched Rock Corporation
- * All rights reserved.
- *
+ * Copyright (c) 2005-2006 Arch Rock Corporation
  * Copyright (c) 2004-2005, Technische Universitaet Berlin
  * All rights reserved.
  *
@@ -23,29 +17,27 @@
  *   documentation and/or other materials provided with the
  *   distribution.
  *
- * - Neither the name of the DEXMA SENSORS SL, ARCHED ROCK, Technische
- *   Universitaet Berlin nor the names of its contributors may be used
- *   to endorse or promote products derived from this software without
- *   specific prior written permission.
+ * - Neither the name of the copyright holders nor the names of
+ *   its contributors may be used to endorse or promote products derived
+ *   from this software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
- * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL Eric B.
- * Decker, DEXMA SENSORS SL, ARCHED ROCK, Technische Universitaet Berlin,
- * OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
- * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL
+ * THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
- * OF THE POSSIBILITY OF SUCH DAMAGE
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include "msp430usci.h"
 
-/**
+/*
  * Implementation of USCIB0 lowlevel functionality - stateless.
  * Setting a mode will by default disable USCIB0 interrupts.
  *
@@ -65,20 +57,21 @@
  */
 
 module HplMsp430UsciB0P @safe() {
-  provides interface HplMsp430UsciB as Usci;
-  provides interface HplMsp430UsciInterrupts as Interrupts;
-
-  uses interface HplMsp430GeneralIO as SIMO;
-  uses interface HplMsp430GeneralIO as SOMI;
-  uses interface HplMsp430GeneralIO as UCLK;
-  uses interface HplMsp430GeneralIO as USDA;
-  uses interface HplMsp430GeneralIO as USCL;
-
-  uses interface HplMsp430UsciRawInterrupts as UsciRawInterrupts;
+  provides {
+    interface HplMsp430UsciB as Usci;
+    interface HplMsp430UsciInterrupts as Interrupts;
+  }
+  uses {
+    interface HplMsp430GeneralIO as SIMO;
+    interface HplMsp430GeneralIO as SOMI;
+    interface HplMsp430GeneralIO as UCLK;
+    interface HplMsp430GeneralIO as USDA;
+    interface HplMsp430GeneralIO as USCL;
+    interface HplMsp430UsciRawInterrupts as UsciRawInterrupts;
+  }
 }
 
-implementation
-{
+implementation {
   MSP430REG_NORACE(IE2);
   MSP430REG_NORACE(IFG2);
   MSP430REG_NORACE(UCB0CTL0);
@@ -98,7 +91,7 @@ implementation
 
   /* Control registers */
   async command void Usci.setUctl0(msp430_uctl0_t control) {
-    UCB0CTL0=uctl02int(control);
+    UCB0CTL0 = uctl02int(control);
   }
 
   async command msp430_uctl0_t Usci.getUctl0() {
@@ -106,7 +99,7 @@ implementation
   }
 
   async command void Usci.setUctl1(msp430_uctl1_t control) {
-    UCB0CTL1=uctl12int(control);
+    UCB0CTL1 = uctl12int(control);
   }
 
   async command msp430_uctl1_t Usci.getUctl1() {
@@ -168,7 +161,7 @@ implementation
 
   async command void Usci.enableSpi() {
     atomic {
-      call SIMO.selectModuleFunc(); 
+      call SIMO.selectModuleFunc();
       call SOMI.selectModuleFunc();
       call UCLK.selectModuleFunc();
     }
@@ -182,13 +175,13 @@ implementation
     }
   }
 
-  void configSpi(const msp430_spi_union_config_t* config) {
+  void configSpi(msp430_spi_union_config_t* config) {
     UCB0CTL1 = (config->spiRegisters.uctl1 | UCSWRST);
     UCB0CTL0 = (config->spiRegisters.uctl0 | UCSYNC);
     call Usci.setUbr(config->spiRegisters.ubr);
   }
 
-  async command void Usci.setModeSpi(const msp430_spi_union_config_t* config) {
+  async command void Usci.setModeSpi(msp430_spi_union_config_t* config) {
     atomic {
       call Usci.disableIntr();
       call Usci.clrIntr();
@@ -273,19 +266,19 @@ implementation
 
   async command void Usci.enableI2C() {
     atomic {
-      call USDA.selectModuleFunc();
+      call USDA.selectModuleFunc(); 
       call USCL.selectModuleFunc();
-    }
+    }  
   }
 
   async command void Usci.disableI2C() {
     atomic {
       call USDA.selectIOFunc();
       call USCL.selectIOFunc();
-    }
+    }  
   }
 
-  void configI2C(const msp430_i2c_union_config_t* config) {
+  void configI2C(msp430_i2c_union_config_t* config) {
     UCB0CTL1 = (config->i2cRegisters.uctl1 | UCSWRST);
     UCB0CTL0 = (config->i2cRegisters.uctl0 | UCSYNC);
     call Usci.setUbr(config->i2cRegisters.ubr);
@@ -294,7 +287,7 @@ implementation
     UCB0I2CIE = 0;
   }
 
-  async command void Usci.setModeI2C( const msp430_i2c_union_config_t* config ) {
+  async command void Usci.setModeI2C( msp430_i2c_union_config_t* config ) {
     atomic {
       call Usci.disableIntr();
       call Usci.clrIntr();
@@ -345,12 +338,13 @@ implementation
   async command void Usci.setMasterMode() { UCB0CTL0 &= ~UCMST; }
 
   /* get stop bit in i2c mode */
+  async command bool Usci.getStartBit() { return (UCB0CTL1 & UCTXSTT); } 
   async command bool Usci.getStopBit() { return (UCB0CTL1 & UCTXSTP); }
   async command bool Usci.getTransmitReceiveMode() { return (UCB0CTL1 & UCTR); }
 
   /* get/set Slave Address, i2cSA */
-  async command uint16_t Usci.getSlaveAddress()            { atomic { return UCB0I2CSA; } }
-  async command void Usci.setSlaveAddress( uint16_t addr ) { atomic { UCB0I2CSA = addr; } }
+  async command uint16_t Usci.getSlaveAddress()            { return UCB0I2CSA; }
+  async command void Usci.setSlaveAddress( uint16_t addr ) { UCB0I2CSA = addr; }
 
   /* enable/disable NACK interrupt */
   async command void Usci.disableNACKInt() { UCB0I2CIE &= ~UCNACKIE; }

@@ -18,7 +18,7 @@ awk '
     /^#include/ && match($0, /msp430[^.]+/) {
         mcu = substr($0, RSTART, RLENGTH)
         printf "#include \"%s_symbols.h\"\n", mcu
-        printf "#include \"errata/%s_errata.h\"\n", mcu
+        printf "#include \"mcu/errata/%s_errata.h\"\n", mcu
     }' ${include}/msp430.h > msp430mcu.h
 
 target_dirs=($TINYOS_ROOT_DIR/support/make/targets)
