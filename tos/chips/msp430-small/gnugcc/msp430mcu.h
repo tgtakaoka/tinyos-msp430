@@ -2449,6 +2449,30 @@
 #include "msp430fr60471.h"
 #include "msp430fr60471_symbols.h"
 
+#elif defined (__MSP430FR5041__)
+#include "msp430fr5041.h"
+#include "msp430fr5041_symbols.h"
+
+#elif defined (__MSP430FR5043__)
+#include "msp430fr5043.h"
+#include "msp430fr5043_symbols.h"
+
+#elif defined (__MSP430FR50431__)
+#include "msp430fr50431.h"
+#include "msp430fr50431_symbols.h"
+
+#elif defined (__MSP430FR6041__)
+#include "msp430fr6041.h"
+#include "msp430fr6041_symbols.h"
+
+#elif defined (__MSP430FR6043__)
+#include "msp430fr6043.h"
+#include "msp430fr6043_symbols.h"
+
+#elif defined (__MSP430FR60431__)
+#include "msp430fr60431.h"
+#include "msp430fr60431_symbols.h"
+
 #elif defined (__MSP430XGENERIC__)
 #include "msp430xgeneric.h"
 #include "msp430xgeneric_symbols.h"
