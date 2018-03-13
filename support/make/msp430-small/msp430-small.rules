@@ -25,7 +25,7 @@ endif
 
 $(call TOSMake_include_make_platform,msp)
 
-ifdef USE_GNUGCC
+ifdef USE_MSP430ELF
 PFLAGS += -I %T/chips/msp430-small/gnugcc
 endif
 
