@@ -3,8 +3,21 @@
 # Script to generate <mcu>_symbols.h from <mcu>_symbols.ld comes from
 # TI's gcc support files.
 
-gcc=$(which msp430-elf-gcc)
-include=${gcc%/bin/msp430-elf-gcc}/msp430-gcc-support-files/include
+case $(uname) in
+Darwin)
+  brew=$(brew --prefix)
+  include=${brew}/include/msp430-elf/include
+  lib=${brew}/lib/msp430-elf/lib
+  ;;
+Linux)
+  gcc=$(which msp430-elf-gcc)
+  include=${gcc%/bin/msp430-elf-gcc}/msp430-elf/include
+  lib=${gcc%/bin/msp430-elf-gcc}/msp430-elf/lib
+  ;;
+esac
+
+echo "##### Copy devices.csv from ${include}/devices.csv" 1>&2
+cp -p ${include}/devices.csv .
 
 echo "##### Generate iomacros.h from ${include}/iomacros.h" 1>&2
 sed -e 's/unsigned long int/uint32_t/' \
@@ -30,7 +43,7 @@ mcu_list=(
 )
 echo "##### MSP430 targets: ${mcu_list[@]}" 1>&2
 for mcu in "${mcu_list[@]}"; do
-    symbols=${include}/${mcu}_symbols.ld
+    symbols=${lib}/${mcu}_symbols.ld
     [[ -f ${symbols} ]] || continue
     echo "##### Generate ${mcu}_symbols.h from ${symbols}" 1>&2
     sed -E 's/PROVIDE\(([A-Z0-9_]+) *= *([0-9A-Fx]+)\);/#define \1_	\2/' \
