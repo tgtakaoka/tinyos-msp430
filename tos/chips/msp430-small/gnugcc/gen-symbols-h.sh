@@ -3,18 +3,9 @@
 # Script to generate <mcu>_symbols.h from <mcu>_symbols.ld comes from
 # TI's gcc support files.
 
-case $(uname) in
-Darwin)
-  brew=$(brew --prefix)
-  include=${brew}/include/msp430-elf/include
-  lib=${brew}/lib/msp430-elf/lib
-  ;;
-Linux)
-  gcc=$(which msp430-elf-gcc)
-  include=${gcc%/bin/msp430-elf-gcc}/msp430-elf/include
-  lib=${gcc%/bin/msp430-elf-gcc}/msp430-elf/lib
-  ;;
-esac
+brew=$(brew --prefix)
+include=${brew}/include/msp430-elf/include
+lib=${brew}/lib/msp430-elf/lib
 
 echo "##### Copy devices.csv from ${include}/devices.csv" 1>&2
 cp -p ${include}/devices.csv .
