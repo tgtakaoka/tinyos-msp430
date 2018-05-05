@@ -334,17 +334,15 @@ implementation
 
     atomic
     {
-      signal Msp430ClockInit.setupDcoCalibrate();
 #if !defined(__MSP430_HAS_BC2__)
+      signal Msp430ClockInit.setupDcoCalibrate();
       busyCalibrateDco();
 #endif
       signal Msp430ClockInit.initClocks();
       signal Msp430ClockInit.initTimerA();
-#if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
-      signal Msp430ClockInit.initTimerB();
-#endif
       startTimerA();
 #if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
+      signal Msp430ClockInit.initTimerB();
       startTimerB();
 #endif
     }
