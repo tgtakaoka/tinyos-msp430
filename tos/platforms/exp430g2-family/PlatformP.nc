@@ -39,6 +39,7 @@ module PlatformP {
 }
 implementation {
     command error_t Init.init() {
+        WDTCTL = WDTPW + WDTHOLD;
         call LedsInit.init();
         call Msp430ClockInit.init();
         return SUCCESS;
