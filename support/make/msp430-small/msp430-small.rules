@@ -18,7 +18,7 @@ PFLAGS += -mmcu=$(MSP_MCU)
 PFLAGS += -fnesc-target=msp430
 PFLAGS += -fnesc-no-debug
 
-ifdef USE_MSPGCC
+ifndef USE_MSP430ELF
 # Disable MSP430 hardware multiply because it makes MSPGCC die
 PFLAGS += -mmpy=none -mdisable-watchdog
 endif
