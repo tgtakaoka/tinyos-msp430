@@ -58,12 +58,12 @@ implementation {
   HplMsp430UsciB = HplUsciP;
   HplMsp430UsciInterrupts = HplUsciP;
 
-  components Msp430UsciConf as UsciC;
-  HplUsciP.SIMO -> UsciC.UCB0SIMO;
-  HplUsciP.SOMI -> UsciC.UCB0SOMI;
-  HplUsciP.UCLK -> UsciC.UCB0CLK;
-  HplUsciP.USDA -> UsciC.UCB0SDA;
-  HplUsciP.USCL -> UsciC.UCB0SCL;
+  components HplMsp430GeneralIOC as GIO;
+  HplUsciP.SIMO -> GIO.UCB0SIMO;
+  HplUsciP.SOMI -> GIO.UCB0SOMI;
+  HplUsciP.UCLK -> GIO.UCB0CLK;
+  HplUsciP.USDA -> GIO.UCB0SDA;
+  HplUsciP.USCL -> GIO.UCB0SCL;
   
   components HplMsp430UsciAB0RawInterruptsP as UsciRawInterrupts;
   HplUsciP.UsciRawInterrupts -> UsciRawInterrupts.UsciB;
