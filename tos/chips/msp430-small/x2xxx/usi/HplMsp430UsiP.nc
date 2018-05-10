@@ -63,40 +63,6 @@ implementation {
         signal Interrupts.startDetected();
     }
 
-    /* Control registers */
-    async command void Usi.setUsictl0(msp430_usictl0_t control) {
-        USICTL0 = usictl02int(control);
-    }
-
-    async command msp430_usictl0_t Usi.getUsictl0() {
-        return int2usictl0(USICTL0);
-    }
-
-    async command void Usi.setUsictl1(msp430_usictl1_t control) {
-        USICTL1 = usictl12int(control);
-    }
-
-    async command msp430_usictl1_t Usi.getUsictl1() {
-        return int2usictl1(USICTL1);
-    }
-
-    async command void Usi.setUsickctl(msp430_usickctl_t control) {
-        USICKCTL = usickctl2int(control);
-    }
-
-    async command msp430_usickctl_t Usi.getUsickctl() {
-        return int2usickctl(USICKCTL);
-    }
-
-    async command void Usi.setUsicnt(msp430_usicnt_t control) {
-        USICNT = usicnt2int(control);
-    }
-
-    async command msp430_usicnt_t Usi.getUsicnt() {
-        return int2usicnt(USICNT);
-    }
-
-
     /* Operations */
     async command void Usi.resetUsi(bool reset) {
         if (reset)

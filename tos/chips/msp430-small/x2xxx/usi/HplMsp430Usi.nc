@@ -33,22 +33,6 @@
 #include "msp430usi.h"
 
 interface HplMsp430Usi {
-    /* UCICTL0 */
-    async command void setUsictl0(msp430_usictl0_t control);
-    async command msp430_usictl0_t getUsictl0();
-
-    /* UCICTL1 */
-    async command void setUsictl1(msp430_usictl1_t control);
-    async command msp430_usictl1_t getUsictl1();
-
-    /* UCICKCTL */
-    async command void setUsickctl(msp430_usickctl_t control);
-    async command msp430_usickctl_t getUsickctl();
-
-    /* UCICNT */
-    async command void setUsicnt(msp430_usicnt_t control);
-    async command msp430_usicnt_t getUsicnt();
-
     async command void resetUsi(bool reset);
 
     async command msp430_usimode_t getMode();
