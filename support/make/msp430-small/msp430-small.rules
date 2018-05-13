@@ -18,14 +18,14 @@ PFLAGS += -mmcu=$(MSP_MCU)
 PFLAGS += -fnesc-target=msp430
 PFLAGS += -fnesc-no-debug
 
-ifndef USE_MSP430ELF
+ifeq ($(GCC),msp430-gcc)
 # Disable MSP430 hardware multiply because it makes MSPGCC die
 PFLAGS += -mmpy=none -mdisable-watchdog
 endif
 
 $(call TOSMake_include_make_platform,msp)
 
-ifdef USE_MSP430ELF
+ifeq ($(GCC),msp430-elf-gcc)
 PFLAGS += -I %T/chips/msp430-small/gnugcc
 endif
 

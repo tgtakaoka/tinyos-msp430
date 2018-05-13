@@ -7,22 +7,22 @@ brew=$(brew --prefix)
 include=${brew}/include/msp430-elf/include
 lib=${brew}/lib/msp430-elf/lib
 
-echo "##### Copy devices.csv from ${include}/devices.csv" 1>&2
+echo "##### Copy gnugcc/devices.csv from ${include}/devices.csv" 1>&2
 cp -p ${include}/devices.csv .
 
-echo "##### Generate iomacros.h from ${include}/iomacros.h" 1>&2
+echo "##### Generate gnugcc/iomacros.h from ${include}/iomacros.h" 1>&2
 sed -e 's/unsigned long int/uint32_t/' \
     -e 's/unsigned int/uint16_t/' \
     -e 's/unsigned char/uint8_t/' \
     ${include}/iomacros.h > iomacros.h
 
-echo "##### Generate msp430mcu.h from ${include}/msp430.h" 1>&2
+echo "##### Generate gnugcc/msp430.h from ${include}/msp430.h" 1>&2
 cat ${include}/msp430.h | \
 tr -d '\015' | \
 awk '
     {  print; }
     /^#include/ { sub("\\.h", "_symbols.h", $2); print; }' \
-    > msp430mcu.h
+    > msp430.h
 
 target_dirs=($TINYOS_ROOT_DIR/support/make/targets)
 [[ -n $TINYOS_ROOT_DIR_ADDITIONAL ]] \
