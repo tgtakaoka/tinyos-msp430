@@ -38,22 +38,21 @@
 #define _H_msp430hardware_h
 
 #if defined(__MSPGCC__)
+/* mspgcc */
 #include <msp430.h>
 #include <legacymsp430.h>
 #elif defined(__GNUC__)
 /* GNU gcc */
-#include "msp430mcu.h"
+#include "gnugcc/msp430.h"
 #define nop() __nop()
 #define eint() __eint()
 #define dint() __dint()
 #define READ_SR __get_SR_register()
-/* GNU gcc */
-#include "msp430mcu.h"
-#define nop() __nop()
-#define eint() __eint()
-#define dint() __dint()
-#define READ_SR __get_SR_register()
-#endif
+#else /* __GNUC__ */
+/* old mspgcc3, forked mspgcc4 */
+#include <io.h>
+#include <signal.h>
+#endif /* __MSPGCC__ */
 #include "msp430regtypes.h"
 
 #ifdef __MSP430_TI_HEADERS__
