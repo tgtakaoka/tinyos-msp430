@@ -70,7 +70,7 @@ implementation {
         return call UsiResource.request[id]();
     }
 
-    async command uint8_t Resource.isOwner[uint8_t id]() {
+    async command bool Resource.isOwner[uint8_t id]() {
         return call UsiResource.isOwner[id]();
     }
 
@@ -105,7 +105,7 @@ implementation {
         return byte;
     }
 
-    default async command error_t UsiResource.isOwner[uint8_t id]() { return FAIL; }
+    default async command bool UsiResource.isOwner[uint8_t id]() { return FAIL; }
     default async command error_t UsiResource.request[uint8_t id]() { return FAIL; }
     default async command error_t UsiResource.immediateRequest[uint8_t id]() { return FAIL; }
     default async command error_t UsiResource.release[uint8_t id]() { return FAIL; }
