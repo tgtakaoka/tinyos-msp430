@@ -1,8 +1,7 @@
 /*
- * Copyright (c) 2011 Eric B. Decker
+ * Copyright (c) 2010-2011 Eric B. Decker
  * Copyright (c) 2009 DEXMA SENSORS SL
  * Copyright (c) 2005-2006 Arch Rock Corporation
- * Copyright (c) 2000-2005 The Regents of the University  of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,36 +34,36 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/*
- * An HPL abstraction of USCIB0 on the MSP430.
- *
- * @author Jonathan Hui <jhui@archrock.com>
- * @author Joe Polastre
+/**
+ * @author Jonathan Hui <jhui@archedrock.com>
  * @author Xavier Orduna <xorduna@dexmatech.com>
  * @author Eric B. Decker <cire831@gmail.com>
  */
 
-#include "msp430usci.h"
-
-configuration HplMsp430UsciB0C {
+configuration Msp430SpiA0NoDmaP {
   provides {
-    interface HplMsp430UsciB;
-    interface HplMsp430UsciInterrupts;
+    interface Resource[uint8_t id];
+    interface ResourceConfigure[uint8_t id];
+    interface SpiByte;
+    interface SpiPacket[uint8_t id];
+  }
+  uses {
+    interface Resource as UsciResource[uint8_t id];
+    interface Msp430SpiConfigure[uint8_t id];
+    interface HplMsp430UsciInterrupts as UsciInterrupts;
   }
 }
 
 implementation {
-  components HplMsp430UsciB0P as HplUsciP;
-  HplMsp430UsciB = HplUsciP;
-  HplMsp430UsciInterrupts = HplUsciP;
+  components new Msp430SpiNoDmaAP() as SpiP;
+  Resource = SpiP.Resource;
+  ResourceConfigure = SpiP.ResourceConfigure;
+  Msp430SpiConfigure = SpiP.Msp430SpiConfigure;
+  SpiByte = SpiP.SpiByte;
+  SpiPacket = SpiP.SpiPacket;
+  UsciResource = SpiP.UsciResource;
+  UsciInterrupts = SpiP.UsciInterrupts;
 
-  components HplMsp430GeneralIOC as GIO;
-  HplUsciP.SIMO -> GIO.UCB0SIMO;
-  HplUsciP.SOMI -> GIO.UCB0SOMI;
-  HplUsciP.UCLK -> GIO.UCB0CLK;
-  HplUsciP.USDA -> GIO.UCB0SDA;
-  HplUsciP.USCL -> GIO.UCB0SCL;
-  
-  components HplMsp430UsciAB0RawInterruptsP as UsciRawInterrupts;
-  HplUsciP.UsciRawInterrupts -> UsciRawInterrupts.UsciB;
+  components HplMsp430UsciA0C as UsciC;
+  SpiP.Usci -> UsciC;
 }

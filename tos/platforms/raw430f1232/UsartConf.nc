@@ -13,8 +13,8 @@ implementation {
     const msp430_uart_union_config_t uart_config = {
         {
         ssel   : 0x01,             // baud rate clock source ACLK=32kHz
-        ubr    : UBR_32KHZ_9600,   // baud rate
-        umctl  : UMCTL_32KHZ_9600, // baud rate modulation
+        ubr    : UBR_32KIHZ_9600,   // baud rate
+        umctl  : UMCTL_32KIHZ_9600, // baud rate modulation
         clen   : 1,                // 8-bit character
         spb    : 0,                // 1 stop bit
         pena   : 0,                // no parity
@@ -41,8 +41,8 @@ implementation {
 
     event void UartResource.granted() {}
 
-    async command msp430_uart_union_config_t* Msp430UartConfigure.getConfig() {
-        return (msp430_uart_union_config_t*) &uart_config;
+    async command const msp430_uart_union_config_t* Msp430UartConfigure.getConfig() {
+        return &uart_config;
     }
 
     const msp430_spi_union_config_t spi_config = {
@@ -68,8 +68,8 @@ implementation {
 
     event void SpiResource.granted() {}
 
-    async command msp430_spi_union_config_t* Msp430SpiConfigure.getConfig() {
-        return (msp430_spi_union_config_t*) &spi_config;
+    async command const msp430_spi_union_config_t* Msp430SpiConfigure.getConfig() {
+        return &spi_config;
     }
 }
 
