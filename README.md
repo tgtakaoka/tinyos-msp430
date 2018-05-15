@@ -1,33 +1,25 @@
 tinyos-msp430
 =============
 
-NEWS: Compiling with [TI
-MSP430-GCC](http://www.ti.com/tool/MSP430-GCC-OPENSOURCE) is
-supported.
+NEWS: Compiling with [TI MSP430-GCC][] is supported.
 
-This project ports [TinyOS](https://github.com/tinyos/tinyos-main) to
-small MSP430 chips that are not supported officially, is designed with
-[slightly modified
-upstream](https://github.com/tgtakaoka/tinyos-main/tree/msp430-elf).
+This project ports [TinyOS prod][] to small MSP430 chips that are not
+supported officially, is designed with [TinyOS prod for msp430][].
 
 This project is intended as a basis for electronics hobbyist.
 
-You may find that [Homebrew](https://github.com/Homebrew/brew),
-[Linuxbrew](https://github.com/Linuxbrew/brew), and the following taps
+You may find that [Homebrew][], [Linuxbrew][], and the following taps
 are quite handy for develoipment.
 
-- [mspgcc](https://github.com/tgtakaoka/homebrew-mspgcc): `msp430-gcc`
-  and tools. MSP430 port of `gcc 4.7` known as `mspgcc4`.
+- [tgtakaoka/mspgcc][]: `msp430-gcc` and tools. MSP430 port of `gcc
+  4.7` known as `mspgcc4`.
 
-- [msp430-elf](https://github.com/tgtakaoka/homebrew-msp430-elf):
-  `msp430-elf-gcc` and tools. MSP430 port of `gcc 7.3` known as `TI
-  MSP430-GCC`.
+- [tgtakaoka/msp430-elf][]: `msp430-elf-gcc` and tools. MSP430 port of
+  `gcc 7.3` known as `TI MSP430-GCC`.
 
--
-  [tinyos-msp430](https://github.com/tgtakaoka/homebrew-tinyos-msp430):
-  this project and modified `tinyos-main` tree to support `gcc 7.3`.
-  Also conatins the latest `mspdebug` and `MSP Debug Stack from TI`
-  formulae.
+- [tgtakaoka/tinyos-msp430][]: this project and modified `tinyos-main`
+  tree to support `gcc 7.3`.  Also conatins the latest `mspdebug` and
+  `MSP Debug Stack from TI` formulae.
 
 Supported chips
 ---------------
@@ -101,3 +93,12 @@ Completed
 * 0.1 support msp430f2013 and EZ430F2013
 * 0.1 support VLO oscillator
 * 0.1 support TimerA only chips
+
+[TI MSP430-GCC]: http://www.ti.com/tool/MSP430-GCC-OPENSOURCE
+[TinyOS prod]: https://github.com/tp-freeforall/prod
+[TinyOS prod for msp430]: https://github.com/tgtakaoka/tinyos-main/tree/msp430-elf
+[Homebrew]: https://github.com/Homebrew/brew
+[Linuxbrew]: https://github.com/Linuxbrew/brew
+[tgtakaoka/mspgcc]: https://github.com/tgtakaoka/homebrew-mspgcc
+[tgtakaoka/msp430-elf]: https://github.com/tgtakaoka/homebrew-msp430-elf
+[tgtakaoka/tinyos-msp430]: https://github.com/tgtakaoka/homebrew-tinyos-msp430

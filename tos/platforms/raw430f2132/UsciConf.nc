@@ -40,8 +40,8 @@ implementation {
 
     event void UartResource.granted() {}
 
-    async command msp430_uart_union_config_t* Msp430UartConfigure.getConfig() {
-        return (msp430_uart_union_config_t*) &uart_config;
+    async command const msp430_uart_union_config_t* Msp430UartConfigure.getConfig() {
+        return &uart_config;
     }
 
     const msp430_spi_union_config_t spi_config = {
@@ -68,8 +68,8 @@ implementation {
 
     event void SpiResource.granted() {}
 
-    async command msp430_spi_union_config_t* Msp430SpiConfigure.getConfig() {
-        return (msp430_spi_union_config_t*) &spi_config;
+    async command const msp430_spi_union_config_t* Msp430SpiConfigure.getConfig() {
+        return &spi_config;
     }
 
     static const msp430_i2c_union_config_t i2c_config = {
@@ -98,8 +98,8 @@ implementation {
 
     event void I2CResource.granted() {}
 
-    async command msp430_i2c_union_config_t* Msp430I2CConfigure.getConfig() {
-        return (msp430_i2c_union_config_t*) &i2c_config;
+    async command const msp430_i2c_union_config_t* Msp430I2CConfigure.getConfig() {
+        return &i2c_config;
     }
 }
 
