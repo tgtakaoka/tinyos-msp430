@@ -715,7 +715,7 @@ implementation
   URXD0 = P35;
 #endif
 #if defined(__msp430x21x2) || defined(__msp430x22x4) \
-    || defined(__MSP430F2274) || defined(__MSP430G2553) || defined(__MSP430G2955)
+    || defined(__MSP430F2274) || defined(__MSP430G2955)
   // USCI A0
   UCA0STE = P33;
   UCA0SIMO = P34;
@@ -730,6 +730,23 @@ implementation
   UCB0CLK = P33;
   UCB0SDA = P31;
   UCB0SCL = P32;
+#endif
+
+#if defined(__MSP430G2553)
+  // USCI A0
+  UCA0STE = P15;
+  UCA0SIMO = P12;
+  UCA0SOMI = P11;
+  UCA0CLK = P14;
+  UCA0TXD = P12;
+  UCA0RXD = P11;
+  // USCI B0
+  UCB0STE = P14;
+  UCB0SIMO = P17;
+  UCB0SOMI = P16;
+  UCB0CLK = P15;
+  UCB0SDA = P17;
+  UCB0SCL = P16;
 #endif
 
 #if defined(__MSP430_HAS_USI__)
