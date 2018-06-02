@@ -30,9 +30,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Max7219.h"
-
-/** An HPL module of MAX7219 8-Digit LED Display Drivers
+/** HPL module of MAX7219 8-Digit LED Display Driver.
  *
  * Provides the ability to turn off and set integer value as zero
  * suppressed decimal, zero filled decimal, hexadecimal number.
@@ -43,9 +41,9 @@
 generic module HplMax7219P(char resourceName[]) {
     provides interface HplMax7219 as Hpl;
     uses {
-        interface StdControl as SpiControl;
-        interface SpiByte;
         interface GeneralIO as Load;
+        interface SpiByte;
+        interface Resource as SpiResource;
         interface Boot;
     }
 }
@@ -57,28 +55,33 @@ implementation {
         ADDRESS_SCAN_LIMIT   = 0x0b00,
         ADDRESS_CONFIG       = 0x0c00,
         ADDRESS_DISPLAY_TEST = 0x0f00,
+        CONFIG_NORMAL   = 0x01,
     };
 
-    void event Boot.booted() {
-        atomic {
-            call Load.set();
-            call Load.makeOutput();
-            call SpiControl.start();
-            call Hpl.setConfig(MAX7219_CONFIG_NORMAL);
-            call Hpl.displayTest(FALSE);
-            call Hpl.setScanLimit(uniqueCount(resourceName));
-            call Hpl.setDecodeMode(0x00); /* segment mode */
-            call Hpl.setIntensity(15);
-        }
+    uint16_t mCommands;
+
+    event void Boot.booted() {
+        call Load.set();
+        call Load.makeOutput();
+
+        call Hpl.setShutdown(FALSE);
+        call Hpl.displayTest(FALSE);
+        call Hpl.setScanLimit(uniqueCount(resourceName));
+        call Hpl.setDecodeMode(0x00); /* segment mode */
+        call Hpl.setIntensity(15);
     }
 
-    void write(uint16_t commands) {
-        atomic {
-            call Load.clr();
-            call SpiByte.write(commands >> 8);
-            call SpiByte.write(commands);
-            call Load.set();
-        }
+    static error_t write(uint16_t commands) {
+        mCommands = commands;
+        return call SpiResource.request();
+    }
+
+    event void SpiResource.granted() {
+        call Load.clr();
+        call SpiByte.write(mCommands >> 8);
+        call SpiByte.write(mCommands);
+        call Load.set();
+        call SpiResource.release();
     }
 
     command void Hpl.setDigit(uint8_t digit, uint8_t segments) {
@@ -97,8 +100,10 @@ implementation {
         write(ADDRESS_SCAN_LIMIT | (digits - 1));
     }
 
-    command void Hpl.setConfig(uint8_t config) {
-        write(ADDRESS_CONFIG | config);
+    command void Hpl.setShutdown(bool shutdown) {
+        uint16_t commands = ADDRESS_CONFIG;
+        if (!shutdown) commands |= CONFIG_NORMAL;
+        write(commands);
     }
 
     command void Hpl.displayTest(bool enableTest) {

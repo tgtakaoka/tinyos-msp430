@@ -30,97 +30,65 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Ds1624.h"
-
-/** An HPL module of DS1624 13-bit Temperature sensor and 256 byte EEPROM
+/** HPL module of DS1624 12-bit Temperature sensor and 256 byte EEPROM
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 generic module HplDs1624P(uint8_t devAddr) {
     provides interface HplDs1624 as Hpl;
-    uses interface I2CPacket<TI2CBasicAddr>;
+    uses {
+        interface I2CPacket<TI2CBasicAddr>;
+        interface Resource as I2CResource;
+    }
 }
 implementation {
     enum {
-        IDLE = 0,
-        CONTINUE = 0x01,
-        READ = 0x02,
-        WRITE = 0x04,
+        DEV_ADDR = 0x48 + (devAddr & 0x7),
     };
-    norace uint8_t m_state = IDLE;
-    uint8_t m_dataLen;
-    uint8_t *m_data;
-    uint8_t *m_cmd;
-    norace error_t m_error;
+    norace uint8_t m_flags;
+    norace uint8_t *m_buf;
+    norace uint8_t m_len;
 
-    command error_t Hpl.read(uint8_t cmd_len, uint8_t *cmd, uint8_t data_len, uint8_t *data) {
-        atomic {
-            if (m_state != IDLE)
-                return EBUSY;
-            m_state = READ;
-            m_cmd = cmd;
-            m_dataLen = data_len;
-            m_data = data;
-            return call I2CPacket.write(I2C_START, devAddr, cmd_len, cmd);
+    command error_t Hpl.write(uint8_t i2c_flags, uint8_t *buf, uint8_t len) {
+        m_flags = i2c_flags;
+        m_buf = buf;
+        m_len = len;
+        return call I2CResource.request();
+    }
+
+    command error_t Hpl.read(uint8_t *buf, uint8_t len) {
+        m_flags = I2C_RESTART | I2C_STOP;
+        m_buf = buf;
+        m_len = len;
+        return call I2CResource.request();
+    }
+
+    event void I2CResource.granted() {
+        const uint8_t i2c_flags = m_flags;
+        if (i2c_flags & I2C_RESTART) {
+            call I2CPacket.read(i2c_flags, DEV_ADDR, m_len, m_buf);
+        } else {
+            call I2CPacket.write(i2c_flags, DEV_ADDR, m_len, m_buf);
         }
     }
 
-    command error_t Hpl.write(uint8_t cmd_len, uint8_t *cmd, uint8_t data_len, uint8_t *data) {
-        atomic {
-            uint8_t flag = I2C_START;
-            if (m_state != IDLE)
-                return EBUSY;
-            if (data == NULL)
-                flag |= I2C_STOP;
-            m_state = WRITE;
-            m_cmd = cmd;
-            m_dataLen = data_len;
-            m_data = data;
-            return call I2CPacket.write(flag, devAddr, cmd_len, cmd);
-        }
-    }
-
-    task void writeDone() {
-        signal Hpl.writeDone(m_error, m_cmd, m_dataLen, m_data);
+    task void releaseResource() {
+        m_flags = 0;
+        call I2CResource.release();
     }
 
     async event void I2CPacket.writeDone(error_t error, uint16_t chipAddr, uint8_t len,
                                          uint8_t *buf) {
-        m_error = error;
-        switch (m_state) {
-        case READ:
-            m_state |= CONTINUE;
-            call I2CPacket.read(I2C_START | I2C_STOP, devAddr, m_dataLen, m_data);
-            break;
-        case WRITE:
-            if (m_data == NULL) {
-                goto write_done;
-            } else {
-                m_state |= CONTINUE;
-                call I2CPacket.write(I2C_STOP, devAddr, m_dataLen, m_data);
-            }
-            break;
-        case WRITE | CONTINUE:
-        write_done:
-            m_state = IDLE;
-            post writeDone();
-            break;
-        }
-    }
-
-    task void readDone() {
-        signal Hpl.readDone(m_error, m_cmd, m_dataLen, m_data);
+        if (m_flags & I2C_STOP)
+            post releaseResource();
+        signal Hpl.writeDone(error, buf, len);
     }
 
     async event void I2CPacket.readDone(error_t error, uint16_t chipAddr, uint8_t len,
                                         uint8_t *buf) {
-        m_error = error;
-        switch (m_state) {
-        case READ | CONTINUE:
-            m_state = IDLE;
-            post readDone();
-            break;
-        }
+        if (m_flags & I2C_STOP)
+            post releaseResource();
+        signal Hpl.readDone(error, buf, len);
     }
 }
 

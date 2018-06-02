@@ -30,8 +30,6 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Max549.h"
-
 /** An implementation of MAX549 2ch 8-bit DAC
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
@@ -42,20 +40,27 @@ generic module Max549P() {
     uses interface HplMax549 as Hpl;
 }
 implementation {
+    enum {
+        POWER_DOWN_MODE = 0x1000,
+        LOAD_DAC_REG    = 0x0800,
+        ADDRESS_DAC_B   = 0x0200,
+        ADDRESS_DAC_A   = 0x0100,
+    };
+
     command void Max549.outA(uint8_t data) {
-        call Hpl.setDacReg(MAX549_CHANNEL_A, data);
+        call Hpl.setRegister(LOAD_DAC_REG | ADDRESS_DAC_A | data);
     }
 
     command void Max549.outB(uint8_t data) {
-        call Hpl.setDacReg(MAX549_CHANNEL_B, data);
+        call Hpl.setRegister(LOAD_DAC_REG | ADDRESS_DAC_B | data);
     }
 
     command void Max549.outAB(uint8_t data) {
-        call Hpl.setDacReg(MAX549_CHANNEL_AB, data);
+        call Hpl.setRegister(LOAD_DAC_REG | ADDRESS_DAC_A | ADDRESS_DAC_B | data);
     }
 
     command void Max549.shutdown() {
-        call Hpl.shutdown();
+        call Hpl.setRegister(POWER_DOWN_MODE);
     }
 }
 

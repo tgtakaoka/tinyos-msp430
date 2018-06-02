@@ -32,7 +32,7 @@
 
 #include "Max6951.h"
 
-/** An HPL module of MAX6951 8-Digit LED Display Drivers
+/** HPL module of MAX6951 8-Digit LED Display Driver.
  *
  * Provides the ability to turn off and set integer value as zero
  * suppressed decimal, zero filled decimal, hexadecimal number.
@@ -41,11 +41,11 @@
  */
 
 generic module HplMax6951P(char resourceName[]) {
-    provides interface HplMax6951 as Hpl;
+    provides interface HplMax6951;
     uses {
-        interface StdControl as SpiControl;
         interface SpiByte;
-        interface GeneralIO as CS;
+        interface Resource as SpiResource;
+        interface GeneralIO as SpiCS;
         interface Boot;
     }
 }
@@ -58,51 +58,55 @@ implementation {
         ADDRESS_DISPLAY_TEST   = 0x0700,
     };
 
-    void event Boot.booted() {
-        atomic {
-            call CS.set();
-            call CS.makeOutput();
-            call SpiControl.start();
-            call Hpl.setConfig(MAX6951_CONFIG_NORMAL | MAX6951_CONFIG_BLINK_1_0S |
-                               MAX6951_CONFIG_BLINK_OFF | MAX6951_CONFIG_BLINK_ASYNC |
-                               MAX6951_CONFIG_CLEAR_ASYNC);
-            call Hpl.displayTest(FALSE);
-            call Hpl.setScanLimit(uniqueCount(resourceName));
-            call Hpl.setDecodeMode(0x00); /* segment mode */
-            call Hpl.setIntensity(1);
-        }
+    uint16_t mCommands;
+
+    event void Boot.booted() {
+        call SpiCS.set();
+        call SpiCS.makeOutput();
+
+        call HplMax6951.setConfig(MAX6951_CONFIG_NORMAL | MAX6951_CONFIG_BLINK_1_0S |
+                                  MAX6951_CONFIG_BLINK_OFF | MAX6951_CONFIG_BLINK_ASYNC |
+                                  MAX6951_CONFIG_CLEAR_ASYNC);
+        call HplMax6951.displayTest(FALSE);
+        call HplMax6951.setScanLimit(uniqueCount(resourceName));
+        call HplMax6951.setDecodeMode(0x00); /* segment mode */
+        call HplMax6951.setIntensity(1);
     }
 
-    void write(uint16_t commands) {
-        atomic {
-            call CS.clr();
-            call SpiByte.write(commands >> 8);
-            call SpiByte.write(commands);
-            call CS.set();
-        }
+    static error_t write(uint16_t commands) {
+        mCommands = commands;
+        return call SpiResource.request();
     }
 
-    command void Hpl.setDigit(uint16_t plane, uint8_t digit, uint8_t segments) {
+    event void SpiResource.granted() {
+        call SpiCS.clr();
+        call SpiByte.write(mCommands >> 8);
+        call SpiByte.write(mCommands);
+        call SpiCS.set();
+        call SpiResource.release();
+    }
+
+    command void HplMax6951.setDigit(uint16_t plane, uint8_t digit, uint8_t segments) {
         write((digit << 8) | plane | segments);
     }
 
-    command void Hpl.setDecodeMode(uint8_t modes) {
+    command void HplMax6951.setDecodeMode(uint8_t modes) {
         write(ADDRESS_DECODE_MODE | modes);
     }
 
-    command void Hpl.setIntensity(uint8_t intensity) {
+    command void HplMax6951.setIntensity(uint8_t intensity) {
         write(ADDRESS_INTENSITY | intensity);
     }
 
-    command void Hpl.setScanLimit(uint8_t digits) {
+    command void HplMax6951.setScanLimit(uint8_t digits) {
         write(ADDRESS_SCAN_LIMIT | (digits - 1));
     }
 
-    command void Hpl.setConfig(uint8_t config) {
+    command void HplMax6951.setConfig(uint8_t config) {
         write(ADDRESS_CONFIG | config);
     }
 
-    command void Hpl.displayTest(bool enableTest) {
+    command void HplMax6951.displayTest(bool enableTest) {
         write(ADDRESS_DISPLAY_TEST | enableTest);
     }
 }

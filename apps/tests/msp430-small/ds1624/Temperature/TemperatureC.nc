@@ -31,60 +31,51 @@
  */
 
 module TemperatureC {
-    uses interface Led7Segs<uint16_t> as Temp;
-    uses interface Led7Segs<uint16_t> as Frac;
-    uses interface Led7Segs<uint16_t> as Min;
-    uses interface Led7Segs<uint16_t> as Sec;
-    uses interface Led;
-    uses interface Timer16<TMilli> as Timer;
-    uses interface Boot;
-    uses interface StdControl as I2CControl;
-    uses interface Ds1624;
+    uses {
+        interface Led7Segs<uint16_t> as Temp;
+        interface Led7Segs<uint16_t> as Frac;
+        interface Led7Segs<uint16_t> as CentiSec;
+        interface Led;
+        interface Boot;
+        interface StdControl as I2CControl;
+        interface Ds1624;
+        interface Timer16<TMilli> as Timer16;
+    }
 }
 implementation {
-    uint8_t deciSec;
-    uint8_t sec;
-    uint8_t min;
-    uint8_t temp[2];
+    uint8_t centiSec;
 
     event void Boot.booted() {
-        call Timer.startPeriodic(100);
+        call Timer16.startPeriodic(100);
         call I2CControl.start();
-        call Ds1624.startConversion();
+        call Ds1624.setOneshotMode();
     }
 
-    event void Timer.fired() {
-        ++deciSec;
-        if (deciSec == 10) {
-            deciSec = 0;
-            ++sec;
-            if (sec == 60) {
-                sec = 0;
-                min++;
-                if (min == 60) {
-                    min = 0;
-                }
-            }
-            call Sec.decimal0(sec);
-            call Min.decimal0(min);
-        }
-        call Ds1624.readTemperature(temp);
+    event void Ds1624.setOneshotModeDone(error_t error) {
+        call Ds1624.startConvert();
     }
 
-    event void Ds1624.readTemperatureDone(error_t error, uint8_t *temperature) {
+    event void Timer16.fired() {
+        ++centiSec;
+        call CentiSec.decimal0(centiSec);
+        call Ds1624.readTemperature();
+        call Ds1624.startConvert();
+    }
+
+    event void Ds1624.startConvertDone(error_t error) {
         call Led.toggle();
-        call Temp.decimal(temperature[0]);
-        call Frac.decimal0((temperature[1] * 100) / 256);
+    }
+    
+    event void Ds1624.readTemperatureDone(error_t error, uint16_t temp) {
+        call Temp.decimal(temp >> 8);
+        call Frac.decimal0(((temp & 0xff) * 100) / 256);
     }
 
-    event void Ds1624.startConversionDone(error_t error) {}
-    event void Ds1624.stopConversionDone(error_t error) {}
-    event void Ds1624.readConfigDone(error_t error, uint8_t config) {}
-    event void Ds1624.writeConfigDone(error_t error) {}
-    event void Ds1624.readMemoryDone(error_t error, uint8_t memAddr, uint8_t data_len,
-                                     uint8_t *data) {}
-    event void Ds1624.writeMemoryDone(error_t error, uint8_t memAddr, uint8_t data_len,
-                                      uint8_t *data) {}
+    event void Ds1624.stopConvertDone(error_t error) {}
+    event void Ds1624.setContinuousModeDone(error_t error) {}
+    event void Ds1624.getStatusDone(error_t error, bool conversionDone) {}
+    event void Ds1624.readMemoryDone(error_t error, uint8_t memAddr, uint8_t *buf, uint8_t len) {}
+    event void Ds1624.writeMemoryDone(error_t error, uint8_t memAddr, uint8_t *buf, uint8_t len) {}
 }
 
 /*

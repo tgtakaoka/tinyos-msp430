@@ -30,6 +30,8 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "Timer16.h"
+
 configuration TemperatureAppC {
 }
 implementation {
@@ -37,22 +39,19 @@ implementation {
     components TemperatureC as App;
     components DisplayC;
     components LedC;
-    components PlatformI2CC as I2CC;
-    components new Timer16MilliC() as Timer;
-    components new HplDs1624P(0x9e >> 1);
-    components new Ds1624P();
+    components new Timer16MilliC() as Timer16;
+    components new PlatformI2CC() as I2CMasterC;
+    components new Ds1624C(7);
 
-    HplDs1624P -> I2CC.I2CPacket;
-    Ds1624P.Hpl -> HplDs1624P;
+    Ds1624C.I2CPacket -> I2CMasterC;
+    Ds1624C.I2CResource -> I2CMasterC;
 
     App.Boot -> MainC;
-    App.I2CControl -> I2CC;
-    App.Timer -> Timer;
-    App.Ds1624 -> Ds1624P;
+    App.Timer16 -> Timer16;
+    App.Ds1624 -> Ds1624C;
     App.Frac -> DisplayC.Frac;
     App.Temp -> DisplayC.Temp;
-    App.Sec -> DisplayC.Sec;
-    App.Min -> DisplayC.Min;
+    App.CentiSec -> DisplayC.CentiSec;
     App.Led -> LedC.Led0;
 }
 

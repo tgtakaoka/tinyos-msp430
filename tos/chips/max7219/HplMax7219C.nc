@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,28 +30,22 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_DS1624_H
-#define _H_DS1624_H
+generic configuration HplMax7219C(char resourceName[]) {
+    provides interface HplMax7219;
+    uses {
+        interface GeneralIO as Load;
+        interface SpiByte;
+        interface Resource as SpiResource;
+    }
+}
+implementation {
+    components new HplMax7219P(resourceName) as Hpl;
+    components MainC;
 
-#define DS1624_I2C_ADDRESS(a) (0x48 + ((a) & 0x7)
+    HplMax7219 = Hpl;
+    Load = Hpl;
+    SpiByte = Hpl;
+    SpiResource = Hpl;
 
-#define DS1624_COMMAND_READ_TEMPERATURE 0xaa
-#define DS1624_COMMAND_START_CONVERT    0xee
-#define DS1624_COMMAND_STOP_CONVERT     0x22
-#define DS1624_COMMAND_ACCESS_MEMORY    0x17
-#define DS1624_COMMAND_ACCESS_CONFIG    0xac
-
-#define DS1624_CONFIG_DONE       0x80
-#define DS1624_CONFIG_1SHOT      0x01
-#define DS1624_CONFIG_CONTINUOUS 0x00
-
-#endif /* _H_DS1624_H */
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
+    MainC <- Hpl.Boot;
+}

@@ -34,35 +34,44 @@
 
 configuration PlatformSerialC {
     provides {
-        interface StdControl as SerialControl;
+        interface Resource;
+        interface ResourceRequested;
         interface UartStream;
         interface UartByte;
     }
     uses {
 #if defined(PLATFORM_UART_BITBANG)
-        interface BitBangUartConfigure as SerialConfigure;
+        interface BitBangUartConfigure as UartConfigure;
 #else
-        interface Msp430UartConfigure as SerialConfigure;
+        interface Msp430UartConfigure as UartConfigure;
 #endif
     }
 }
 implementation {
 #if defined(PLATFORM_UART_BITBANG)
-    components new BitBangUartC() as SerialC;
+    components new BitBangUartC() as UartC;
 #elif defined(PLATFORM_UART_USCI_A0)
-    components new Msp430UartA0C() as SerialC;
+    components new Msp430UartA0C() as UartC;
 #elif defined(PLATFORM_UART_USCI_A1)
-    components new Msp430UartA1C() as SerialC;
+    components new Msp430UartA1C() as UartC;
 #elif defined(PLATFORM_UART_USART0)
-    components new Msp430Uart0C() as SerialC;
+    components new Msp430Uart0C() as UartC;
 #elif defined(PLATFORM_UART_USART1)
-    components new Msp430Uart1C() as SerialC;
+    components new Msp430Uart1C() as UartC;
 #endif
-    components PlatformSerialP as SerialP;
 
-    SerialControl = SerialP.SerialControl;
-    UartStream = SerialC;
-    UartByte = SerialC;
-    SerialConfigure = SerialC;
-    SerialP.SerialResource -> SerialC;
+    Resource = UartC;
+    ResourceRequested = UartC;
+    UartStream = UartC;
+    UartByte = UartC;
+    UartConfigure = UartC;
 }
+
+/*
+ * Local Variables:
+ * c-file-style: "bsd"
+ * c-basic-offset: 4
+ * indent-tabs-mode: nil
+ * End:
+ * vim: set et ts=4 sw=4:
+ */

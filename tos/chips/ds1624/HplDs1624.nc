@@ -30,16 +30,16 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An HPL of DS1624 13-bit Temperature sensor and 256 byte EEPROM
+/** HPL interface of DS1624 12-bit Temperature sensor and 256 byte EEPROM
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 interface HplDs1624 {
-    command error_t read(uint8_t cmd_len, uint8_t *cmd, uint8_t data_len, uint8_t *data);
-    command error_t write(uint8_t cmd_len, uint8_t *cmd, uint8_t data_len, uint8_t *data);
+    command error_t write(uint8_t i2c_flags, uint8_t *buf, uint8_t len);
+    command error_t read(uint8_t *buf, uint8_t len);
 
-    event void readDone(error_t error, uint8_t *cmd, uint8_t data_len, uint8_t *data);
-    event void writeDone(error_t error, uint8_t *cmd, uint8_t data_len, uint8_t *data);
+    async event void writeDone(error_t error, uint8_t *buf, uint8_t len);
+    async event void readDone(error_t error, uint8_t *buf, uint8_t len);
 }
 
 /*

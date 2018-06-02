@@ -30,26 +30,28 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An interface of DS1624 13-bit Temperature sensor and 256 byte EEPROM
+/** An interface of DS1624 12-bit Temperature sensor and 256 byte EEPROM
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 interface Ds1624 {
-    command error_t readTemperature(uint8_t *temperature);
-    command error_t startConversion();
-    command error_t stopConversion();
-    command error_t readConfig();
-    command error_t writeConfig(uint8_t condif);
-    command error_t readMemory(uint8_t memAddr, uint8_t data_len, uint8_t *data);
-    command error_t writeMemory(uint8_t memAddr, uint8_t data_len, uint8_t *data);
+    command error_t readTemperature();
+    command error_t startConvert();
+    command error_t stopConvert();
+    command error_t setOneshotMode();
+    command error_t setContinuousMode();
+    command error_t getStatus();
+    command error_t readMemory(uint8_t memAddr, uint8_t *buf, uint8_t len);
+    command error_t writeMemory(uint8_t memAddr, uint8_t *buf, uint8_t len);
 
-    event void readTemperatureDone(error_t error, uint8_t *temperature);
-    event void startConversionDone(error_t error);
-    event void stopConversionDone(error_t error);
-    event void readConfigDone(error_t error, uint8_t config);
-    event void writeConfigDone(error_t error);
-    event void readMemoryDone(error_t error, uint8_t memAddr, uint8_t data_len, uint8_t *data);
-    event void writeMemoryDone(error_t error, uint8_t memAddr, uint8_t data_len, uint8_t *data);
+    event void readTemperatureDone(error_t error, uint16_t temperature);
+    event void startConvertDone(error_t error);
+    event void stopConvertDone(error_t error);
+    event void setOneshotModeDone(error_t error);
+    event void setContinuousModeDone(error_t error);
+    event void getStatusDone(error_t error, bool conversionDone);
+    event void readMemoryDone(error_t error, uint8_t memAddr, uint8_t *buf, uint8_t len);
+    event void writeMemoryDone(error_t error, uint8_t memAddr, uint8_t *buf, uint8_t len);
 }
 
 /*

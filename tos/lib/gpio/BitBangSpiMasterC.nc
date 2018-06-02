@@ -53,16 +53,16 @@ implementation {
 
     components new SimpleFcfsArbiterC(BIT_BANG_SPI_MASTER_RESOURCE) as ArbiterC;
     components new BitBangSpiMasterP() as SpiP;
-    components PlatformPinsC as SpiPinsC;
+    components PlatformPinsC as PinsC;
 
     Resource = ArbiterC.Resource[CLIENT_ID];
     ResourceRequested = ArbiterC.ResourceRequested[CLIENT_ID];
 
     SpiP.SpiByte = SpiByte;
     SpiP.SpiPacket[CLIENT_ID] = SpiPacket;
-    SpiP.SIMO -> SpiPinsC.SpiSIMO;
-    SpiP.SOMI -> SpiPinsC.SpiSOMI;
-    SpiP.CLK -> SpiPinsC.SpiCLK;
+    SpiP.SIMO -> PinsC.SpiSIMO;
+    SpiP.SOMI -> PinsC.SpiSOMI;
+    SpiP.CLK -> PinsC.SpiCLK;
 
     SpiP.ResourceConfigure[CLIENT_ID] <- ArbiterC.ResourceConfigure[CLIENT_ID];
     SpiP.Configure[CLIENT_ID] = SpiMasterConfigure;

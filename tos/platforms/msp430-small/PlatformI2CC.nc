@@ -32,9 +32,10 @@
 
 #include "hardware.h"
 
-configuration PlatformI2CC {
+generic configuration PlatformI2CC() {
     provides {
-        interface StdControl as I2CControl;
+        interface Resource;
+        interface ResourceRequested;
         interface I2CPacket<TI2CBasicAddr>;
     }
     uses {
@@ -57,12 +58,11 @@ implementation {
 #elif defined(PLATFORM_I2C_MASTER_USART0)
     components new Msp430I2CC() as I2CMasterC;
 #endif
-    components PlatformI2CP as I2CP;
 
-    I2CControl = I2CP.I2CControl;
+    Resource = I2CMasterC;
+    ResourceRequested = I2CMasterC;
     I2CPacket = I2CMasterC;
     I2CConfigure = I2CMasterC;
-    I2CP.I2CResource -> I2CMasterC;
 }
 
 /*

@@ -52,14 +52,14 @@ implementation {
 
     components new SimpleFcfsArbiterC(BIT_BANG_I2C_MASTER_RESOURCE) as ArbiterC;
     components new BitBangI2CMasterP() as I2CP;
-    components PlatformPinsC as I2CPinsC;
+    components PlatformPinsC as PinsC;
 
     Resource = ArbiterC.Resource[CLIENT_ID];
     ResourceRequested = ArbiterC.ResourceRequested[CLIENT_ID];
 
     I2CP.I2CPacket[CLIENT_ID] = I2CPacket;
-    I2CP.SCL -> I2CPinsC.I2CSCL;
-    I2CP.SDA -> I2CPinsC.I2CSDA;
+    I2CP.SCL -> PinsC.I2CSCL;
+    I2CP.SDA -> PinsC.I2CSDA;
 
     I2CP.ResourceConfigure[CLIENT_ID] <- ArbiterC.ResourceConfigure[CLIENT_ID];
     I2CP.Configure[CLIENT_ID] = I2CMasterConfigure;

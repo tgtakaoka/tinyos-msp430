@@ -47,3 +47,12 @@ implementation {
     event void SerialResource.granted() {
     }
 }
+
+/*
+ * Local Variables:
+ * c-file-style: "bsd"
+ * c-basic-offset: 4
+ * indent-tabs-mode: nil
+ * End:
+ * vim: set et ts=4 sw=4:
+ */

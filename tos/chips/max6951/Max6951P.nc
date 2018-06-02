@@ -32,7 +32,7 @@
 
 #include "Max6951.h"
 
-/** An implementation of MAX6951 8-Digit LED Display Drivers
+/** An implementation of MAX6951 8-Digit LED Display Driver.
  *
  * Provides the ability to turn off and set integer value as zero
  * suppressed decimal, zero filled decimal, hexadecimal number.

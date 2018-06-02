@@ -1,43 +1,31 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
 
-#include "BitBangSpiMaster.h"
-
 configuration DisplayC {
     provides {
         interface Led7Segs<uint16_t> as Frac;
         interface Led7Segs<uint16_t> as Temp;
-        interface Led7Segs<uint16_t> as Sec;
-        interface Led7Segs<uint16_t> as Min;
+        interface Led7Segs<uint16_t> as CentiSec;
     }
 }
-
 implementation {
-    components MainC;
+#define MAX6951_RESOURCE "MAX6951_RESOURCE"
     components PlatformPinsC as PinsC;
-    components PlatformSpiC as SpiC;
-    components new HplMax6951P("HH:MM TT.FF");
-    components new Max6951P();
-    components new Led7SegsP("HH:MM TT.FF", 2, uint16_t) as F;
-    components new Led7SegsP("HH:MM TT.FF", 2, uint16_t) as T;
-    components new Led7SegsP("HH:MM TT.FF", 2, uint16_t) as S;
-    components new Led7SegsP("HH:MM TT.FF", 2, uint16_t) as M;
+    components new PlatformSpiC() as SpiMasterC;
+    components new Max6951C(MAX6951_RESOURCE) as Max6951;
+    components new Led7SegsP(MAX6951_RESOURCE, 2, uint16_t) as F;
+    components new Led7SegsP(MAX6951_RESOURCE, 2, uint16_t) as T;
+    components new Led7SegsP(MAX6951_RESOURCE, 2, uint16_t) as C;
 
     Frac = F;
     Temp = T;
-    Sec = S;
-    Min = M;
+    CentiSec = C;
 
-    HplMax6951P.Boot -> MainC.Boot;
-    HplMax6951P.CS -> PinsC.SpiCS0;
-    HplMax6951P.SpiByte -> SpiC;
-    HplMax6951P.SpiControl -> SpiC;
-
-    Max6951P.Hpl -> HplMax6951P;
-
-    F.Led7Seg -> Max6951P;
-    T.Led7Seg -> Max6951P;
-    S.Led7Seg -> Max6951P;
-    M.Led7Seg -> Max6951P;
+    Max6951.SpiCS -> PinsC.SpiCS0;
+    Max6951.SpiByte -> SpiMasterC;
+    Max6951.SpiResource -> SpiMasterC;
+    F.Led7Seg -> Max6951;
+    T.Led7Seg -> Max6951;
+    C.Led7Seg -> Max6951;
 }
 
 /*

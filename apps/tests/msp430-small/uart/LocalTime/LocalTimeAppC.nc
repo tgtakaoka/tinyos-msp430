@@ -41,8 +41,8 @@ implementation {
     components LocalTimeC as App;
 
     App.Boot -> MainC;
-    App.SerialControl -> SerialC;
     App.UartStream -> SerialC;
+    App.UartByte -> SerialC;
     App.Timer -> Timer;
     App.LocalTime -> LocalTime;
     App.Led -> LedC.Led0;

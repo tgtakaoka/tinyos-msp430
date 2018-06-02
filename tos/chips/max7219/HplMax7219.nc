@@ -30,10 +30,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An HPL of MAX7219 8-Digit LED Display Drivers
- *
- * Provides the ability to turn off and set integer value as zero
- * suppressed decimal, zero filled decimal, hexadecimal number.
+/** HPL of MAX7219 8-Digit LED Display Driver.
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
@@ -43,7 +40,7 @@ interface HplMax7219 {
     command void setDecodeMode(uint8_t modes);
     command void setIntensity(uint8_t intensity);
     command void setScanLimit(uint8_t digits);
-    command void setConfig(uint8_t config);
+    command void setShutdown(bool shutdown);
     command void displayTest(bool enableTest);
 }
 

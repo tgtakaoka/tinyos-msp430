@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,25 +30,22 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** HPL interface of MAX6951 8-Digit LED Display Driver.
- *
- * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
- */
-
-interface HplMax6951 {
-    command void setDigit(uint16_t plane, uint8_t digit, uint8_t segments);
-    command void setDecodeMode(uint8_t modes);
-    command void setIntensity(uint8_t intensity);
-    command void setScanLimit(uint8_t digits);
-    command void setConfig(uint8_t config);
-    command void displayTest(bool enableTest);
+generic configuration HplMax6951C(char resourceName[]) {
+    provides interface HplMax6951;
+    uses {
+        interface GeneralIO as SpiCS;
+        interface SpiByte;
+        interface Resource as SpiResource;
+    }
 }
+implementation {
+    components new HplMax6951P(resourceName) as Hpl;
+    components MainC;
 
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
+    HplMax6951 = Hpl;
+    SpiCS = Hpl;
+    SpiByte = Hpl;
+    SpiResource = Hpl;
+
+    MainC <- Hpl.Boot;
+}

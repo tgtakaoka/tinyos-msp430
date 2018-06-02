@@ -30,12 +30,13 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <stdlib.h>
 #include "Timer.h"
 
 module LocalTimeC {
     uses interface Boot;
-    uses interface StdControl as SerialControl;
     uses interface UartStream;
+    uses interface UartByte;
     uses interface Timer<TMilli>;
     uses interface LocalTime<TMilli>;
     uses interface Led;

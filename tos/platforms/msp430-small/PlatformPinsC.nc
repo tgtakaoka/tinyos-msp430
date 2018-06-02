@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,20 +30,48 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_MAX549_H
-#define _H_MAX549_H
+#include "hardware.h"
 
-#define MAX549_CHANNEL_A  0x0100
-#define MAX549_CHANNEL_B  0x0200
-#define MAX549_CHANNEL_AB 0x0300
+configuration PlatformPinsC {
+    provides {
+        interface GeneralIO as SpiCS0;
+#if defined(PLATFORM_SPI_MASTER_BITBANG)
+        interface GeneralIO as SpiSIMO;
+        interface GeneralIO as SpiSOMI;
+        interface GeneralIO as SpiCLK;
+#endif
+#if defined(PLATFORM_I2C_MASTER_BITBANG)
+        interface GeneralIO as I2CSCL;
+        interface GeneralIO as I2CSDA;
+#endif
+    }
+}
+implementation {
+    components HplMsp430GeneralIOC as IOC;
 
+    // SPI bus
+    components new Msp430GpioC() as CS0;
+    SpiCS0 = CS0;
+    CS0 -> IOC.Port15;
+#if defined(PLATFORM_SPI_MASTER_BITBANG)
+    components new Msp430GpioC() as SIMO;
+    components new Msp430GpioC() as SOMI;
+    components new Msp430GpioC() as CLK;
+    SpiSIMO = SIMO;
+    SpiSOMI = SOMI;
+    SpiCLK = CLK;
+    SIMO -> IOC.Port12;
+    SOMI -> IOC.Port11;
+    CLK -> IOC.Port14;
 #endif
 
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
+#if defined(PLATFORM_I2C_MASTER_BITBANG)
+    // I2C bus
+    components new Msp430GpioC() as SCL;
+    components new Msp430GpioC() as SDA;
+    I2CSCL = SCL;
+    I2CSDA = SDA;
+    SCL -> IOC.Port16;
+    SDA -> IOC.Port17;
+#endif
+}

@@ -32,9 +32,10 @@
 
 #include "hardware.h"
 
-configuration PlatformSpiC {
+generic configuration PlatformSpiC() {
     provides {
-        interface StdControl as SpiControl;
+        interface Resource;
+        interface ResourceRequested;
         interface SpiByte;
         interface SpiPacket;
     }
@@ -64,11 +65,10 @@ implementation {
 #elif defined(PLATFORM_SPI_MASTER_USART1)
     components new Msp430Spi1C() as SpiMasterC;
 #endif
-    components PlatformSpiP as SpiP;
 
-    SpiControl = SpiP.SpiControl;
+    Resource = SpiMasterC;
+    ResourceRequested = SpiMasterC;
     SpiByte = SpiMasterC;
     SpiPacket = SpiMasterC;
     SpiConfigure = SpiMasterC;
-    SpiP.SpiResource -> SpiMasterC;
 }

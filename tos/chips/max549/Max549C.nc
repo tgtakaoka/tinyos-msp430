@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,19 +30,21 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_MAX7219_H
-#define _H_MAX7219_H
+generic configuration Max549C() {
+    provides interface Max549;
+    uses {
+        interface GeneralIO as SpiCS;
+        interface SpiByte;
+        interface Resource as SpiResource;
+    }
+}
+implementation {
+    components new Max549P();
+    components new HplMax549C() as Hpl;
 
-#define MAX7219_CONFIG_SHUTDOWN    0x00
-#define MAX7219_CONFIG_NORMAL      0x01
-
-#endif
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
+    Max549 = Max549P;
+    Max549P.Hpl -> Hpl;
+    SpiCS = Hpl;
+    SpiByte = Hpl;
+    SpiResource = Hpl;
+}
