@@ -32,7 +32,7 @@
 
 #include "Ds1624.h"
 
-/** An HPL module of DS1624 13-bit Temperature sensor and 256 byte EEPROM
+/** HPL module of DS1624 13-bit Temperature sensor and 256 byte EEPROM
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */

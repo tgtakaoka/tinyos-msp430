@@ -43,7 +43,6 @@ implementation {
     App.Timer -> Timer;
     App.Sec -> DisplayC.Sec;
     App.Min -> DisplayC.Min;
-    App.Hour -> DisplayC.Hour;
     App.Led -> LedC.Led0;
 }
 

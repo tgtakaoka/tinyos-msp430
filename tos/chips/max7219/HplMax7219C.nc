@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,24 +30,19 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef MICROWIRE_H
-#define MICROWIRE_H
+generic configuration HplMax7219C(char resourceName[]) {
+    provides interface HplMax7219;
+    uses interface GeneralIO as Load;
+}
+implementation {
+    components new HplMax7219P(resourceName) as Hpl;
+    components new PlatformSpiMasterC() as SpiC;
+    components MainC;
 
-#define MICROWIRE_MODE0 0      /* CPOL=0 CPHA=0 */
-#define MICROWIRE_MODE1 1      /* CPOL=0 CPHA=1 */
-#define MICROWIRE_MODE2 2      /* CPOL=1 CPHA=0 */
-#define MICROWIRE_MODE3 3      /* CPOL=1 CPHA=1 */
+    HplMax7219 = Hpl;
+    Load = Hpl;
 
-#define MICROWIRE_MSB 0        /* MSB first */
-#define MICROWIRE_LSB 1        /* LSB first */
-
-#endif
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
+    SpiC <- Hpl.SpiByte;
+    SpiC <- Hpl.SpiResource;
+    MainC <- Hpl.Boot;
+}

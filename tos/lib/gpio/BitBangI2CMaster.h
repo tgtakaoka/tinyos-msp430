@@ -33,7 +33,6 @@
 #ifndef BIT_BANG_I2C_MASTER_H
 #define BIT_BANG_I2C_MASTER_H
 
-#define I2C_MASTER_BASIC_ADDR 0    /* 7-bit addressing */
-#define I2C_MASTER_EXTENDED_ADDR 1 /* 10-bit addressing */
+#define BIT_BANG_I2C_MASTER_RESOURCE "BIT_BANG_I2C_MASTER_RESOURCE"
 
 #endif

@@ -38,30 +38,22 @@ module ClockC {
     uses interface Boot;
 }
 implementation {
-    uint8_t deciSec;
+    uint8_t centiSec;
     uint8_t sec;
-    uint8_t min;
 
     event void Boot.booted() {
-        call Timer.startPeriodic(100);
+        call Timer.startPeriodic(10);
     }
 
     event void Timer.fired() {
-        ++deciSec;
-        if (deciSec == 10) {
-            deciSec = 0;
+        ++centiSec;
+        if (centiSec == 100) {
+            centiSec = 0;
             ++sec;
-            if (sec == 60) {
-                sec = 0;
-                min++;
-                if (min == 60) {
-                    min = 0;
-                }
-            }
-            call Sec.decimal0(sec);
-            call Min.decimal0(min);
+            call Sec.decimal0(centiSec);
+            call Min.decimal0(sec);
         }
-        call Led.set(deciSec < 1);
+        call Led.set(centiSec < 10);
     }
 }
 

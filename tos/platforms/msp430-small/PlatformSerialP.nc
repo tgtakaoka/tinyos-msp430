@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,69 +30,58 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module PlatformLedP {
+#include "hardware.h"
+
+module PlatformSerialP {
     provides {
-        interface MultiLed;
-        interface Led[uint8_t led_id];
+        interface StdControl;
+#if defined(PLATFORM_UART_BITBANG)
+        interface BitBangUartConfigure as Configure;
+#else
+        interface Msp430UartConfigure as Configure;
+#endif
     }
-    uses interface Leds;
+    uses interface Resource;
 }
 implementation {
-    async command void Led.on[uint8_t led_id]() {
-        switch (led_id) {
-        case 0: call Leds.led0On(); break;
-        case 1: call Leds.led1On(); break;
-        case 2: call Leds.led2On(); break;
-        }
+#if defined(PLATFORM_UART_BITBANG)
+#elif defined(PLATFORM_UART_USCI_A0) || defined(PLATFORM_UART_USCI_A1)
+    const msp430_uart_union_config_t dco16m_uart115k_config = { {
+        ubr    : UBR_16MIHZ_115200,
+        umctl  : UMCTL_16MIHZ_115200,
+        ucssel : 2,
+    }};
+#elif defined(PLATFORM_UART_USART0) || defined(PLATFORM_UART_USART1)
+    const msp430_uart_union_config_t dco4m_uart115k_config = { {
+        ubr    : UBR_4MIHZ_115200,
+        umctl  : UMCTL_4MIHZ_115200,
+        ssel : 2,
+    }};
+#endif
+    command error_t StdControl.start() {
+        return call Resource.immediateRequest();
     }
 
-    async command void Led.off[uint8_t led_id]() {
-        switch (led_id) {
-        case 0: call Leds.led0Off(); break;
-        case 1: call Leds.led1Off(); break;
-        case 2: call Leds.led2Off(); break;
-        }
+    command error_t StdControl.stop() {
+        call Resource.release();
+        return SUCCESS;
     }
 
-    async command void Led.set[uint8_t led_id](bool turn_on) {
-        if (turn_on) {
-            call Led.on[led_id]();
-        } else {
-            call Led.off[led_id]();
-        }
+    event void Resource.granted() {
     }
 
-    async command void Led.toggle[uint8_t led_id]() {
-        switch (led_id) {
-        case 0: call Leds.led0Toggle(); break;
-        case 1: call Leds.led1Toggle(); break;
-        case 2: call Leds.led2Toggle(); break;
-        }
+#if defined(PLATFORM_UART_BITBANG)
+    async command bit_bang_uart_config_t Configure.getConfig() {
     }
-
-    async command unsigned int MultiLed.get() {
-        return call Leds.get();
+#elif defined(PLATFORM_UART_USCI_A0) || defined(PLATFORM_UART_USCI_A1)
+    async command const msp430_uart_union_config_t* Configure.getConfig() {
+        return &dco16m_uart115k_config;
     }
-
-    async command void MultiLed.set(unsigned int val) {
-        call Leds.set(val);
+#elif defined(PLATFORM_UART_USART0) || defined(PLATFORM_UART_USART1)
+    async command const msp430_uart_union_config_t* Configure.getConfig() {
+        return &dco4m_uart115k_config;
     }
-
-    async command void MultiLed.on(unsigned int led_id) {
-        call Led.on[led_id]();
-    }
-
-    async command void MultiLed.off(unsigned int led_id) {
-        call Led.off[led_id]();
-    }
-
-    async command void MultiLed.toggle(unsigned int led_id) {
-        call Led.toggle[led_id]();
-    }
-
-    async command void MultiLed.setSingle(unsigned int led_id, bool turn_on) {
-        call Led.set[led_id](turn_on);
-    }
+#endif
 }
 
 /*

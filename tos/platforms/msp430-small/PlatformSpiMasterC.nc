@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,25 +30,45 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** HPL interface of MAX6951 8-Digit LED Display Driver.
- *
- * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
- */
+#include "hardware.h"
 
-interface HplMax6951 {
-    command void setDigit(uint16_t plane, uint8_t digit, uint8_t segments);
-    command void setDecodeMode(uint8_t modes);
-    command void setIntensity(uint8_t intensity);
-    command void setScanLimit(uint8_t digits);
-    command void setConfig(uint8_t config);
-    command void displayTest(bool enableTest);
+generic configuration PlatformSpiMasterC() {
+    provides {
+        interface Resource;
+        interface ResourceRequested;
+        interface SpiByte;
+        interface SpiPacket;
+    }
+    uses {
+#if defined(PLATFORM_SPI_MASTER_BITBANG)
+        interface BitBangSpiMasterConfigure as SpiConfigure;
+#else
+        interface Msp430SpiConfigure as SpiConfigure;
+#endif
+    }
 }
+implementation {
+#if defined(PLATFORM_SPI_MASTER_BITBANG)
+    components new BitBangSpiMasterC() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USI)
+    components new Msp430Spi0C() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USCI_A0)
+    components new Msp430SpiA0C() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USCI_A1)
+    components new Msp430SpiA1C() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USCI_B0)
+    components new Msp430SpiB0C() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USCI_B1)
+    components new Msp430SpiB1C() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USART0)
+    components new Msp430Spi0C() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USART1)
+    components new Msp430Spi1C() as SpiMasterC;
+#endif
 
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
+    Resource = SpiMasterC;
+    ResourceRequested = SpiMasterC;
+    SpiByte = SpiMasterC;
+    SpiPacket = SpiMasterC;
+    SpiConfigure = SpiMasterC;
+}

@@ -8,29 +8,21 @@ configuration DisplayC {
     }
 }
 implementation {
-    components MainC;
-    components GpioConf as GpioC;
+#define MAX7219_RESOURCE "MAX7219_RESOURCE"
     components PlatformSpiC as SpiC;
-    components new HplMax7219P("HH:MM:SS");
-    components new Max7219P();
-    components new Led7SegsP("HH:MM:SS", 2, uint16_t) as S;
-    components new Led7SegsP("HH:MM:SS", 2, uint16_t) as M;
-    components new Led7SegsP("HH:MM:SS", 2, uint16_t) as H;
+    components new Max7219C(MAX7219_RESOURCE);
+    components new Led7SegsP(MAX7219_RESOURCE, 2, uint16_t) as S;
+    components new Led7SegsP(MAX7219_RESOURCE, 2, uint16_t) as M;
+    components new Led7SegsP(MAX7219_RESOURCE, 2, uint16_t) as H;
 
     Sec = S;
     Min = M;
     Hour = H;
 
-    HplMax7219P.Boot -> MainC.Boot;
-    HplMax7219P.Load -> GpioC.STE;
-    HplMax7219P.SpiByte -> SpiC;
-    HplMax7219P.SpiControl -> SpiC;
-
-    Max7219P.Hpl -> HplMax7219P;
-
-    S.Led7Seg -> Max7219P;
-    M.Led7Seg -> Max7219P;
-    H.Led7Seg -> Max7219P;
+    Max7219C.Load -> SpiC.CS0;
+    S.Led7Seg -> Max7219C;
+    M.Led7Seg -> Max7219C;
+    H.Led7Seg -> Max7219C;
 }
 
 /*

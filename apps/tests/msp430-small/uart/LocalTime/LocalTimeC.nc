@@ -30,71 +30,64 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <stdlib.h>
 #include "Timer.h"
 
 module LocalTimeC {
     uses interface Boot;
-    uses interface StdControl as UartControl;
+    uses interface StdControl as SerialControl;
     uses interface UartStream;
+    uses interface UartByte;
     uses interface Timer<TMilli>;
     uses interface LocalTime<TMilli>;
     uses interface Led;
 }
 implementation {
-    uint8_t prevSec = -1;
-    uint8_t message[] = "HH:MM:SS\r\n";
+    uint16_t prevSec;
+    uint8_t message[] = "####\r\n";
+    norace uint8_t sendBuf;
 
-    uint8_t *getSendBuf() {
-        return message + sizeof(message) - 1;
-    }
-
-    void dec2(uint8_t *p, uint16_t v) {
-        p[0] = v / 10 + '0';
-        p[1] = v % 10 + '0';
+    char to(uint8_t v) {
+        v &= 0x0f;
+        if (v < 10) return v + '0';
+        return v + 'A';
     }
 
     task void sendMessage() {
-        uint32_t time;
-        uint8_t sec;
-        time = call LocalTime.get();
-        call Led.set(time % 1000 < 100);
-
-        sec = (time /= 1000) % 60;
-        if (sec == prevSec)
-            return;
-
+        uint32_t localtime = call LocalTime.get();
+        uint16_t sec = localtime >> 10;
+        call Led.set((localtime & 0x3ff) < 100);
+        if (sec == prevSec) return;
         prevSec = sec;
-        dec2(message + 6, sec);
-        dec2(message + 3, (time /= 60) % 60);
-        dec2(message + 0, (time /= 60) % 24);
+        message[0] = to(sec);
+        message[1] = to(sec >>= 4);
+        message[2] = to(sec >>= 4);
+        message[3] = to(sec >>= 4);
         call UartStream.send(message, sizeof(message) - 1);
     }
 
+    async event void UartStream.sendDone(uint8_t* buf, uint16_t len, error_t error) {
+    }
+
+    async event void UartStream.receiveDone(uint8_t* buf, uint16_t len, error_t error) {
+    }
+
     task void echoBack() {
-        uint8_t *sendBuf = getSendBuf();
-        if (*sendBuf == '\r' || *sendBuf == '\n') {
-            call UartStream.send(sendBuf - 2, 2);
-        } else {
-            call UartStream.send(sendBuf, 1);
-        }
+        call UartByte.send(sendBuf);
     }
 
     async event void UartStream.receivedByte(uint8_t byte) { 
-        *getSendBuf() = byte;
+        sendBuf = byte;
         post echoBack();
     }
-
-    async event void UartStream.sendDone(uint8_t *buf, uint16_t len, error_t error) {}
-
-    async event void UartStream.receiveDone(uint8_t *buf, uint16_t len, error_t error) {}
 
     event void Timer.fired() {
         post sendMessage();
     }
 
     event void Boot.booted() {
-        call UartControl.start();
         call Timer.startPeriodic(100);
+        call SerialControl.start();
     }
 }
 

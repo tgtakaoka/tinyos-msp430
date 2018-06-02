@@ -31,40 +31,25 @@
  */
 
 module ClockC {
-    uses interface Led7Segs<uint16_t> as Min;
     uses interface Led7Segs<uint16_t> as Sec;
+    uses interface Led7Segs<uint16_t> as Min;
     uses interface Led;
     uses interface Timer16<TMilli> as Timer;
     uses interface Boot;
     uses interface Max549;
 }
 implementation {
-    uint8_t deciSec;
-    uint8_t sec;
-    uint8_t min;
+    uint8_t subSec;
 
     event void Boot.booted() {
-        call Timer.startPeriodic(100);
+        call Timer.startPeriodic(62); // ~ 1000/0x10
     }
 
     event void Timer.fired() {
-        ++deciSec;
-        if (deciSec == 10) {
-            deciSec = 0;
-            ++sec;
-            if (sec == 60) {
-                sec = 0;
-                min++;
-                if (min == 60) {
-                    min = 0;
-                }
-            }
-            call Sec.decimal0(sec);
-            call Min.decimal0(min);
-            call Max549.outA(sec);
-            call Max549.outB(min);
-        }
-        call Led.set(deciSec < 1);
+        ++subSec;
+        call Sec.hexadecimal(subSec);
+        call Max549.outA(subSec);
+        call Max549.outB(~subSec);
     }
 }
 

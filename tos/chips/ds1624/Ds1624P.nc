@@ -32,14 +32,17 @@
 
 #include "Ds1624.h"
 
-/** An module of DS1624 13-bit Temperature sensor and 256 byte EEPROM
+/** A module of DS1624 13-bit Temperature sensor and 256 byte EEPROM
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 
 generic module Ds1624P() {
     provides interface Ds1624;
-    uses interface HplDs1624 as Hpl;
+    uses {
+        interface Resource as I2CResource;
+        interface I2CPacket<TI2CBasicAddr>;
+    }
 }
 implementation {
     uint8_t m_buf[2];
@@ -82,8 +85,8 @@ implementation {
         return call Hpl.write(2, m_buf, data_len, data);
     }
 
-    event void Hpl.readDone(error_t error, uint8_t *cmd, uint8_t data_len, uint8_t *data) {
-        switch (cmd[0]) {
+    event void I2CPacket.readDone(error_t error, uint16_t addr, uint8_t len, uint8_t *data) {
+        switch (data[0]) {
         case DS1624_COMMAND_READ_TEMPERATURE:
             signal Ds1624.readTemperatureDone(error, data);
             break;
@@ -96,8 +99,8 @@ implementation {
         }
     }
 
-    event void Hpl.writeDone(error_t error, uint8_t *cmd, uint8_t data_len, uint8_t *data) {
-        switch (cmd[0]) {
+    event void I2CPacket.writeDone(error_t error, uint16_t addr, uint8_t_len, uint8_t *data) {
+        switch (data[0]) {
         case DS1624_COMMAND_START_CONVERT:
             signal Ds1624.startConversionDone(error);
             break;

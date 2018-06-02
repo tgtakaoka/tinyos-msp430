@@ -30,6 +30,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "msp430usi.h"
 
 configuration Msp430UsiShareP {
     provides {
@@ -40,7 +41,7 @@ configuration Msp430UsiShareP {
     uses interface ResourceConfigure[uint8_t id];
 }
 implementation {
-    components new FcfsArbiterC(MSP430_HPLUSI_RESOURCE) as ArbiterC;
+    components new SimpleFcfsArbiterC(MSP430_HPLUSI_RESOURCE) as ArbiterC;
     Resource = ArbiterC;
     ResourceRequested = ArbiterC;
     ResourceConfigure = ArbiterC;

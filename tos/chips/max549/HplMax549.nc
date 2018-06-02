@@ -30,15 +30,12 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-/** An HPL of MAX549 2ch 8-bit DAC
+/** HPL interface of MAX549 2ch 8-bit DAC.
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 interface HplMax549 {
-    command void setInputReg(uint16_t channel, uint8_t data);
-    command void setDacReg(uint16_t channel, uint8_t data);
-    command void loadDacReg();
-    command void shutdown();
+    command error_t setRegister(uint16_t data);
 }
 
 /*

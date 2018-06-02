@@ -30,58 +30,39 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "Max549.h"
-
-/** An HPL module of MAX549 2ch 8-bit DAC
+/** n HPL module of MAX549 2ch 8-bit DAC
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 generic module HplMax549P() {
-    provides interface HplMax549 as Hpl;
+    provides interface HplMax549;
     uses {
-        interface StdControl as SpiControl;
         interface SpiByte;
-        interface GeneralIO as CS;
+        interface Resource as SpiResource;
+        interface GeneralIO as SpiCS;
         interface Boot;
     }
 }
 implementation {
-    enum {
-        LOAD_INPUT_REG = 0x0000,
-        LOAD_DAC_REG   = 0x0800,
-    };
+    uint16_t mCommands;
 
-    void write(unsigned data) {
-        atomic {
-            call CS.clr();
-            call SpiByte.write(data >> 8);
-            call SpiByte.write(data);
-            call CS.set();
-        }
+    event void Boot.booted() {
+        call SpiCS.set();
+        call SpiCS.makeOutput();
     }
 
-    void event Boot.booted() {
-        atomic {
-            call CS.set();
-            call CS.makeOutput();
-            call SpiControl.start();
-        }
+    command error_t HplMax549.setRegister(uint16_t data) {
+        mCommands = data;
+        return call SpiResource.request();
     }
 
-    command void Hpl.setInputReg(uint16_t channel, uint8_t data) __attribute__((noinline)) {
-        write(LOAD_INPUT_REG | channel | data);
-    }
-
-    command void Hpl.setDacReg(uint16_t channel, uint8_t data) __attribute__((noinline)) {
-        write(LOAD_DAC_REG | channel | data);
-    }
-
-    command void Hpl.loadDacReg() __attribute__((noinline)) {
-        write(LOAD_DAC_REG);
-    }
-
-    command void Hpl.shutdown() __attribute__((noinline)) {
-        write(0x1800);
+    event void SpiResource.granted() {
+        uint16_t commands = mCommands;
+        call SpiCS.clr();
+        call SpiByte.write(commands >> 8);
+        call SpiByte.write(commands);
+        call SpiCS.set();
+        call SpiResource.release();
     }
 }
 

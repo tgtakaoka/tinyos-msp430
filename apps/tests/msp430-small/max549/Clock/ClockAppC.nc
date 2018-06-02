@@ -39,22 +39,14 @@ implementation {
     components LedC;
     components new Timer16MilliC() as Timer;
 
-    components new HplMax549P();
-    components PlatformSpiC as SpiC;
-    components HplMsp430GeneralIOC as GpioC;
+    components HplMsp430GeneralIOC as IOC;
     components new Msp430GpioC() as Max549CS;
-    components new Max549P();
+    components new Max549C() as Max549;
 
-    Max549CS -> GpioC.Port13;
-    HplMax549P.Boot -> MainC.Boot;
-    HplMax549P.CS -> Max549CS;
-    HplMax549P.SpiByte -> SpiC;
-    HplMax549P.SpiControl -> SpiC;
+    Max549CS -> IOC.Port13;
+    Max549CS <- Max549.SpiCS;
 
-    Max549P.Hpl -> HplMax549P;
-
-    App.Max549 -> Max549P;
-    App.Boot -> MainC.Boot;
+    App.Max549 -> Max549;
     App.Timer -> Timer;
     App.Sec -> DisplayC.Sec;
     App.Min -> DisplayC.Min;

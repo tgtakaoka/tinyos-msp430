@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,69 +30,28 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module PlatformLedP {
+#include "hardware.h"
+
+generic configuration PlatformI2CMasterC() {
     provides {
-        interface MultiLed;
-        interface Led[uint8_t led_id];
+        interface Resource;
+        interface ResourceRequested;
+        interface I2CPacket<TI2CBasicAddr>;
     }
-    uses interface Leds;
+    uses interface Msp430I2CConfigure;
 }
 implementation {
-    async command void Led.on[uint8_t led_id]() {
-        switch (led_id) {
-        case 0: call Leds.led0On(); break;
-        case 1: call Leds.led1On(); break;
-        case 2: call Leds.led2On(); break;
-        }
-    }
+#if defined(PLATFORM_I2C_MASTER_BITBANG)
+    components new BitBangI2CMasterC() as I2CMasterC;
+#elif defined(PLATFORM_I2C_MASTER_USCI_B0)
+    components new Msp430I2CB0C() as I2CMasterC;
+#elif defined(PLATFORM_I2C_MASTER_USCI_B1)
+    components new Msp430I2CB1C() as I2CMasterC;
+#endif
 
-    async command void Led.off[uint8_t led_id]() {
-        switch (led_id) {
-        case 0: call Leds.led0Off(); break;
-        case 1: call Leds.led1Off(); break;
-        case 2: call Leds.led2Off(); break;
-        }
-    }
-
-    async command void Led.set[uint8_t led_id](bool turn_on) {
-        if (turn_on) {
-            call Led.on[led_id]();
-        } else {
-            call Led.off[led_id]();
-        }
-    }
-
-    async command void Led.toggle[uint8_t led_id]() {
-        switch (led_id) {
-        case 0: call Leds.led0Toggle(); break;
-        case 1: call Leds.led1Toggle(); break;
-        case 2: call Leds.led2Toggle(); break;
-        }
-    }
-
-    async command unsigned int MultiLed.get() {
-        return call Leds.get();
-    }
-
-    async command void MultiLed.set(unsigned int val) {
-        call Leds.set(val);
-    }
-
-    async command void MultiLed.on(unsigned int led_id) {
-        call Led.on[led_id]();
-    }
-
-    async command void MultiLed.off(unsigned int led_id) {
-        call Led.off[led_id]();
-    }
-
-    async command void MultiLed.toggle(unsigned int led_id) {
-        call Led.toggle[led_id]();
-    }
-
-    async command void MultiLed.setSingle(unsigned int led_id, bool turn_on) {
-        call Led.set[led_id](turn_on);
-    }
+    Resource = I2CMasterC;
+    ResourceRequested = I2CMasterC;
+    I2CPacket = I2CMasterC;
 }
 
 /*
