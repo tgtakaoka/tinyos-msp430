@@ -1,7 +1,8 @@
 # -*-Makefile-*- vim:syntax=make
 
-PFLAGS += -I%T/platforms/$(TARGET)
 PFLAGS += -I%T/chips/msp430-small/timer-vlo
 PFLAGS += -D__msp430_using_vlo
+PFLAGS += -I%T/platforms/$(TARGET)
+PFLAGS += -I%T/platforms/msp430-small
 
 $(call TOSMake_include,msp430-small/mspdebug.extra)
