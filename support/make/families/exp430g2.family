@@ -1,8 +1,9 @@
 # -*- mode: makefile-gmake; mode: flyspell-prog; -*-
 
-PFLAGS += -I%T/platforms/exp430g2-family
-PFLAGS += -I%T/platforms/$(TARGET)
 PFLAGS += -I%T/chips/msp430-small/timer-vlo
 PFLAGS += -D__msp430_using_vlo
+PFLAGS += -I%T/platforms/$(TARGET)
+PFLAGS += -I%T/platforms/exp430g2-family
+PFLAGS += -I%T/platforms/msp430-small
 
 $(call TOSMake_include,msp430-small/mspdebug.extra)
