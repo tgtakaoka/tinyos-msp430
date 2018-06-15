@@ -33,12 +33,27 @@
 #ifndef BIT_BANG_SPI_MASTER_H
 #define BIT_BANG_SPI_MASTER_H
 
-#define SPI_MASTER_MODE0 0      /* CPOL=0 CPHA=0 */
-#define SPI_MASTER_MODE1 1      /* CPOL=0 CPHA=1 */
-#define SPI_MASTER_MODE2 2      /* CPOL=1 CPHA=0 */
-#define SPI_MASTER_MODE3 3      /* CPOL=1 CPHA=1 */
+#include "hardware.h"
 
-#define SPI_MASTER_MSB 0        /* MSB first */
-#define SPI_MASTER_LSB 1        /* LSB first */
+#define BIT_BANG_SPI_MASTER_RESOURCE "BitBangSpiMaster"
+
+typedef uint8_t bit_bang_spi_master_config_t;
+#define BIT_BANG_SPI_MASTER_CLK_POLALITY_POSITIVE  (1 << 0)
+#define BIT_BANG_SPI_MASTER_CLK_PHASE_LEADING_EDGE (1 << 1)
+#define BIT_BANG_SPI_MASTER_BIT_BIG_ENDIAN         (1 << 2)
+#define BIT_BANG_SPI_MASTER_DEFAULT_CONFIG (\
+        BIT_BANG_SPI_MASTER_CLK_POLALITY_POSITIVE |\
+        BIT_BANG_SPI_MASTER_CLK_PHASE_LEADING_EDGE |\
+        BIT_BANG_SPI_MASTER_BIT_BIG_ENDIAN )
+
+/**
+ * When BIT_BANG_SPI_MASTER_SINGLE_CONFIG is defined, the symbol value
+ * is used as a single configuration of BitBangSpiMasterP and
+ * implementation will be drastically optimized.
+ *
+ * #define BIT_BANG_SPI_MASTER_SINGLE_CONFIG     \
+ *    BIT_BANG_SPI_MASTER_DEFAULT_CONFIG
+ *
+ */
 
 #endif

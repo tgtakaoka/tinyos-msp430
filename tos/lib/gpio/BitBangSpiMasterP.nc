@@ -32,32 +32,45 @@
 
 #include "BitBangSpiMaster.h"
 
-/** An software SPI master implementation using GPIO.
+/** A software SPI master implementation using GPIO.
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
-generic module BitBangSpiMasterP(const int mode, const int bit_endian) {
+generic module BitBangSpiMasterP() {
     provides {
-        interface StdControl as SpiControl;
+        interface ResourceConfigure[uint8_t id];
         interface SpiByte;
+        interface SpiPacket[uint8_t id];
     }
     uses {
+        // Default: ClockPolarity=Positive, ClockPhase=LeadingEdge, BitEndian=MsbFirst
+        interface BitBangSpiMasterConfigure as Configure[uint8_t id];
         interface GeneralIO as SIMO;
         interface GeneralIO as SOMI;
         interface GeneralIO as CLK;
     }
 }
 implementation {
-    void inactivateClk() {
-        if (mode == SPI_MASTER_MODE0 || mode == SPI_MASTER_MODE1) {
+
+#if defined(BIT_BANG_SPI_MASTER_SINGLE_CONFIG)
+#define GET_CONFIG(id)       BIT_BANG_SPI_MASTER_SINGLE_CONFIG
+#define GET_CURRENT_CONFIG() BIT_BANG_SPI_MASTER_SINGLE_CONFIG
+#else
+    norace bit_bang_spi_master_config_t mCurrentConfig;
+#define GET_CONFIG(id)       (mCurrentConfig = call Configure.getConfig[id]())
+#define GET_CURRENT_CONFIG() mCurrentConfig
+#endif
+
+    void inactivateClk(const bit_bang_spi_master_config_t config) {
+        if (config & BIT_BANG_SPI_MASTER_CLK_POLALITY_POSITIVE) {
             call CLK.clr();
         } else {
             call CLK.set();
         }
     }
 
-    uint8_t writeSlave(uint8_t tx) {
-        if (bit_endian == SPI_MASTER_MSB) {
+    uint8_t writeSlave(uint8_t tx, const bit_bang_spi_master_config_t config) {
+        if (config & BIT_BANG_SPI_MASTER_BIT_BIG_ENDIAN) {
             if (tx & 0x80) {
                 call SIMO.set();
             } else {
@@ -75,44 +88,64 @@ implementation {
         return tx;
     }
 
-    uint8_t readSlave() {
-        if (bit_endian == SPI_MASTER_MSB) {
+    uint8_t readSlave(const bit_bang_spi_master_config_t config) {
+        if (config & BIT_BANG_SPI_MASTER_BIT_BIG_ENDIAN) {
             return call SOMI.get() ? 0x01 : 0x00;
         } else {
-            return call SOMI.get() ? 0x80 : 0x00;
+            return call SIMO.get() ? 0x80 : 0x00;
         }
     }
 
-    command error_t SpiControl.start() {
-        inactivateClk();
+    async command void ResourceConfigure.configure[uint8_t id]() {
+        inactivateClk(GET_CONFIG(id));
         call CLK.makeOutput();
         call SIMO.makeOutput();
         call SOMI.makeInput();
-        return SUCCESS;
     }
 
-    command error_t SpiControl.stop() {
-        return SUCCESS;
+    async command void ResourceConfigure.unconfigure[uint8_t id]() {
+        inactivateClk(GET_CURRENT_CONFIG());
     }
 
     async command uint8_t SpiByte.write(uint8_t tx) {
+        const bit_bang_spi_master_config_t config = GET_CURRENT_CONFIG();
         int bit = 8;
         do {
-            if (mode == SPI_MASTER_MODE0 || mode == SPI_MASTER_MODE2) {
-                tx = writeSlave(tx);
+            if (config & BIT_BANG_SPI_MASTER_CLK_PHASE_LEADING_EDGE) {
+                tx = writeSlave(tx, config);
                 call CLK.toggle();
-                tx |= readSlave();
+                tx |= readSlave(config);
                 call CLK.toggle();
             } else {
                 call CLK.toggle();
-                tx = writeSlave(tx);
+                tx = writeSlave(tx, config);
                 call CLK.toggle();
-                tx |= readSlave();
+                tx |= readSlave(config);
             }
         } while (--bit != 0);
         return tx;
     }
+
+    async command error_t SpiPacket.send[uint8_t id](
+        uint8_t* txBuf, uint8_t* rxBuf, uint16_t len) {
+        while (len != 0) {
+            *rxBuf++ = call SpiByte.write(*txBuf++);
+            len--;
+        }
+        return SUCCESS;
+    }
+
+    default async event void SpiPacket.sendDone[uint8_t id](
+        uint8_t* txBuf, uint8_t* rxBuf, uint16_t len, error_t error) {
+    }
+
+    default async command const bit_bang_spi_master_config_t Configure.getConfig[uint8_t id]() {
+        return BIT_BANG_SPI_MASTER_DEFAULT_CONFIG;
+    }
 }
+
+#undef GET_CONFIG
+#undef GET_CURRENT_CONFIG
 
 /*
  * Local Variables:

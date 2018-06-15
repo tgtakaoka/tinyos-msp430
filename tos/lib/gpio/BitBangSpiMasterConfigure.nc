@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,18 +30,15 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef MICROWIRE_H
-#define MICROWIRE_H
+#include "BitBangSpiMaster.h"
 
-#define MICROWIRE_MODE0 0      /* CPOL=0 CPHA=0 */
-#define MICROWIRE_MODE1 1      /* CPOL=0 CPHA=1 */
-#define MICROWIRE_MODE2 2      /* CPOL=1 CPHA=0 */
-#define MICROWIRE_MODE3 3      /* CPOL=1 CPHA=1 */
-
-#define MICROWIRE_MSB 0        /* MSB first */
-#define MICROWIRE_LSB 1        /* LSB first */
-
-#endif
+/** Configuration of software SPI master implementation.
+ *
+ * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
+ */
+interface BitBangSpiMasterConfigure {
+    async command const bit_bang_spi_master_config_t getConfig();
+}
 
 /*
  * Local Variables:
