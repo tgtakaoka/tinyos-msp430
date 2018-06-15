@@ -18,17 +18,23 @@ configuration PlatformSpiC {
     provides {
         interface StdControl as SpiControl;
         interface SpiByte;
+#if defined(USE_BIT_BANG_SPI_MASTER)
+        interface GeneralIO as SIMO;
+        interface GeneralIO as SOMI;
+        interface GeneralIO as CLK;
+#endif
     }
 }
 implementation {
 #if defined(USE_BIT_BANG_SPI_MASTER)
-    components new BitBangSpiMasterP(SPI_MASTER_MODE0, SPI_MASTER_MSB)
-        as SpiMaster;
-    components GpioConf as SpiC;
-    SpiMaster.SIMO -> SpiC.SIMO;
-    SpiMaster.SOMI -> SpiC.SOMI;
-    SpiMaster.CLK -> SpiC.CLK;
-    SpiControl = SpiMaster;
+    components new BitBangSpiMasterC() as SpiMaster;
+    components UsciConf as SpiC;
+    SpiControl = SpiC.SpiControl;
+    SpiC.SpiResource -> SpiMaster;
+    components GpioConf;
+    SIMO = GpioConf.SIMO;
+    SOMI = GpioConf.SOMI;
+    CLK = GpioConf.CLK;
 #elif defined(USE_USI_SPI_MASTER)
     components new USE_USI_SPI_MASTER() as SpiMaster;
     components UsiConf as SpiC;
