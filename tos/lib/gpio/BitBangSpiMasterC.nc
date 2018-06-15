@@ -1,5 +1,5 @@
-/* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010-2011, Tadashi G. Takaoka
+/* -*- mode: nesc; mode: flyspell-prog; -*- */
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,21 +30,43 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_hardware_h
-#define _H_hardware_h
+#include "BitBangSpiMaster.h"
 
-#if !defined(__MSP430__REV__)
-#define __MSP430_REV__ 'D'
-#endif
+/** A software SPI master implementation using GPIO.
+ *
+ * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
+ */
+generic configuration BitBangSpiMasterC() {
+    provides {
+        interface Resource;
+        interface ResourceRequested;
+        interface SpiByte;
+        interface SpiPacket;
+    }
+    uses interface BitBangSpiMasterConfigure as SpiMasterConfigure;
+}
+implementation {
 
-#include "msp430hardware.h"
+    enum {
+        CLIENT_ID = unique(BIT_BANG_SPI_MASTER_RESOURCE),
+    };
 
-#define USE_BIT_BANG_SPI_MASTER
-#define BIT_BANG_SPI_MASTER_SINGLE_CONFIG \
-    BIT_BANG_SPI_MASTER_DEFAULT_CONFIG
-#define USE_BIT_BANG_I2C_MASTER
+    components new SimpleFcfsArbiterC(BIT_BANG_SPI_MASTER_RESOURCE) as ArbiterC;
+    components new BitBangSpiMasterP() as SpiP;
+    components PlatformSpiC as SpiPins;
 
-#endif // _H_hardware_h
+    Resource = ArbiterC.Resource[CLIENT_ID];
+    ResourceRequested = ArbiterC.ResourceRequested[CLIENT_ID];
+
+    SpiP.SpiByte = SpiByte;
+    SpiP.SpiPacket[CLIENT_ID] = SpiPacket;
+    SpiP.SIMO -> SpiPins.SIMO;
+    SpiP.SOMI -> SpiPins.SOMI;
+    SpiP.CLK -> SpiPins.CLK;
+
+    SpiP.ResourceConfigure[CLIENT_ID] <- ArbiterC.ResourceConfigure[CLIENT_ID];
+    SpiP.Configure[CLIENT_ID] = SpiMasterConfigure;
+}
 
 /*
  * Local Variables:
