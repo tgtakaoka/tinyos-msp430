@@ -30,27 +30,30 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "I2C.h"
 #include "BitBangI2CMaster.h"
 
-/** An software I2C master implementation using GPIO.
+/** A software I2C master implementation using GPIO.
  *
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 
-generic module BitBangI2CMasterP(typedef addr_size, int addressing) {
+generic module BitBangI2CMasterP() {
     provides {
-        interface StdControl as I2CControl;
-        interface I2CPacket<addr_size>;
+        interface ResourceConfigure[uint8_t id];
+        interface I2CPacket<TI2CBasicAddr>[uint8_t id];
     }
     uses {
+        interface BitBangI2CMasterConfigure as Configure[uint8_t id];
         interface GeneralIO as SCL;
         interface GeneralIO as SDA;
     }
 }
 implementation {
+    norace uint8_t m_id;
     norace uint8_t m_length;
     norace uint8_t *m_data;
-    norace uint16_t m_addr;
+    norace uint8_t m_addr;
 
     void delay() {
         int i;
@@ -132,13 +135,7 @@ implementation {
     }
 
     uint8_t sendAddress(uint16_t addr, int read) {
-        if (addressing == I2C_MASTER_BASIC_ADDR) {
-            return sendByte(addr << 1 | read);
-        } else {
-            if (sendByte(0xF0 | ((addr & 0x200) >> 7) | read) != 0)
-                return 1;
-            return sendByte(addr);
-        }
+        return sendByte(addr << 1 | read);
     }
 
     void i2cStop() {
@@ -154,35 +151,38 @@ implementation {
         return FALSE;
     }
 
-    command error_t I2CControl.start() {
-        atomic {
-            setSdaHigh();
-            setSclHigh();
-            call SDA.clr();
-            call SCL.clr();
-        }
-        return SUCCESS;
+    void initialize() {
+        setSdaHigh();
+        setSclHigh();
+        call SDA.clr();
+        call SCL.clr();
     }
 
-    command error_t I2CControl.stop() {
-        return SUCCESS;
+    async command void ResourceConfigure.configure[uint8_t id]() {
+        initialize();
     }
 
-    void initState(uint16_t addr, uint8_t length, uint8_t *data) {
+    async command void ResourceConfigure.unconfigure[uint8_t id]() {
+        initialize();
+    }
+
+    void saveParameters(uint8_t id, uint8_t addr, uint8_t length, uint8_t *data) {
+        m_id = id;
         m_addr = addr;
         m_length = length;
         m_data = data;
     }
 
     task void readDone() {
-        signal I2CPacket.readDone(SUCCESS, m_addr, m_length, m_data);
+        signal I2CPacket.readDone[m_id](SUCCESS, m_addr, m_length, m_data);
     }
 
-    async command error_t I2CPacket.read(i2c_flags_t flags, uint16_t addr, uint8_t length,
-                                         uint8_t *data) {
+    async command error_t I2CPacket.read[uint8_t id](
+        i2c_flags_t flags, uint16_t addr, uint8_t length, uint8_t *data) {
         int i;
-        initState(addr, length, data);
+        saveParameters(id, addr, length, data);
 
+        // TODO: Implement I2C_RESTART
         if (flags & I2C_START) {
             if (i2cStart(addr, 1))
                 return ENOACK;
@@ -200,14 +200,15 @@ implementation {
     }
 
     task void writeDone() {
-        signal I2CPacket.writeDone(SUCCESS, m_addr, m_length, m_data);
+        signal I2CPacket.writeDone[m_id](SUCCESS, m_addr, m_length, m_data);
     }
 
-    async command error_t I2CPacket.write(i2c_flags_t flags, uint16_t addr, uint8_t length,
-                                          uint8_t *data) {
+    async command error_t I2CPacket.write[uint8_t id](
+        i2c_flags_t flags, uint16_t addr, uint8_t length, uint8_t *data) {
         int i;
-        initState(addr, length, data);
+        saveParameters(id, addr, length, data);
 
+        // TODO: Implement I2C_RESTART.
         if (flags & I2C_START) {
             if (i2cStart(addr, 0))
                 return ENOACK;
@@ -225,7 +226,19 @@ implementation {
 
         post writeDone();
         return SUCCESS;
-   }
+    }
+
+    default async event void I2CPacket.readDone[uint8_t id](
+        error_t error, uint16_t addr, uint8_t length, uint8_t* data) {
+    }
+
+    default async event void I2CPacket.writeDone[uint8_t id](
+        error_t error, uint16_t addr, uint8_t length, uint8_t* data) {
+    }
+
+    default async command const bit_bang_i2c_master_config_t Configure.getConfig[uint8_t id]() {
+        return 0;
+    }
 }
 
 /*

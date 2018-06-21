@@ -30,37 +30,14 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "hardware.h"
+#include "BitBangI2CMaster.h"
 
-configuration PlatformI2CC {
-    provides {
-        interface StdControl as I2CControl;
-        interface I2CPacket<TI2CBasicAddr>;
-    }
-    uses {
-#if defined(USE_BIT_BANG_I2C_MASTER)
-        interface BitBangI2CMasterConfigure as I2CConfigure;
-#else
-        interface Msp430I2CConfigure as I2CConfigure;
-#endif
-    }
-}
-implementation {
-#if defined(USE_BIT_BANG_I2C_MASTER)
-    components new BitBangI2CMasterC() as I2CMasterC;
-#elif defined(USE_USI_I2C_MASTER)
-    components new USE_USI_I2C_MASTER() as I2CMasterC;
-#elif defined(USE_USCI_I2C_MASTER)
-    components new USE_USCI_I2C_MASTER() as I2CMasterC;
-#elif defined(USE_USART_I2C_MASTER)
-    components new USE_USART_I2C_MASTER() as I2CMasterC;
-#endif
-    components PlatformI2CP as I2CP;
-
-    I2CControl = I2CP.I2CControl;
-    I2CPacket = I2CMasterC;
-    I2CConfigure = I2CMasterC;
-    I2CP.I2CResource -> I2CMasterC;
+/** Configuration of software I2C master implementation.
+ *
+ * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
+ */
+interface BitBangI2CMasterConfigure {
+    async command const bit_bang_i2c_master_config_t getConfig();
 }
 
 /*
