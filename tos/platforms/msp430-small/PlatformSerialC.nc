@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,29 +30,35 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-configuration LocalTimeAppC {
+#include "hardware.h"
+
+configuration PlatformSerialC {
+    provides {
+        interface StdControl as SerialControl;
+        interface UartStream;
+        interface UartByte;
+    }
+    uses {
+#if defined(USE_BIT_BANG_UART)
+        interface BitBangUartConfigure as SerialConfigure;
+#else
+        interface Msp430UartConfigure as SerialConfigure;
+#endif
+    }
 }
 implementation {
-    components MainC;
-    components PlatformSerialC as SerialC;
-    components LedC;
-    components new TimerMilliC() as Timer;
-    components LocalTimeMilliC as LocalTime;
-    components LocalTimeC as App;
+#if defined(USE_BIT_BANG_UART)
+    components new BitBangUartC() as SerialC;
+#elif defined(USE_USCI_UART)
+    components new USE_USCI_UART() as SerialC;
+#elif defined(USE_USART_UART)
+    components new USE_USART_UART() as SerialC;
+#endif
+    components PlatformSerialP as SerialP;
 
-    App.Boot -> MainC;
-    App.SerialControl -> SerialC;
-    App.UartStream -> SerialC;
-    App.Timer -> Timer;
-    App.LocalTime -> LocalTime;
-    App.Led -> LedC.Led0;
+    SerialControl = SerialP.SerialControl;
+    UartStream = SerialC;
+    UartByte = SerialC;
+    SerialConfigure = SerialC;
+    SerialP.SerialResource -> SerialC;
 }
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
