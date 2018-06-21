@@ -1,5 +1,5 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
-/* Copyright (c) 2011, Tadashi G. Takaoka
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,29 +30,22 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-configuration LocalTimeAppC {
+#include "hardware.h"
+
+module PlatformSerialP {
+    provides interface StdControl as SerialControl;
+    uses interface Resource as SerialResource;
 }
 implementation {
-    components MainC;
-    components PlatformSerialC as SerialC;
-    components LedC;
-    components new TimerMilliC() as Timer;
-    components LocalTimeMilliC as LocalTime;
-    components LocalTimeC as App;
+    command error_t SerialControl.start() {
+        return call SerialResource.immediateRequest();
+    }
 
-    App.Boot -> MainC;
-    App.SerialControl -> SerialC;
-    App.UartStream -> SerialC;
-    App.Timer -> Timer;
-    App.LocalTime -> LocalTime;
-    App.Led -> LedC.Led0;
+    command error_t SerialControl.stop() {
+        call SerialResource.release();
+        return SUCCESS;
+    }
+
+    event void SerialResource.granted() {
+    }
 }
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */

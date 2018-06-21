@@ -34,7 +34,7 @@
 
 module LocalTimeC {
     uses interface Boot;
-    uses interface StdControl as UartControl;
+    uses interface StdControl as SerialControl;
     uses interface UartStream;
     uses interface Timer<TMilli>;
     uses interface LocalTime<TMilli>;
@@ -93,7 +93,7 @@ implementation {
     }
 
     event void Boot.booted() {
-        call UartControl.start();
+        call SerialControl.start();
         call Timer.startPeriodic(100);
     }
 }
