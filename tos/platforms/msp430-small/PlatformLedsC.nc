@@ -42,13 +42,13 @@ configuration PlatformLedsC {
     uses interface Init;
 }
 implementation {
-    components HplMsp430GeneralIOC as GpioC;
+    components HplMsp430GeneralIOC as PinsC;
 #ifdef PORT_LED0
     components new Msp430GpioC() as Led0Port;
     components new InvertGeneralIOP() as Led0Inv;
     Led0 = Led0Inv;
     Led0Inv.Inverted -> Led0Port;
-    Led0Port -> GpioC.PORT_LED0;
+    Led0Port -> PinsC.PORT_LED0;
 #else
 #warning "This platform has no LED0"
     components new NoPinC() as DummyLed0;
@@ -59,7 +59,7 @@ implementation {
     components new InvertGeneralIOP() as Led1Inv;
     Led1 = Led1Inv;
     Led1Inv.Inverted -> Led1Port;
-    Led1Port -> GpioC.PORT_LED1;
+    Led1Port -> PinsC.PORT_LED1;
 #else
 #warning "This platform has no LED1"
     components new NoPinC() as DummyLed1;
@@ -70,7 +70,7 @@ implementation {
     components new InvertGeneralIOP() as Led2Inv;
     Led2 = Led2Inv;
     Led2Inv.Inverted -> Led2Port;
-    Led2Port -> GpioC.PORT_LED2;
+    Led2Port -> PinsC.PORT_LED2;
 #else
 #warning "This platform has no LED2"
     components new NoPinC() as DummyLed2;

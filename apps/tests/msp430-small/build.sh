@@ -154,6 +154,7 @@ setup_expects
 
 projects=()
 targets=()
+errors=()
 if [[ -f Makefile ]]; then
     project="${PWD#${ROOT_APPS}/}"
     in_array "${project}" "${PROJECTS[@]}" \
@@ -172,9 +173,11 @@ for arg in "$@"; do
     elif [[ $arg == clean ]]; then
 	targets+=(clean)
     else
+	errors+=("${arg}")
 	echo -e "${COLOR_RED}@@@@@ Skip unknown argument: ${arg}${COLOR_OFF}" 1>&2
     fi
 done
+[[ ${#errors[@]} -gt 0 ]] && exit 0
 [[ ${#projects[@]} -eq 0 ]] && projects=("${PROJECTS[@]}")
 [[ ${#targets[@]} -eq 0 ]] && targets=("${TARGETS[@]}")
 for target in "${targets[@]}"; do
