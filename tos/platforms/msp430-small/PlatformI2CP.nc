@@ -32,42 +32,20 @@
 
 #include "hardware.h"
 
-configuration PlatformI2CC {
-    provides {
-        interface StdControl as I2CControl;
-        interface I2CPacket<TI2CBasicAddr>;
-    }
-    uses {
-#if defined(USE_BIT_BANG_I2C_MASTER)
-        interface BitBangI2CMasterConfigure as I2CConfigure;
-#else
-        interface Msp430I2CConfigure as I2CConfigure;
-#endif
-    }
+module PlatformI2CP {
+    provides interface StdControl as I2CControl;
+    uses interface Resource as I2CResource;
 }
 implementation {
-#if defined(USE_BIT_BANG_I2C_MASTER)
-    components new BitBangI2CMasterC() as I2CMasterC;
-#elif defined(USE_USI_I2C_MASTER)
-    components new USE_USI_I2C_MASTER() as I2CMasterC;
-#elif defined(USE_USCI_I2C_MASTER)
-    components new USE_USCI_I2C_MASTER() as I2CMasterC;
-#elif defined(USE_USART_I2C_MASTER)
-    components new USE_USART_I2C_MASTER() as I2CMasterC;
-#endif
-    components PlatformI2CP as I2CP;
+    command error_t I2CControl.start() {
+        return call I2CResource.immediateRequest();
+    }
 
-    I2CControl = I2CP.I2CControl;
-    I2CPacket = I2CMasterC;
-    I2CConfigure = I2CMasterC;
-    I2CP.I2CResource -> I2CMasterC;
+    command error_t I2CControl.stop() {
+        call I2CResource.release();
+        return SUCCESS;
+    }
+
+    event void I2CResource.granted() {
+    }
 }
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */

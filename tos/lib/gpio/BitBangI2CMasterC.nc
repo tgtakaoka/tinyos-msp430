@@ -30,37 +30,39 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "hardware.h"
+#include "BitBangSpiMaster.h"
 
-configuration PlatformI2CC {
+/** A software I2C master implementation using GPIO.
+ *
+ * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
+ */
+generic configuration BitBangI2CMasterC() {
     provides {
-        interface StdControl as I2CControl;
+        interface Resource;
+        interface ResourceRequested;
         interface I2CPacket<TI2CBasicAddr>;
     }
-    uses {
-#if defined(USE_BIT_BANG_I2C_MASTER)
-        interface BitBangI2CMasterConfigure as I2CConfigure;
-#else
-        interface Msp430I2CConfigure as I2CConfigure;
-#endif
-    }
+    uses interface BitBangI2CMasterConfigure as I2CMasterConfigure;
 }
 implementation {
-#if defined(USE_BIT_BANG_I2C_MASTER)
-    components new BitBangI2CMasterC() as I2CMasterC;
-#elif defined(USE_USI_I2C_MASTER)
-    components new USE_USI_I2C_MASTER() as I2CMasterC;
-#elif defined(USE_USCI_I2C_MASTER)
-    components new USE_USCI_I2C_MASTER() as I2CMasterC;
-#elif defined(USE_USART_I2C_MASTER)
-    components new USE_USART_I2C_MASTER() as I2CMasterC;
-#endif
-    components PlatformI2CP as I2CP;
 
-    I2CControl = I2CP.I2CControl;
-    I2CPacket = I2CMasterC;
-    I2CConfigure = I2CMasterC;
-    I2CP.I2CResource -> I2CMasterC;
+    enum {
+        CLIENT_ID = unique(BIT_BANG_I2C_MASTER_RESOURCE),
+    };
+
+    components new SimpleFcfsArbiterC(BIT_BANG_I2C_MASTER_RESOURCE) as ArbiterC;
+    components new BitBangI2CMasterP() as I2CP;
+    components GpioConf as I2CPinsC;
+
+    Resource = ArbiterC.Resource[CLIENT_ID];
+    ResourceRequested = ArbiterC.ResourceRequested[CLIENT_ID];
+
+    I2CP.I2CPacket[CLIENT_ID] = I2CPacket;
+    I2CP.SCL -> I2CPinsC.SCL;
+    I2CP.SDA -> I2CPinsC.SDA;
+
+    I2CP.ResourceConfigure[CLIENT_ID] <- ArbiterC.ResourceConfigure[CLIENT_ID];
+    I2CP.Configure[CLIENT_ID] = I2CMasterConfigure;
 }
 
 /*
