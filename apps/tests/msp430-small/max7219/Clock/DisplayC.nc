@@ -9,7 +9,7 @@ configuration DisplayC {
 }
 implementation {
     components MainC;
-    components GpioConf as GpioC;
+    components PlatformPinsC as PinsC;
     components PlatformSpiC as SpiC;
     components new HplMax7219P("HH:MM:SS");
     components new Max7219P();
@@ -22,7 +22,7 @@ implementation {
     Hour = H;
 
     HplMax7219P.Boot -> MainC.Boot;
-    HplMax7219P.Load -> GpioC.STE;
+    HplMax7219P.Load -> PinsC.SpiCS0;
     HplMax7219P.SpiByte -> SpiC;
     HplMax7219P.SpiControl -> SpiC;
 

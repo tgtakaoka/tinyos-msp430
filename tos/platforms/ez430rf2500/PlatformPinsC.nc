@@ -30,49 +30,48 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "BitBangSpiMaster.h"
+#include "hardware.h"
 
-/** A software SPI master implementation using GPIO.
- *
- * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
- */
-generic configuration BitBangSpiMasterC() {
+configuration PlatformPinsC {
     provides {
-        interface Resource;
-        interface ResourceRequested;
-        interface SpiByte;
-        interface SpiPacket;
+        interface GeneralIO as SpiCS0;
+#ifdef USE_BIT_BANG_SPI_MASTER
+        interface GeneralIO as SpiSIMO;
+        interface GeneralIO as SpiSOMI;
+        interface GeneralIO as SpiCLK;
+#endif
+
+#ifdef USE_BIT_BANG_I2C_MASTER
+        interface GeneralIO as I2CSCL;
+        interface GeneralIO as I2CSDA;
+#endif
     }
-    uses interface BitBangSpiMasterConfigure as SpiMasterConfigure;
 }
 implementation {
+    components HplMsp430GeneralIOC as IOC;
 
-    enum {
-        CLIENT_ID = unique(BIT_BANG_SPI_MASTER_RESOURCE),
-    };
+    components new Msp430GpioC() as STE0;
+    STE0  -> IOC.Port30;
+    SpiCS0  = STE0;
 
-    components new SimpleFcfsArbiterC(BIT_BANG_SPI_MASTER_RESOURCE) as ArbiterC;
-    components new BitBangSpiMasterP() as SpiP;
-    components PlatformPinsC as SpiPinsC;
+#ifdef USE_BIT_BANG_SPI_MASTER
+    components new Msp430GpioC() as SIMO0;
+    components new Msp430GpioC() as SOMI0;
+    components new Msp430GpioC() as CLK0;
+    CLK0  -> IOC.Port33;
+    SIMO0 -> IOC.Port31;
+    SOMI0 -> IOC.Port32;
+    SpiCLK  = CLK0;
+    SpiSIMO = SIMO0;
+    SpiSOMI = SOMI0;
+#endif
 
-    Resource = ArbiterC.Resource[CLIENT_ID];
-    ResourceRequested = ArbiterC.ResourceRequested[CLIENT_ID];
-
-    SpiP.SpiByte = SpiByte;
-    SpiP.SpiPacket[CLIENT_ID] = SpiPacket;
-    SpiP.SIMO -> SpiPinsC.SpiSIMO;
-    SpiP.SOMI -> SpiPinsC.SpiSOMI;
-    SpiP.CLK -> SpiPinsC.SpiCLK;
-
-    SpiP.ResourceConfigure[CLIENT_ID] <- ArbiterC.ResourceConfigure[CLIENT_ID];
-    SpiP.Configure[CLIENT_ID] = SpiMasterConfigure;
+#ifdef USE_BIT_BANG_I2C_MASTER
+    components new Msp430GpioC() as SCL0;
+    components new Msp430GpioC() as SDA0;
+    SCL0 -> IOC.Port26;
+    SDA0 -> IOC.Port27;
+    I2CSCL = SCL0;
+    I2CSDA = SDA0;
+#endif
 }
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
