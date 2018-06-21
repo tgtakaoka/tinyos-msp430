@@ -1,67 +1,66 @@
 /* -*- mode: nesc; mode: flyspell-prog; -*- */
+/* Copyright (c) 2018, Tadashi G. Takaoka
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * - Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ * - Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in
+ *   the documentation and/or other materials provided with the
+ *   distribution.
+ * - Neither the name of Tadashi G. Takaoka nor the names of its
+ *   contributors may be used to endorse or promote products derived
+ *   from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 #include "hardware.h"
-
-#if defined(USE_BIT_BANG_SPI_MASTER)
-#include "BitBangSpiMaster.h"
-#elif defined(USE_USI_SPI_MASTER)
-#include "msp430usi.h"
-#elif defined(USE_USCI_SPI_MASTER)
-#include "msp430usci.h"
-#elif defined(USE_USART_SPI_MASTER)
-#include "msp430usart.h"
-#else
-#error "This platform has no SPI Master defined"
-#endif
 
 configuration PlatformSpiC {
     provides {
         interface StdControl as SpiControl;
         interface SpiByte;
+        interface SpiPacket;
+    }
+    uses {
 #if defined(USE_BIT_BANG_SPI_MASTER)
-        interface GeneralIO as SIMO;
-        interface GeneralIO as SOMI;
-        interface GeneralIO as CLK;
+        interface BitBangSpiMasterConfigure as SpiConfigure;
+#else
+        interface Msp430SpiConfigure as SpiConfigure;
 #endif
     }
 }
 implementation {
 #if defined(USE_BIT_BANG_SPI_MASTER)
-    components new BitBangSpiMasterC() as SpiMaster;
-    components UsciConf as SpiC;
-    SpiControl = SpiC.SpiControl;
-    SpiC.SpiResource -> SpiMaster;
-    components GpioConf;
-    SIMO = GpioConf.SIMO;
-    SOMI = GpioConf.SOMI;
-    CLK = GpioConf.CLK;
+    components new BitBangSpiMasterC() as SpiMasterC;
 #elif defined(USE_USI_SPI_MASTER)
-    components new USE_USI_SPI_MASTER() as SpiMaster;
-    components UsiConf as SpiC;
-    SpiControl = SpiC.SpiControl;
-    SpiC.Msp430SpiConfigure <- SpiMaster;
-    SpiC.SpiResource -> SpiMaster;
+    components new USE_USI_SPI_MASTER() as SpiMasterC;
 #elif defined(USE_USCI_SPI_MASTER)
-    components new USE_USCI_SPI_MASTER() as SpiMaster;
-    components UsciConf as SpiC;
-    SpiControl = SpiC.SpiControl;
-    SpiC.Msp430SpiConfigure <- SpiMaster;
-    SpiC.SpiResource -> SpiMaster;
+    components new USE_USCI_SPI_MASTER() as SpiMasterC;
 #elif defined(USE_USART_SPI_MASTER)
-    components new USE_USART_SPI_MASTER() as SpiMaster;
-    components UsartConf as SpiC;
-    SpiControl = SpiC.SpiControl;
-    SpiC.Msp430SpiConfigure <- SpiMaster;
-    SpiC.SpiResource -> SpiMaster;
+    components new USE_USART_SPI_MASTER() as SpiMasterC;
 #endif
-    SpiByte = SpiMaster;
-}
+    components PlatformSpiP as SpiP;
 
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
+    SpiControl = SpiP.SpiControl;
+    SpiByte = SpiMasterC;
+    SpiPacket = SpiMasterC;
+    SpiConfigure = SpiMasterC;
+    SpiP.SpiResource -> SpiMasterC;
+}
