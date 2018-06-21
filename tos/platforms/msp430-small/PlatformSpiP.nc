@@ -1,5 +1,5 @@
-/* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010-2011, Tadashi G. Takaoka
+/* -*- mode: nesc; mode: flyspell-prog; -*- */
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,26 +30,22 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_hardware_h
-#define _H_hardware_h
+#include "hardware.h"
 
-#if !defined(__MSP430__REV__)
-#define __MSP430_REV__ 'J'
-#endif
+module PlatformSpiP {
+    provides interface StdControl as SpiControl;
+    uses interface Resource as SpiResource;
+}
+implementation {
+    command error_t SpiControl.start() {
+        return call SpiResource.immediateRequest();
+    }
 
-#include "msp430hardware.h"
+    command error_t SpiControl.stop() {
+        call SpiResource.release();
+        return SUCCESS;
+    }
 
-#define USE_BIT_BANG_SPI_MASTER
-#define BIT_BANG_SPI_MASTER_SINGLE_CONFIG BIT_BANG_SPI_MASTER_DEFAULT_CONFIG
-#define USE_BIT_BANG_I2C_MASTER
-
-#endif // _H_hardware_h
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
+    event void SpiResource.granted() {
+    }
+}

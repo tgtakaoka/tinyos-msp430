@@ -39,8 +39,9 @@
 
 #include "msp430hardware.h"
 
-//#define USE_BIT_BANG_SPI_MASTER
-#define USE_USI_SPI_MASTER Msp430Spi0C
+#define USE_BIT_BANG_SPI_MASTER
+#define BIT_BANG_SPI_MASTER_SINGLE_CONFIG BIT_BANG_SPI_MASTER_DEFAULT_CONFIG
+//#define USE_USI_SPI_MASTER Msp430Spi0C
 #define USE_BIT_BANG_I2C_MASTER
 
 #endif // _H_hardware_h
