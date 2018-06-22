@@ -39,7 +39,7 @@ configuration PlatformSpiC {
         interface SpiPacket;
     }
     uses {
-#if defined(USE_BIT_BANG_SPI_MASTER)
+#if defined(PLATFORM_SPI_MASTER_BITBANG)
         interface BitBangSpiMasterConfigure as SpiConfigure;
 #else
         interface Msp430SpiConfigure as SpiConfigure;
@@ -47,14 +47,22 @@ configuration PlatformSpiC {
     }
 }
 implementation {
-#if defined(USE_BIT_BANG_SPI_MASTER)
+#if defined(PLATFORM_SPI_MASTER_BITBANG)
     components new BitBangSpiMasterC() as SpiMasterC;
-#elif defined(USE_USI_SPI_MASTER)
-    components new USE_USI_SPI_MASTER() as SpiMasterC;
-#elif defined(USE_USCI_SPI_MASTER)
-    components new USE_USCI_SPI_MASTER() as SpiMasterC;
-#elif defined(USE_USART_SPI_MASTER)
-    components new USE_USART_SPI_MASTER() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USI)
+    components new Msp430SpiC() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USCI_A0)
+    components new Msp430SpiA0C() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USCI_A1)
+    components new Msp430SpiA1C() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USCI_B0)
+    components new Msp430SpiB0C() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USCI_B1)
+    components new Msp430SpiB1C() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USART0)
+    components new Msp430Spi0C() as SpiMasterC;
+#elif defined(PLATFORM_SPI_MASTER_USART1)
+    components new Msp430Spi1C() as SpiMasterC;
 #endif
     components PlatformSpiP as SpiP;
 

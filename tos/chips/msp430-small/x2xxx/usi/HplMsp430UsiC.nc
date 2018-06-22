@@ -32,34 +32,21 @@
 
 #include "msp430usi.h"
 
-generic configuration Msp430Spi0C() {
-    provides {
-        interface Resource;
-        interface ResourceRequested;
-        interface SpiByte;
-        interface SpiPacket;
-    }
-
-    uses interface Msp430SpiConfigure;
+configuration HplMsp430UsiC {
+    provides interface HplMsp430Usi;
+    provides interface HplMsp430UsiInterrupts;
 }
 implementation {
-    enum {
-        CLIENT_ID = unique(MSP430_SPI_BUS),
-    };
-
-    components Msp430SpiP as SpiP;
-
-    Resource = SpiP.Resource[CLIENT_ID];
-    SpiByte = SpiP.SpiByte;
-    SpiPacket = SpiP.SpiPacket[CLIENT_ID];
-    Msp430SpiConfigure = SpiP.Msp430SpiConfigure[CLIENT_ID];
-
-    components new Msp430Usi0C() as UsiC;
-    ResourceRequested = UsiC;
-    SpiP.ResourceConfigure[CLIENT_ID] <- UsiC.ResourceConfigure;
-    SpiP.UsiResource[CLIENT_ID] -> UsiC.Resource;
-    SpiP.UsiInterrupts -> UsiC.HplMsp430UsiInterrupts;
-    SpiP.Usi -> UsiC;
+    components HplMsp430UsiP as HplUsiP;
+    HplMsp430Usi = HplUsiP;
+    HplMsp430UsiInterrupts = HplUsiP;
+  
+    components HplMsp430GeneralIOC as GIO;
+    HplUsiP.SIMO -> GIO.USISDO;
+    HplUsiP.SOMI -> GIO.USISDI;
+    HplUsiP.UCLK -> GIO.USISCLK;
+    HplUsiP.SCL -> GIO.USISCL;
+    HplUsiP.SDA -> GIO.USISDA;  
 }
 
 /*
