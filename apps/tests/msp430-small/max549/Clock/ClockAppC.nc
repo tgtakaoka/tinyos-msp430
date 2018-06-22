@@ -41,11 +41,11 @@ implementation {
 
     components new HplMax549P();
     components PlatformSpiC as SpiC;
-    components HplMsp430GeneralIOC as GpioC;
+    components HplMsp430GeneralIOC as PinsC;
     components new Msp430GpioC() as Max549CS;
     components new Max549P();
 
-    Max549CS -> GpioC.Port13;
+    Max549CS -> PinsC.Port13;
     HplMax549P.Boot -> MainC.Boot;
     HplMax549P.CS -> Max549CS;
     HplMax549P.SpiByte -> SpiC;
