@@ -18,11 +18,11 @@ FAIL_KNOWNS=(
 )
 
 if [[ -t 1 ]]; then
-    COLOR_RED="\e[31m"
-    COLOR_GREEN="\e[32m"
-    COLOR_YELLOW="\e[33m"
-    COLOR_BLUE="\e[34m"
-    COLOR_OFF="\e[m"
+    COLOR_RED=$(tput setaf 1)
+    COLOR_GREEN=$(tput setaf 2)
+    COLOR_YELLOW=$(tput setaf 3)
+    COLOR_BLUE=$(tput setaf 4)
+    COLOR_OFF=$(tput sgr0)
 else
     COLOR_RED=
     COLOR_GREEN=
@@ -145,7 +145,7 @@ function build_project {
 	in_array "${project_target}" "${FAIL_EXPECTS[@]}" \
 	    && status="${COLOR_YELLOW}FAIL"
     fi
-    echo -e "${status}: ${target} ${project}${COLOR_OFF}"
+    echo "${status}: ${target} ${project}${COLOR_OFF}"
 }
 
 setup_targets "${ROOT_TARGETS}"
@@ -174,7 +174,7 @@ for arg in "$@"; do
 	targets+=(clean)
     else
 	errors+=("${arg}")
-	echo -e "${COLOR_RED}@@@@@ Skip unknown argument: ${arg}${COLOR_OFF}" 1>&2
+	echo "${COLOR_RED}@@@@@ Skip unknown argument: ${arg}${COLOR_OFF}" 1>&2
     fi
 done
 [[ ${#errors[@]} -gt 0 ]] && exit 0
