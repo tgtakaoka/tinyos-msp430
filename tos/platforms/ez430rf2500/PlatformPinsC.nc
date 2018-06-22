@@ -35,13 +35,13 @@
 configuration PlatformPinsC {
     provides {
         interface GeneralIO as SpiCS0;
-#ifdef USE_BIT_BANG_SPI_MASTER
+#ifdef PLATFORM_SPI_MASTER_BITBANG
         interface GeneralIO as SpiSIMO;
         interface GeneralIO as SpiSOMI;
         interface GeneralIO as SpiCLK;
 #endif
 
-#ifdef USE_BIT_BANG_I2C_MASTER
+#ifdef PLATFORM_I2C_MASTER_BITBANG
         interface GeneralIO as I2CSCL;
         interface GeneralIO as I2CSDA;
 #endif
@@ -54,7 +54,7 @@ implementation {
     STE0  -> IOC.Port30;
     SpiCS0  = STE0;
 
-#ifdef USE_BIT_BANG_SPI_MASTER
+#ifdef PLATFORM_SPI_MASTER_BITBANG
     components new Msp430GpioC() as SIMO0;
     components new Msp430GpioC() as SOMI0;
     components new Msp430GpioC() as CLK0;
@@ -66,7 +66,7 @@ implementation {
     SpiSOMI = SOMI0;
 #endif
 
-#ifdef USE_BIT_BANG_I2C_MASTER
+#ifdef PLATFORM_I2C_MASTER_BITBANG
     components new Msp430GpioC() as SCL0;
     components new Msp430GpioC() as SDA0;
     SCL0 -> IOC.Port26;
