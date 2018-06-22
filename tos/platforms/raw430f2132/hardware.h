@@ -40,12 +40,12 @@
 #include "msp430hardware.h"
 #include "msp430usci.h"
 
-//#define USE_BIT_BANG_SPI_MASTER
-#define USE_USCI_SPI_MASTER Msp430SpiA0C
-//#define USE_USCI_SPI_MASTER Msp430SpiB0C
-//#define USE_BIT_BANG_I2C_MASTER
-#define USE_USCI_I2C_MASTER Msp430I2CB0C
-#define USE_USCI_UART Msp430UartA0C
+//#define PLATFORM_SPI_MASTER_BITBANG
+#define PLATFORM_SPI_MASTER_USCI_A0
+//#define PLATFORM_SPI_MASTER_USCI_B0
+//#define PLATFORM_I2C_MASTER_BITBANG
+#define PLATFORM_I2C_MASTER_USCI_B0
+#define PLATFORM_UART_USCI_A0
 
 #endif // _H_hardware_h
 

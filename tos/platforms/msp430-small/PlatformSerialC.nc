@@ -39,7 +39,7 @@ configuration PlatformSerialC {
         interface UartByte;
     }
     uses {
-#if defined(USE_BIT_BANG_UART)
+#if defined(PLATFORM_UART_BITBANG)
         interface BitBangUartConfigure as SerialConfigure;
 #else
         interface Msp430UartConfigure as SerialConfigure;
@@ -47,12 +47,16 @@ configuration PlatformSerialC {
     }
 }
 implementation {
-#if defined(USE_BIT_BANG_UART)
+#if defined(PLATFORM_UART_BITBANG)
     components new BitBangUartC() as SerialC;
-#elif defined(USE_USCI_UART)
-    components new USE_USCI_UART() as SerialC;
-#elif defined(USE_USART_UART)
-    components new USE_USART_UART() as SerialC;
+#elif defined(PLATFORM_UART_USCI_A0)
+    components new Msp430UartA0C() as SerialC;
+#elif defined(PLATFORM_UART_USCI_A1)
+    components new Msp430UartA1C() as SerialC;
+#elif defined(PLATFORM_UART_USART0)
+    components new Msp430Uart0C() as SerialC;
+#elif defined(PLATFORM_UART_USART1)
+    components new Msp430Uart1C() as SerialC;
 #endif
     components PlatformSerialP as SerialP;
 

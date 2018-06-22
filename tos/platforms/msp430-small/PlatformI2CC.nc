@@ -38,7 +38,7 @@ configuration PlatformI2CC {
         interface I2CPacket<TI2CBasicAddr>;
     }
     uses {
-#if defined(USE_BIT_BANG_I2C_MASTER)
+#if defined(PLATFORM_I2C_MASTER_BITBANG)
         interface BitBangI2CMasterConfigure as I2CConfigure;
 #else
         interface Msp430I2CConfigure as I2CConfigure;
@@ -46,14 +46,16 @@ configuration PlatformI2CC {
     }
 }
 implementation {
-#if defined(USE_BIT_BANG_I2C_MASTER)
+#if defined(PLATFORM_I2C_MASTER_BITBANG)
     components new BitBangI2CMasterC() as I2CMasterC;
-#elif defined(USE_USI_I2C_MASTER)
-    components new USE_USI_I2C_MASTER() as I2CMasterC;
-#elif defined(USE_USCI_I2C_MASTER)
-    components new USE_USCI_I2C_MASTER() as I2CMasterC;
-#elif defined(USE_USART_I2C_MASTER)
-    components new USE_USART_I2C_MASTER() as I2CMasterC;
+#elif defined(PLATFORM_I2C_MASTER_USI)
+    components new Msp430I2CC() as I2CMasterC;
+#elif defined(PLATFORM_I2C_MASTER_USCI_B0)
+    components new Msp430I2CB0C() as I2CMasterC;
+#elif defined(PLATFORM_I2C_MASTER_USCI_B1)
+    components new Msp430I2CB1C() as I2CMasterC;
+#elif defined(PLATFORM_I2C_MASTER_USART0)
+    components new Msp430I2CC() as I2CMasterC;
 #endif
     components PlatformI2CP as I2CP;
 
