@@ -32,7 +32,7 @@
 
 module PlatformLedP {
     provides {
-        interface MultiLed;;
+        interface MultiLed;
         interface Led[uint8_t led_id];
     }
     uses interface Leds;
