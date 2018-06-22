@@ -68,7 +68,7 @@ To do
 * [MSP430I2041](http://www.ti.com/product/MSP430I2041) (28pin, 16MHz, 32KB Flash, 2KB RAM)
 * [MSP430AFE253](http://www.ti.com/product/MSP430AFE253) (24pin, 12MHz, 16KB Flash, 512B RAM)
 * [MSP-EXP430FR2311](http://www.ti.com/tool/MSP-EXP430FR2311)
-* [MSP-EXP430FR2355[(http://www.ti.com/tool/MSP-EXP430FR2355)
+* [MSP-EXP430FR2355](http://www.ti.com/tool/MSP-EXP430FR2355)
 * [MSP-EXP430FR2433](http://www.ti.com/tool/MSP-EXP430FR2433)
 * [MSP-EXP430FR4133](http://www.ti.com/tool/MSP-EXP430FR4133)
 * [MSP-EXP430FR5739](http://www.ti.com/tool/MSP-EXP430FR5739)
