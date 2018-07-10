@@ -233,7 +233,7 @@ implementation {
   }
 
   command void Msp430ClockInit.defaultSetupDcoCalibrate() {
-#if !defined(__MSP430_HAS_BC2__)
+#if defined(__MSP430_HAS_BASIC_CLOCK__)
   
     // --- setup ---
 
@@ -256,7 +256,7 @@ implementation {
     BCSCTL1 = XT2OFF;                        // LF mode, ACLK=LFXT1CLK/1
     BCSCTL2 = SELM_0 | DIVM_0 | DIVS_0 /* | DCOR */;
 #endif
-#endif /* __MSP430_HAS_BC2__ */
+#endif /* __MSP430_HAS_BASIC_CLOCK__ */
 
     /*
      * leave BCSCTL3 alone, resets to 0x05,
@@ -265,7 +265,7 @@ implementation {
   }
     
   command void Msp430ClockInit.defaultInitClocks() {
-#if !defined(__MSP430_HAS_BC2__)
+#if defined(__MSP430_HAS_BASIC_CLOCK__)
     // BCSCTL1
     // .XT2OFF = 1;	disable the external oscillator for SCLK and MCLK
     // .XTS    = 0;	set low frequency mode for LXFT1
@@ -282,7 +282,7 @@ implementation {
     BCSCTL2 = SMCLK_DIVS;
 
     // BCSCTL3: use default, on reset set to 4, 6pF.
-#else /* __MSP430_HAS_BC2__ */
+#elif defined(__MSP430_HAS_BC2__)
 #if 0
     P2SEL |= 0xc0;                      // P2.6=XIN, P2.7=XOUT
     P2DIR = 0x80 | (P2DIR & ~0xc0);     // some chips need P2.7 set as output
@@ -536,7 +536,7 @@ uint16_t test_calib_busywait_delta(uint16_t calib) {
 #endif
 
     atomic {
-#if !defined(__MSP430_HAS_BC2__)
+#if defined(__MSP430_HAS_BASIC_CLOCK__)
       signal Msp430ClockInit.setupDcoCalibrate();
       busyCalibrateDco();
 #endif
