@@ -32,17 +32,20 @@
 
 /**
  * @author Cory Sharp <cssharp@eecs.berkeley.edu>
- * @author Vlado Handziski <handzisk@tkn.tu-berlin.de>
  */
 
-interface Msp430ClockInit
+configuration Msp430ClockC
 {
-  event void initClocks();
-  event void initTimerMicro();
-  event void initTimerMilli();
-
-  command void defaultInitClocks();
-  command void defaultInitTimerMicro();
-  command void defaultInitTimerMilli();
+  provides interface Init;
+  provides interface Msp430ClockInit;
 }
+implementation
+{
+  components Msp430ClockP, McuSleepC;
+  components Msp430CalibrateDcoC;
 
+  Init = Msp430ClockP;
+  Msp430ClockInit = Msp430ClockP;
+  Msp430CalibrateDcoC.CalibrateDco -> Msp430ClockP;
+  McuSleepC.McuPowerOverride -> Msp430ClockP;
+}
