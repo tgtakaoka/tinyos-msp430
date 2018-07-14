@@ -71,19 +71,36 @@ function is_large_project {
     in_array "${project}" "${LARGE_PROJECTS[@]}"
 }
 
+function insertion_sort {
+    local -a list=("$@")
+    local p i
+    for ((p = 1; p < ${#list[@]}; p++)); do
+	# search the insertion point of list[p].
+	for ((i = p; i > 0; i--)); do
+	    [[ "${list[i-1]}" < "${list[p]}" ]] && break
+	done
+	((i == p)) && continue
+	# move list[p] before list[i]
+	list=("${list[@]:0:i}" "${list[p]}" "${list[i]}" "${list[@]:i+1:p-(i+1)}" "${list[@]:p+1}")
+    done
+    echo "${list[@]}"
+}
+
 function setup_targets {
     TARGETS=()
     TARGET_MCUS=()
     MCUS=()
 
     local root="$1"
-    local p target
+    local p target mcu
     for p in $(find "${root}" -name '*.target' | sort); do
 	target=$(basename "${p}" .target)
 	mcu=$(grep -w MSP_MCU "${p}" | sed -E 's/MSP_MCU *[?:]?= *(.*)$/\1/')
-	TARGETS+=("${target}")
 	TARGET_MCUS+=("${target}:${mcu}")
 	in_array "${mcu}" "${MCUS[@]}" || MCUS+=("${mcu}")
+    done
+    for mcu in $(insertion_sort "${MCUS[@]}"); do
+	TARGETS+=($(get_targets_of "${mcu}"))
     done
 }
 
