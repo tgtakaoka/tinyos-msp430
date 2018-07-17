@@ -65,52 +65,39 @@ implementation {
 
     event void CalibrateDco.busyWaitCalibrateDco() {
         const uint16_t saved_bcsctl1 = BCSCTL1 & ~RSEL_MASK;
-        uint16_t previous;
-        int16_t loop;
+        uint16_t calib = (RSEL_MAX << 8);
+        uint16_t bit = calib;
 
-        BCSCTL1 = BCSCTL1_BITS | RSEL_MAX;
         call Control.disableEvents();
         call Control.setControlAsCapture(MSP430TIMER_CM_RISING, MSP430TIMER_CCI_B);
         call Timer.setControl(MSP430TIMER_CONTINUOUS_MODE,
                               MSP430TIMER_SMCLK,
                               MSP430TIMER_CLOCKDIV_1);
-        while (!call Control.isInterruptPending())
-            ;
         call Control.clearPendingInterrupt();
-        previous = call Capture.getEvent();
-        for (loop = 0; loop < MAX_LOOP; loop++) {
+        while (bit != 0) {
             int16_t value;
+            BCSCTL1 = XT2OFF | DIVA_3 | (calib >> 8);
+            DCOCTL = (calib & 0xff);
             while (!call Control.isInterruptPending())
                 ;
             call Control.clearPendingInterrupt();
-            value = call Capture.getEvent() - previous;
-            previous = call Capture.getEvent();
+            value = call Capture.getEvent();
+            while (!call Control.isInterruptPending())
+                ;
+            call Control.clearPendingInterrupt();
+            value = call Capture.getEvent() - value;
             value -= DELTA;
             if (value == 0 || value == -1)
                 break; // calibrated.
-            if (value < 0) {
-                if (++DCOCTL == 0) {
-                    if (BCSCTL1 == (BCSCTL1_BITS | RSEL_MASK)) {
-                        DCOCTL = 0xff; // set fastest DCO.
-                        break;
-                    }
-                    BCSCTL1++;
-                }
+            if (value >= 0) // DCO is too fast.
+                calib &= ~bit; // slow down DCO.
+            calib |= (bit >>= 1);
 #if defined(__MSP430_HAS_BC2__) && defined(CALDCO_16MH_)
-                if (DCOCTL == CALDCO_16MHZ
-                    && BCSCTL1 == (BCSCTL1_BITS | CALBC1_16MHZ)) {
-                    break; // fastest DCO.
-                }
-#endif
-            } else {
-                if (--DCOCTL == 0) {
-                    if ((BCSCTL1 & RSEL_MASK) == 0) {
-                        DCOCTL = 0; // set slowest DCO.
-                        break;
-                    }
-                    BCSCTL1--;
-                }
+            while (calib > ((CALBC1_16MHZ << 8) | CALDCO_16MHZ) && bit != 0) {
+                calib &= ~bit;
+                calib |= (bit >>= 1);
             }
+#endif
         }
         BCSCTL1 = (BCSCTL1 & RSEL_MASK) | saved_bcsctl1;
     }
