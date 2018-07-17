@@ -59,8 +59,6 @@ implementation {
 #error "Unknown clock system"
 #endif
         DELTA = (uint16_t)(TARGET_DCO_HZ / (ACLK_HZ / 8)),
-        MAX_LOOP = 10000,
-        BCSCTL1_BITS = XT2OFF | DIVA_3, // ACLK = LFXT1 / 8.
     };
 
     event void CalibrateDco.busyWaitCalibrateDco() {
