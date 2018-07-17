@@ -123,6 +123,14 @@ implementation
     TxCTL = (TxCTL & ~(ID0|ID1)) | ((inputDivider << 6) & (ID0|ID1));
   }
 
+  async command void Timer.setControl(int mode, int clockSource, int inputDivider)
+  {
+    TxCTL = (TxCTL & ~(MC1|MC0|TxSSEL1|TxSSEL0|ID1|ID0))
+        | ((mode << 4) & (MC1|MC0))
+        | ((clockSource << 8) & (TxSSEL1|TxSSEL0))
+        | ((inputDivider << 6) & (ID1|ID0));
+  }
+
   async event void VectorTimerX0.fired()
   {
     signal Event.fired[0]();

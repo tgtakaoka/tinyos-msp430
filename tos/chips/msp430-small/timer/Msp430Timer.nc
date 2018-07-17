@@ -32,17 +32,29 @@
 
 /**
  * @author Cory Sharp <cssharp@eecs.berkeley.edu>
- * @author Vlado Handziski <handzisk@tkn.tu-berlin.de>
+ * @author Jan Hauer <hauer@tkn.tu-berlin.de>
  */
 
-interface Msp430ClockInit
-{
-  event void initClocks();
-  event void initTimerMicro();
-  event void initTimerMilli();
+//@author Cory Sharp <cssharp@eecs.berkeley.edu>
+//@author Jan Hauer <hauer@tkn.tu-berlin.de>
 
-  command void defaultInitClocks();
-  command void defaultInitTimerMicro();
-  command void defaultInitTimerMilli();
+#include "Msp430Timer.h"
+
+interface Msp430Timer
+{
+  async command uint16_t get();
+  async command bool isOverflowPending();
+  async command void clearOverflow();
+  async event void overflow();
+
+  async command void setMode( int mode );
+  async command int getMode();
+  async command void clear();
+  async command void enableEvents();
+  async command void disableEvents();
+  async command void setClockSource( uint16_t clockSource );
+  async command void setInputDivider( uint16_t inputDivider );
+  async command void setControl(int mode, int clockSource, int inputDivider);
+  // partial timer management, add more commands here as appropriate
 }
 
