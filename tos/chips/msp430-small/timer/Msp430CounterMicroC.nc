@@ -1,6 +1,6 @@
-//$Id: Msp430Timer32khzMapC.nc,v 1.5 2010-06-29 22:07:45 scipio Exp $
-
-/* Copyright (c) 2000-2003 The Regents of the University of California.
+/*
+ * Copyright (c) 2013 Eric B. Decker
+ * Copyright (c) 2000-2003 The Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,43 +32,25 @@
  */
 
 /**
- * Msp430Timer32khzMapC presents as paramaterized interfaces all of the 32khz
- * hardware timers on the MSP430 that are available for compile time allocation
- * by "new Alarm32khz16C()", "new AlarmMilli32C()", and so on.
- *
- * Platforms based on the MSP430 are encouraged to copy in and override this
- * file, presenting only the hardware timers that are available for allocation
- * on that platform.
+ * Msp430CounterMicroC provides the standard 1 uis (or 1 us) counter for the
+ * MSP430.   If your base clock is in units of binary hertz then 1 uis, decimal
+ * hertz it will be 1us.
  *
  * @author Cory Sharp <cssharp@eecs.berkeley.edu>
+ * @see  Please refer to TEP 102 for more information about this component and its
+ *          intended use.
  */
 
-configuration Msp430Timer32khzMapC
+configuration Msp430CounterMicroC
 {
-  provides interface Msp430Timer[ uint8_t id ];
-  provides interface Msp430TimerControl[ uint8_t id ];
-  provides interface Msp430Compare[ uint8_t id ];
+  provides interface Counter<TMicro,uint16_t> as Msp430CounterMicro;
 }
 implementation
 {
-  components Msp430TimerC;
+  components Msp430TimerC
+           , new Msp430CounterC(TMicro) as Counter
+           ;
 
-#if defined(__MSP430_HAS_TA2__) || defined(__MSP430_HAS_TA3__)
-  Msp430Timer[0] = Msp430TimerC.TimerA;
-  Msp430TimerControl[0] = Msp430TimerC.ControlA0;
-  Msp430Compare[0] = Msp430TimerC.CompareA0;
-
-  Msp430Timer[1] = Msp430TimerC.TimerA;
-  Msp430TimerControl[1] = Msp430TimerC.ControlA1;
-  Msp430Compare[1] = Msp430TimerC.CompareA1;
-
-#if defined(__MSP430_HAS_TA3__)
-  Msp430Timer[2] = Msp430TimerC.TimerA;
-  Msp430TimerControl[2] = Msp430TimerC.ControlA2;
-  Msp430Compare[2] = Msp430TimerC.CompareA2;
-#endif
-
-#else
-#error "No timer is configurated for Timer 32kiHz"
-#endif / *defined(__MSP430_HAS_TA2__) || defined(__MSP430_HAS_TA3__) */
+  Msp430CounterMicro = Counter;
+  Counter.Msp430Timer -> Msp430TimerC.TimerA;
 }

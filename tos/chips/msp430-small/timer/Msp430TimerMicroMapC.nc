@@ -1,6 +1,6 @@
-//$Id: Msp430Timer32khzMapC.nc,v 1.5 2010-06-29 22:07:45 scipio Exp $
-
-/* Copyright (c) 2000-2003 The Regents of the University of California.
+/*
+ * Copyright (c) 2013, Eric B. Decker
+ * Copyright (c) 2010, Vanderbilt University
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -13,7 +13,7 @@
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the
  *   distribution.
- * - Neither the name of the copyright holders nor the names of
+ * - Neither the name of the copyright holder nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
  *
@@ -29,31 +29,30 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * Author: Janos Sallai
+ *
+ * x1x2 Msp430TimerMicroMapC
+ *
+ * The x1/x2 processors have dual timers, TA3 and TB7.
+ * TimerA is assigned by the platform to TMicro.  This module hands
+ * out control registers for the TA3 control cells.
+ *
+ * TimerB is assigned to 32KHiZ which is used by TMilli.  See
+ * Msp430Timer32khzMapC which hands out TimerB controls.
  */
 
-/**
- * Msp430Timer32khzMapC presents as paramaterized interfaces all of the 32khz
- * hardware timers on the MSP430 that are available for compile time allocation
- * by "new Alarm32khz16C()", "new AlarmMilli32C()", and so on.
- *
- * Platforms based on the MSP430 are encouraged to copy in and override this
- * file, presenting only the hardware timers that are available for allocation
- * on that platform.
- *
- * @author Cory Sharp <cssharp@eecs.berkeley.edu>
- */
-
-configuration Msp430Timer32khzMapC
-{
+configuration Msp430TimerMicroMapC {
   provides interface Msp430Timer[ uint8_t id ];
   provides interface Msp430TimerControl[ uint8_t id ];
   provides interface Msp430Compare[ uint8_t id ];
 }
-implementation
-{
+
+implementation {
   components Msp430TimerC;
 
-#if defined(__MSP430_HAS_TA2__) || defined(__MSP430_HAS_TA3__)
+#if deiined(__MSP430_HAS_T1A2__) || (defined(__MSP430_HAS_T1A3__)
+
   Msp430Timer[0] = Msp430TimerC.TimerA;
   Msp430TimerControl[0] = Msp430TimerC.ControlA0;
   Msp430Compare[0] = Msp430TimerC.CompareA0;
@@ -62,13 +61,44 @@ implementation
   Msp430TimerControl[1] = Msp430TimerC.ControlA1;
   Msp430Compare[1] = Msp430TimerC.CompareA1;
 
-#if defined(__MSP430_HAS_TA3__)
+#if defined(__MSP430_HAS_T1A3__)
   Msp430Timer[2] = Msp430TimerC.TimerA;
   Msp430TimerControl[2] = Msp430TimerC.ControlA2;
   Msp430Compare[2] = Msp430TimerC.CompareA2;
 #endif
 
+#elif defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
+  Msp430Timer[0] = Msp430TimerC.TimerB;
+  Msp430TimerControl[0] = Msp430TimerC.ControlB0;
+  Msp430Compare[0] = Msp430TimerC.CompareB0;
+
+  Msp430Timer[1] = Msp430TimerC.TimerB;
+  Msp430TimerControl[1] = Msp430TimerC.ControlB1;
+  Msp430Compare[1] = Msp430TimerC.CompareB1;
+
+  Msp430Timer[2] = Msp430TimerC.TimerB;
+  Msp430TimerControl[2] = Msp430TimerC.ControlB2;
+  Msp430Compare[2] = Msp430TimerC.CompareB2;
+
+#if defined(__MSP430_HAS_TB7__)
+  Msp430Timer[3] = Msp430TimerC.TimerB;
+  Msp430TimerControl[3] = Msp430TimerC.ControlB3;
+  Msp430Compare[3] = Msp430TimerC.CompareB3;
+
+  Msp430Timer[4] = Msp430TimerC.TimerB;
+  Msp430TimerControl[4] = Msp430TimerC.ControlB4;
+  Msp430Compare[4] = Msp430TimerC.CompareB4;
+
+  Msp430Timer[5] = Msp430TimerC.TimerB;
+  Msp430TimerControl[5] = Msp430TimerC.ControlB5;
+  Msp430Compare[5] = Msp430TimerC.CompareB5;
+
+  Msp430Timer[6] = Msp430TimerC.TimerB;
+  Msp430TimerControl[6] = Msp430TimerC.ControlB6;
+  Msp430Compare[6] = Msp430TimerC.CompareB6;
+#endif
+
 #else
-#error "No timer is configurated for Timer 32kiHz"
-#endif / *defined(__MSP430_HAS_TA2__) || defined(__MSP430_HAS_TA3__) */
+#error "No timer is configured for Timer 1MiHz"
+#endif
 }
