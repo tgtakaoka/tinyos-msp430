@@ -41,11 +41,14 @@ module LocalTimeC {
     uses interface Led;
 }
 implementation {
-    uint8_t prevSec = -1;
-    uint8_t message[] = "HH:MM:SS\r\n";
+    uint8_t m_prevSec = -1;
+    uint8_t m_timeBuf[] = "HH:MM:SS\r\n";
+    uint8_t m_prefixLen = 0;
+    uint8_t m_prefixBuf[4];
 
-    uint8_t *getSendBuf() {
-        return message + sizeof(message) - 1;
+    event void Boot.booted() {
+        call SerialControl.start();
+        call Timer.startPeriodic(100);
     }
 
     void dec2(uint8_t *p, uint16_t v) {
@@ -60,41 +63,35 @@ implementation {
         call Led.set(time % 1000 < 100);
 
         sec = (time /= 1000) % 60;
-        if (sec == prevSec)
+        if (sec == m_prevSec)
             return;
 
-        prevSec = sec;
-        dec2(message + 6, sec);
-        dec2(message + 3, (time /= 60) % 60);
-        dec2(message + 0, (time /= 60) % 24);
-        call UartStream.send(message, sizeof(message) - 1);
-    }
-
-    task void echoBack() {
-        uint8_t *sendBuf = getSendBuf();
-        if (*sendBuf == '\r' || *sendBuf == '\n') {
-            call UartStream.send(sendBuf - 2, 2);
-        } else {
-            call UartStream.send(sendBuf, 1);
+        m_prevSec = sec;
+        dec2(m_timeBuf + 6, sec);
+        dec2(m_timeBuf + 3, (time /= 60) % 60);
+        dec2(m_timeBuf + 0, (time /= 60) % 24);
+        atomic {
+            call UartStream.send(m_prefixBuf, m_prefixLen);
         }
     }
 
-    async event void UartStream.receivedByte(uint8_t byte) { 
-        *getSendBuf() = byte;
-        post echoBack();
+    async event void UartStream.sendDone(
+        uint8_t *buf, uint16_t len, error_t error) {
+        if (buf == m_prefixBuf)
+            call UartStream.send(m_timeBuf, sizeof(m_timeBuf));
     }
 
-    async event void UartStream.sendDone(uint8_t *buf, uint16_t len, error_t error) {}
+    async event void UartStream.receivedByte(uint8_t byte) {
+        m_prefixBuf[m_prefixLen++] = byte;
+        m_prefixLen %= sizeof(m_prefixBuf);
+    }
 
-    async event void UartStream.receiveDone(uint8_t *buf, uint16_t len, error_t error) {}
+    async event void UartStream.receiveDone(
+        uint8_t *buf, uint16_t len, error_t error) {
+    }
 
     event void Timer.fired() {
         post sendMessage();
-    }
-
-    event void Boot.booted() {
-        call SerialControl.start();
-        call Timer.startPeriodic(100);
     }
 }
 
