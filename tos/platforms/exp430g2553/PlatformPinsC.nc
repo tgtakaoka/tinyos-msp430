@@ -1,5 +1,5 @@
-/* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G. Takaoka
+/* -*- mode: nesc; mode: flyspell-prog; -*- */
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,27 +30,48 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_hardware_h
-#define _H_hardware_h
+#include "hardware.h"
 
-#if !defined(__MSP430__REV__)
-#define __MSP430_REV__ 'D'
+configuration PlatformPinsC {
+    provides {
+        interface GeneralIO as SpiCS0;
+#ifdef PLATFORM_SPI_MASTER_BITBANG
+        interface GeneralIO as SpiSIMO;
+        interface GeneralIO as SpiSOMI;
+        interface GeneralIO as SpiCLK;
 #endif
 
-#include "msp430hardware.h"
+#ifdef PLATFORM_I2C_MASTER_BITBANG
+        interface GeneralIO as I2CSCL;
+        interface GeneralIO as I2CSDA;
+#endif
+    }
+}
+implementation {
+    components HplMsp430GeneralIOC as IOC;
 
-#define PLATFORM_SPI_MASTER_BITBANG
-#define BIT_BANG_SPI_MASTER_SINGLE_CONFIG BIT_BANG_SPI_MASTER_DEFAULT_CONFIG
-//#define PLATFORM_SPI_MASTER_USI
-#define PLATFORM_I2C_MASTER_BITBANG
+    components new Msp430GpioC() as STE0;
+    STE0  -> IOC.Port15;
+    SpiCS0  = STE0;
 
-#endif // _H_hardware_h
+#ifdef PLATFORM_SPI_MASTER_BITBANG
+    components new Msp430GpioC() as SIMO0;
+    components new Msp430GpioC() as SOMI0;
+    components new Msp430GpioC() as CLK0;
+    CLK0  -> IOC.Port14;
+    SIMO0 -> IOC.Port12;
+    SOMI0 -> IOC.Port11;
+    SpiCLK  = CLK0;
+    SpiSIMO = SIMO0;
+    SpiSOMI = SOMI0;
+#endif
 
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
+#ifdef PLATFORM_I2C_MASTER_BITBANG
+    components new Msp430GpioC() as SCL0;
+    components new Msp430GpioC() as SDA0;
+    SCL0 -> IOC.Port16;
+    SDA0 -> IOC.Port17;
+    I2CSCL = SCL0;
+    I2CSDA = SDA0;
+#endif
+}

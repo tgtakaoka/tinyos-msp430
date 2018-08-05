@@ -51,7 +51,7 @@ implementation {
     components HplMsp430GeneralIOC as IOC;
 
     components new Msp430GpioC() as STE0;
-    STE0  -> IOC.Port12;
+    STE0  -> IOC.Port14;
     SpiCS0  = STE0;
 
 #ifdef PLATFORM_SPI_MASTER_BITBANG
@@ -59,8 +59,8 @@ implementation {
     components new Msp430GpioC() as SOMI0;
     components new Msp430GpioC() as CLK0;
     CLK0  -> IOC.Port15;
-    SIMO0 -> IOC.Port14;
-    SOMI0 -> IOC.Port13;
+    SIMO0 -> IOC.Port16;
+    SOMI0 -> IOC.Port17;
     SpiCLK  = CLK0;
     SpiSIMO = SIMO0;
     SpiSOMI = SOMI0;
@@ -69,8 +69,8 @@ implementation {
 #ifdef PLATFORM_I2C_MASTER_BITBANG
     components new Msp430GpioC() as SCL0;
     components new Msp430GpioC() as SDA0;
-    SCL0 -> IOC.Port14;
-    SDA0 -> IOC.Port13;
+    SCL0 -> IOC.Port16;
+    SDA0 -> IOC.Port17;
     I2CSCL = SCL0;
     I2CSDA = SDA0;
 #endif

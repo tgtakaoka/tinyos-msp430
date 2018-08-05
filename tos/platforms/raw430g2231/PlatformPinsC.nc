@@ -51,16 +51,16 @@ implementation {
     components HplMsp430GeneralIOC as IOC;
 
     components new Msp430GpioC() as STE0;
-    STE0  -> IOC.Port15;
+    STE0  -> IOC.Port14;
     SpiCS0  = STE0;
 
 #ifdef PLATFORM_SPI_MASTER_BITBANG
     components new Msp430GpioC() as SIMO0;
     components new Msp430GpioC() as SOMI0;
     components new Msp430GpioC() as CLK0;
-    CLK0  -> IOC.Port14;
-    SIMO0 -> IOC.Port12;
-    SOMI0 -> IOC.Port11;
+    CLK0  -> IOC.Port15;
+    SIMO0 -> IOC.Port16;
+    SOMI0 -> IOC.Port17;
     SpiCLK  = CLK0;
     SpiSIMO = SIMO0;
     SpiSOMI = SOMI0;
