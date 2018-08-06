@@ -30,8 +30,6 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "hardware.h"
-
 configuration PlatformC {
     provides {
         interface Init;

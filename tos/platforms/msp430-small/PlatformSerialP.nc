@@ -30,8 +30,6 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "hardware.h"
-
 module PlatformSerialP {
     provides interface StdControl as SerialControl;
     uses interface Resource as SerialResource;

@@ -30,20 +30,37 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module PlatformSpiP {
-    provides interface StdControl as SpiControl;
-    uses interface Resource as SpiResource;
+#include "hardware.h"
+
+module PlatformI2CP {
+    provides interface StdControl as I2CControl;
+    uses interface Resource as I2CResource;
 }
 implementation {
-    command error_t SpiControl.start() {
-        return call SpiResource.immediateRequest();
+    // To enable USCI I2C pins, P1SEL2 is necessary to set 1 on MSP430G2553.
+    // P1.6=UCB0SCL
+    // P1.7=UCB0SDA
+#if defined(PLATFORM_I2C_MASTER_USCI_B0)
+    enum {
+        USCI_PINS = (1 << 6) | (1 << 7),
+    };
+#endif
+
+    command error_t I2CControl.start() {
+#if defined(PLATFORM_I2C_MASTER_USCI_B0)
+        P1SEL2 |= USCI_PINS;
+#endif
+        return call I2CResource.immediateRequest();
     }
 
-    command error_t SpiControl.stop() {
-        call SpiResource.release();
+    command error_t I2CControl.stop() {
+        call I2CResource.release();
+#if defined(PLATFORM_I2C_MASTER_USCI_B0)
+        P1SEL2 &= ~USCI_PINS;
+#endif
         return SUCCESS;
     }
 
-    event void SpiResource.granted() {
+    event void I2CResource.granted() {
     }
 }

@@ -51,7 +51,13 @@ implementation {
     components HplMsp430GeneralIOC as IOC;
 
     components new Msp430GpioC() as STE0;
+#if defined(PLATFORM_SPI_MASTER_BITBANG)
     STE0  -> IOC.Port15;
+#elif defined(PLATFORM_SPI_MASTER_USCI_A0)
+    STE0  -> IOC.Port15;
+#elif defined(PLATFORM_SPI_MASTER_USCI_B0)
+    STE0  -> IOC.Port14;
+#endif
     SpiCS0  = STE0;
 
 #ifdef PLATFORM_SPI_MASTER_BITBANG
