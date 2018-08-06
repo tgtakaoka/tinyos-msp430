@@ -2,7 +2,9 @@
 
 PFLAGS += -I%T/chips/msp430-small/mcu/msp430f11x2
 PFLAGS += -I%T/chips/msp430-small/clock_bcs
+PFLAGS += -I%T/chips/msp430-small/x1x2/timer
 PFLAGS += -I%T/chips/msp430-small/x1xxx
 
 PFLAGS += -I%T/chips/msp430/clock_bcs
+PFLAGS += -I%T/chips/msp430/x1x2/timer
 PFLAGS += -I%T/chips/msp430/x1xxx
