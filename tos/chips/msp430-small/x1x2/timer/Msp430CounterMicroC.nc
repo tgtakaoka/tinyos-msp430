@@ -1,5 +1,6 @@
-
-/* Copyright (c) 2000-2003 The Regents of the University of California.
+/*
+ * Copyright (c) 2013 Eric B. Decker
+ * Copyright (c) 2000-2003 The Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,24 +32,28 @@
  */
 
 /**
+ * Msp430CounterMicroC provides the standard 1 uis (or 1 us) counter for the
+ * MSP430.   If your base clock is in units of binary hertz then 1 uis, decimal
+ * hertz it will be 1us.
+ *
  * @author Cory Sharp <cssharp@eecs.berkeley.edu>
- * @author Vlado Handziski <handzisk@tkn.tu-berlin.de>
+ * @see  Please refer to TEP 102 for more information about this component and its
+ *          intended use.
  */
 
-interface Msp430ClockInit
+configuration Msp430CounterMicroC
 {
-  event void setupDcoCalibrate();
-  event void initClocks();
-  event void initTimerA();
-#if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
-  event void initTimerB();
-#endif
-
-  command void defaultSetupDcoCalibrate();
-  command void defaultInitClocks();
-  command void defaultInitTimerA();
-#if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
-  command void defaultInitTimerB();
-#endif
+  provides interface Counter<TMicro,uint16_t> as Msp430CounterMicro;
 }
+implementation
+{
+  components Msp430TimerC
+           , new Msp430CounterC(TMicro) as Counter
+           ;
 
+  Msp430CounterMicro = Counter;
+#if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
+  Counter.Msp430Timer -> Msp430TimerC.Timer1A;
+#elif defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
+  Counter.Msp430Timer -> Msp430TimerC.TimerB;
+}

@@ -1,5 +1,7 @@
-
-/* Copyright (c) 2000-2003 The Regents of the University of California.
+/*
+ * Copyright (c) 2018 Tadashi G. Takaoka
+ * Copyright (c) 2011 Eric B. Decker
+ * Copyright (c) 2000-2003 The Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -8,10 +10,12 @@
  *
  * - Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
+ *
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the
  *   distribution.
+ *
  * - Neither the name of the copyright holders nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
@@ -29,38 +33,39 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
- 
+
 /**
  * @author Cory Sharp <cssharp@eecs.berkeley.edu>
+ * @author Eric B. Decker <cire831@gmail.com>
+ * @author Tadashi G. Takaoka <tadashi,g.takaoka@gmail.com>
  */
 
-configuration Msp430TimerC
-{
+configuration Msp430TimerC {
   provides interface Msp430Timer as TimerA;
   provides interface Msp430TimerControl as ControlA0;
   provides interface Msp430TimerControl as ControlA1;
-  provides interface Msp430Compare as CompareA0;
-  provides interface Msp430Compare as CompareA1;
-  provides interface Msp430Capture as CaptureA0;
-  provides interface Msp430Capture as CaptureA1;
+  provides interface Msp430Compare      as CompareA0;
+  provides interface Msp430Compare      as CompareA1;
+  provides interface Msp430Capture      as CaptureA0;
+  provides interface Msp430Capture      as CaptureA1;
 #if defined(__MSP430_HAS_TA3__)
   provides interface Msp430TimerControl as ControlA2;
-  provides interface Msp430Compare as CompareA2;
-  provides interface Msp430Capture as CaptureA2;
+  provides interface Msp430Compare      as CompareA2;
+  provides interface Msp430Capture      as CaptureA2;
 #endif
 
 #if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
   provides interface Msp430Timer as Timer1A;
   provides interface Msp430TimerControl as Control1A0;
-  provides interface Msp430Compare as Compare1A0;
-  provides interface Msp430Capture as Capture1A0;
+  provides interface Msp430Compare      as Compare1A0;
+  provides interface Msp430Capture      as Capture1A0;
   provides interface Msp430TimerControl as Control1A1;
-  provides interface Msp430Compare as Compare1A1;
-  provides interface Msp430Capture as Capture1A1;
+  provides interface Msp430Compare      as Compare1A1;
+  provides interface Msp430Capture      as Capture1A1;
 #if defined(__MSP430_HAS_T1A3__)
   provides interface Msp430TimerControl as Control1A2;
-  provides interface Msp430Compare as Compare1A2;
-  provides interface Msp430Capture as Capture1A2;
+  provides interface Msp430Compare      as Compare1A2;
+  provides interface Msp430Capture      as Capture1A2;
 #endif
 #endif
 
@@ -69,30 +74,29 @@ configuration Msp430TimerC
   provides interface Msp430TimerControl as ControlB0;
   provides interface Msp430TimerControl as ControlB1;
   provides interface Msp430TimerControl as ControlB2;
-  provides interface Msp430Compare as CompareB0;
-  provides interface Msp430Compare as CompareB1;
-  provides interface Msp430Compare as CompareB2;
-  provides interface Msp430Capture as CaptureB0;
-  provides interface Msp430Capture as CaptureB1;
-  provides interface Msp430Capture as CaptureB2;
+  provides interface Msp430Compare      as CompareB0;
+  provides interface Msp430Compare      as CompareB1;
+  provides interface Msp430Compare      as CompareB2;
+  provides interface Msp430Capture      as CaptureB0;
+  provides interface Msp430Capture      as CaptureB1;
+  provides interface Msp430Capture      as CaptureB2;
 #endif
 #if defined(__MSP430_HAS_TB7__)
   provides interface Msp430TimerControl as ControlB3;
   provides interface Msp430TimerControl as ControlB4;
   provides interface Msp430TimerControl as ControlB5;
   provides interface Msp430TimerControl as ControlB6;
-  provides interface Msp430Compare as CompareB3;
-  provides interface Msp430Compare as CompareB4;
-  provides interface Msp430Compare as CompareB5;
-  provides interface Msp430Compare as CompareB6;
-  provides interface Msp430Capture as CaptureB3;
-  provides interface Msp430Capture as CaptureB4;
-  provides interface Msp430Capture as CaptureB5;
-  provides interface Msp430Capture as CaptureB6;
+  provides interface Msp430Compare      as CompareB3;
+  provides interface Msp430Compare      as CompareB4;
+  provides interface Msp430Compare      as CompareB5;
+  provides interface Msp430Compare      as CompareB6;
+  provides interface Msp430Capture      as CaptureB3;
+  provides interface Msp430Capture      as CaptureB4;
+  provides interface Msp430Capture      as CaptureB5;
+  provides interface Msp430Capture      as CaptureB6;
 #endif
 }
-implementation
-{
+implementation {
   components new Msp430TimerP( TAIV_, TAR_, TACTL_, TAIFG, TACLR, TAIE,
                TASSEL0, TASSEL1, FALSE ) as Msp430TimerA
 #if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
@@ -129,7 +133,11 @@ implementation
 
   // Timer A
   TimerA = Msp430TimerA.Timer;
-  Msp430TimerA.Overflow -> Msp430TimerA.Event[10];
+#ifdef TAIV_TAIFG
+  Msp430TimerA.Overflow -> Msp430TimerA.Event[TAIV_TAIFG];
+#else
+  Msp430TimerA.Overflow -> Msp430TimerA.Event[TA0IV_TA0IFG];
+#endif
   Msp430TimerA.VectorTimerX0 -> Common.VectorTimerA0;
   Msp430TimerA.VectorTimerX1 -> Common.VectorTimerA1;
 
@@ -145,7 +153,11 @@ implementation
   CompareA1 = Msp430TimerA1.Compare;
   CaptureA1 = Msp430TimerA1.Capture;
   Msp430TimerA1.Timer -> Msp430TimerA.Timer;
-  Msp430TimerA1.Event -> Msp430TimerA.Event[2];
+#ifdef TAIV_TACCR1
+  Msp430TimerA1.Event -> Msp430TimerA.Event[TAIV_TACCR1];
+#else
+  Msp430TimerA1.Event -> Msp430TimerA.Event[TA0IV_TA0CCR1];
+#endif
 
 #if defined(__MSP430_HAS_TA3__)
   // Timer A2
@@ -153,13 +165,17 @@ implementation
   CompareA2 = Msp430TimerA2.Compare;
   CaptureA2 = Msp430TimerA2.Capture;
   Msp430TimerA2.Timer -> Msp430TimerA.Timer;
-  Msp430TimerA2.Event -> Msp430TimerA.Event[4];
+#ifdef TAIV_TACCR2
+  Msp430TimerA2.Event -> Msp430TimerA.Event[TAIV_TACCR2];
+#else
+  Msp430TimerA2.Event -> Msp430TimerA.Event[TA0IV_TA0CCR2];
+#endif
 #endif
 
 #if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
   // Timer1 A
   Timer1A = Msp430Timer1A.Timer;
-  Msp430Timer1A.Overflow -> Msp430Timer1A.Event[10];
+  Msp430Timer1A.Overflow -> Msp430Timer1A.Event[TA1IV_TA1IFG];
   Msp430Timer1A.VectorTimerX0 -> Common.VectorTimer1A0;
   Msp430Timer1A.VectorTimerX1 -> Common.VectorTimer1A1;
 
@@ -175,7 +191,7 @@ implementation
   Compare1A1 = Msp430Timer1A1.Compare;
   Capture1A1 = Msp430Timer1A1.Capture;
   Msp430Timer1A1.Timer -> Msp430Timer1A.Timer;
-  Msp430Timer1A1.Event -> Msp430Timer1A.Event[2];
+  Msp430Timer1A1.Event -> Msp430Timer1A.Event[TA1IV_TA1CCR1];
 
 #if defined(__MSP430_HAS_T1A3__)
   // Timer1 A2
@@ -183,14 +199,14 @@ implementation
   Compare1A2 = Msp430Timer1A2.Compare;
   Capture1A2 = Msp430Timer1A2.Capture;
   Msp430Timer1A2.Timer -> Msp430Timer1A.Timer;
-  Msp430Timer1A2.Event -> Msp430Timer1A.Event[4];
+  Msp430Timer1A2.Event -> Msp430Timer1A.Event[TA1IV_TA1CCR2];
 #endif
 #endif
 
 #if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
   // Timer B
   TimerB = Msp430TimerB.Timer;
-  Msp430TimerB.Overflow -> Msp430TimerB.Event[14];
+  Msp430TimerB.Overflow -> Msp430TimerB.Event[TBIV_TBIFG];
   Msp430TimerB.VectorTimerX0 -> Common.VectorTimerB0;
   Msp430TimerB.VectorTimerX1 -> Common.VectorTimerB1;
 
@@ -206,14 +222,14 @@ implementation
   CompareB1 = Msp430TimerB1.Compare;
   CaptureB1 = Msp430TimerB1.Capture;
   Msp430TimerB1.Timer -> Msp430TimerB.Timer;
-  Msp430TimerB1.Event -> Msp430TimerB.Event[2];
+  Msp430TimerB1.Event -> Msp430TimerB.Event[TBIV_TBCCR1];
 
   // Timer B2
   ControlB2 = Msp430TimerB2.Control;
   CompareB2 = Msp430TimerB2.Compare;
   CaptureB2 = Msp430TimerB2.Capture;
   Msp430TimerB2.Timer -> Msp430TimerB.Timer;
-  Msp430TimerB2.Event -> Msp430TimerB.Event[4];
+  Msp430TimerB2.Event -> Msp430TimerB.Event[TBIV_TBCCR2];
 #endif
 
 #if defined(__MSP430_HAS_TB7__)
@@ -222,28 +238,27 @@ implementation
   CompareB3 = Msp430TimerB3.Compare;
   CaptureB3 = Msp430TimerB3.Capture;
   Msp430TimerB3.Timer -> Msp430TimerB.Timer;
-  Msp430TimerB3.Event -> Msp430TimerB.Event[6];
+  Msp430TimerB3.Event -> Msp430TimerB.Event[TBIV_TBCCR3];
 
   // Timer B4
   ControlB4 = Msp430TimerB4.Control;
   CompareB4 = Msp430TimerB4.Compare;
   CaptureB4 = Msp430TimerB4.Capture;
   Msp430TimerB4.Timer -> Msp430TimerB.Timer;
-  Msp430TimerB4.Event -> Msp430TimerB.Event[8];
+  Msp430TimerB4.Event -> Msp430TimerB.Event[TBIV_TBCCR4];
 
   // Timer B5
   ControlB5 = Msp430TimerB5.Control;
   CompareB5 = Msp430TimerB5.Compare;
   CaptureB5 = Msp430TimerB5.Capture;
   Msp430TimerB5.Timer -> Msp430TimerB.Timer;
-  Msp430TimerB5.Event -> Msp430TimerB.Event[10];
+  Msp430TimerB5.Event -> Msp430TimerB.Event[TBIV_TBCCR5];
 
   // Timer B6
   ControlB6 = Msp430TimerB6.Control;
   CompareB6 = Msp430TimerB6.Compare;
   CaptureB6 = Msp430TimerB6.Capture;
   Msp430TimerB6.Timer -> Msp430TimerB.Timer;
-  Msp430TimerB6.Event -> Msp430TimerB.Event[12];
+  Msp430TimerB6.Event -> Msp430TimerB.Event[TBIV_TBCCR6];
 #endif
 }
-

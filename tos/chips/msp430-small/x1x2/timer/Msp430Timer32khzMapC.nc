@@ -1,6 +1,7 @@
-//$Id: Msp430Timer32khzMapC.nc,v 1.5 2010-06-29 22:07:45 scipio Exp $
-
-/* Copyright (c) 2000-2003 The Regents of the University of California.
+/*
+ * Copyright (c) 2013 Eric B. Decker
+ * Copyright (c) 2011 Eric B. Decker
+ * Copyright (c) 2000-2003 The Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,10 +10,12 @@
  *
  * - Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
+ *
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the
  *   distribution.
+ *
  * - Neither the name of the copyright holders nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
@@ -36,21 +39,19 @@
  * hardware timers on the MSP430 that are available for compile time allocation
  * by "new Alarm32khz16C()", "new AlarmMilli32C()", and so on.
  *
- * Platforms based on the MSP430 are encouraged to copy in and override this
- * file, presenting only the hardware timers that are available for allocation
- * on that platform.
+ * x1/x2 processors has two Timer blocks, TA3 and TB7.   TA3 is assigned to
+ * TMicro while TB7 is used by the 32KHiZ clock system that runs TMilli.
  *
  * @author Cory Sharp <cssharp@eecs.berkeley.edu>
+ * @author Eric B. Decker <cire831@gmail.com>
  */
 
-configuration Msp430Timer32khzMapC
-{
+configuration Msp430Timer32khzMapC {
   provides interface Msp430Timer[ uint8_t id ];
   provides interface Msp430TimerControl[ uint8_t id ];
   provides interface Msp430Compare[ uint8_t id ];
 }
-implementation
-{
+implementation {
   components Msp430TimerC;
 
 #if defined(__MSP430_HAS_TA2__) || defined(__MSP430_HAS_TA3__)
@@ -72,3 +73,4 @@ implementation
 #error "No timer is configurated for Timer 32kiHz"
 #endif / *defined(__MSP430_HAS_TA2__) || defined(__MSP430_HAS_TA3__) */
 }
+

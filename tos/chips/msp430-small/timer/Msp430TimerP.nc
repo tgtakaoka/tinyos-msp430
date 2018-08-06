@@ -1,5 +1,6 @@
-
-/* Copyright (c) 2000-2003 The Regents of the University of California.
+/*
+ * Copyright (c) 2013-2014 Eric B. Decker
+ * Copyright (c) 2000-2003 The Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,6 +33,7 @@
 
 /**
  * @author Cory Sharp <cssharp@eecs.berkeley.edu>
+ * @author Eric B. Decker <cire831@gmail.com>
  */
 
 #include "msp430regtypes.h"
@@ -78,8 +80,15 @@ implementation
     }
   }
 
-  async command bool Timer.isOverflowPending()
-  {
+  /*
+   * Note: on x5 processors, reading IV clears pending IFG,
+   * depends on which interrupt is happening.  Screwy interrupt
+   * system.  So relying on IFG bits to tell us stuff in interrupt
+   * routines is problematic.  The signalling still works but there
+   * are very tiny windows where calling upper level .get functions
+   * may not detect overflow properly.
+   */
+  async command bool Timer.isOverflowPending() {
     return TxCTL & TxIFG;
   }
 
@@ -131,13 +140,29 @@ implementation
         | ((inputDivider << 6) & (ID1|ID0));
   }
 
-  async event void VectorTimerX0.fired()
-  {
+  /*
+   * All 3 major Msp430 families (x1, x2, and x5) provide TimerA timer
+   * modules.  These modules allow various interrupt and capture/compare
+   * possibilites.  Two interrupt vectors are provided.  The first is
+   * dedicated  to TACCR0.   The TACCR0 IFG (interrupt flag) is automatically
+   * cleared by the h/w.
+   *
+   * VectorTimerX0 handles TxCCR0 interrupts.
+   */
+  async event void VectorTimerX0.fired() {
     signal Event.fired[0]();
   }
 
-  async event void VectorTimerX1.fired()
-  {
+  /*
+   * VectorTimerX1 handles interrupts for other TimerX interrupts,
+   * TAIFG (timer overflow), and TACCRn for n > 0.  A interrupt
+   * vector register (TxIV) provides an indication of which interrupt
+   * has occured (with priority, highest is presented first).
+   *
+   * When TxIV is red the highest priority interrupt is cleared (IFG
+   * is cleared) by the h/w.
+   */
+  async event void VectorTimerX1.fired() {
     signal Event.fired[TxIV]();
   }
 
@@ -146,12 +171,7 @@ implementation
     signal Timer.overflow();
   }
 
-  default async event void Timer.overflow()
-  {
-  }
-
-  default async event void Event.fired[uint8_t n]()
-  {
-  }
+  default async event void Timer.overflow() { }
+  default async event void Event.fired[uint8_t n]() { }
 }
 
