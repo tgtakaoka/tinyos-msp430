@@ -1,6 +1,5 @@
-
-/* Copyright (c) 2000-2003 The Regents of the University of California.
- * All rights reserved.
+/*
+ * Copyright (c) 2018 Tadashi G. Takaoka
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -8,10 +7,12 @@
  *
  * - Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
+ *
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the
  *   distribution.
+ *
  * - Neither the name of the copyright holders nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
@@ -28,24 +29,29 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 
-/**
- * @author Cory Sharp <cssharp@eecs.berkeley.edu>
- */
-
-configuration Msp430ClockC
-{
-  provides interface Init;
-  provides interface Msp430ClockInit;
+module Msp430DcoCalibInfoAP {
+    uses interface Msp430DcoCalib as DcoCalib;
 }
-implementation
-{
-  components Msp430ClockP, McuSleepC;
-  components Msp430DcoCalibC;
-
-  Init = Msp430ClockP;
-  Msp430ClockInit = Msp430ClockP;
-  Msp430DcoCalibC.DcoCalib -> Msp430ClockP;
-  McuSleepC.McuPowerOverride -> Msp430ClockP;
+implementation {
+    event void DcoCalib.busyWaitCalibrateDco() {
+#if TARGET_DCO_HZ == (16 * 1024UL * 1024UL) && defined(CALDCO_16MHZ_)
+        DCOCTL = CALDCO_16MHZ;
+        BCSCTL1 = CALBC1_16MHZ;
+#elif TARGET_DCO_HZ == (12 * 1024UL * 1024UL) && defined(CALDCO_12MHZ_)
+        DCOCTL = CALDCO_12MHZ;
+        BCSCTL1 = CALBC1_12MHZ;
+#elif TARGET_DCO_HZ == (8 * 1024UL * 1024UL) && defined(CALDCO_8MHZ_)
+        DCOCTL = CALDCO_8MHZ;
+        BCSCTL1 = CALBC1_8MHZ;
+#elif TARGET_DCO_HZ == (1 * 1024UL * 1024UL) && defined(CALDCO_1MHZ_)
+        DCOCTL = CALDCO_1MHZ;
+        BCSCTL1 = CALBC1_1MHZ;
+#else
+#error "TARGET_DCO_HZ is " TARGET_DCO_HZ ", but no CALDCO/CALBC1 value defined"
+#endif
+    }
 }

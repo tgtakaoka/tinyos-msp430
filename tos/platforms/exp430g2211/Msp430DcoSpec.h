@@ -1,5 +1,7 @@
 /*
- * Copyright (c) 2018 Tadashi G. Takaoka
+ * Copyright (c) 2010-2011 Eric B. Decker
+ * Copyright (c) 2007 Technische Universitaet Berlin
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -30,29 +32,35 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
+ * @author Andreas Koepke <koepke@tkn.tu-berlin.de>
+ * @author Eric B. Decker <cire831@gmail.com>
+ *
+ *
+ * Specify the target cpu clock speed of your platform by overriding this file.
+ *
+ * Be aware that tinyos relies on binary 4MHz, that is 4096 binary kHz (4MHIZ).  Some
+ * platforms have an external high frequency oscilator to generate the SMCLK
+ * (e.g. eyesIFX, and possibly future ZigBee compliant nodes). These
+ * oscillators provide metric frequencies, but may not run in power down
+ * modes. Here, we need to switch the SMCLK source, which is easier if
+ * the external and the DCO source frequency are the same.
+ * 
+ * changed the name to reflect binary Hz to avoid confusion with power of 10
+ * values provided by TI for msp430x2xx processors.
  */
 
-configuration Msp430CalibrateDcoC {
-    uses interface Msp430CalibrateDco as CalibrateDco;
-}
-implementation {
-    components Msp430CalibrateDcoP, Msp430TimerC;
+#ifndef MSP430DCOSPEC_H
+#define MSP430DCOSPEC_H
 
-    CalibrateDco = Msp430CalibrateDcoP;
+/* 1 MIHZ */
+#define TARGET_DCO_HZ   1048576UL
+#define ACLK_HZ         32768UL
+#define SMCLK_DIV	1
+#define TIMERA_DIV	1
 
-    Msp430CalibrateDcoP.Timer -> Msp430TimerC.TimerA;
-#if defined(__MSP430_HAS_TA2__)
-    Msp430CalibrateDcoP.Control -> Msp430TimerC.ControlA0;
-    Msp430CalibrateDcoP.Capture -> Msp430TimerC.CaptureA0;
-#elif defined(__MSP430_HAS_TA3__)
-#if defined(__MSP430G2402) || defined(__MSP430G2452) || defined(__MSP430G2553)
-    /* Some MSP430G2xx have TA3 but ACLK is connected to CCR0.CCIB */
-    Msp430CalibrateDcoP.Control -> Msp430TimerC.ControlA0;
-    Msp430CalibrateDcoP.Capture -> Msp430TimerC.CaptureA0;
-#else
-    Msp430CalibrateDcoP.Control -> Msp430TimerC.ControlA2;
-    Msp430CalibrateDcoP.Capture -> Msp430TimerC.CaptureA2;
+#ifdef notdef
+#define TARGET_DCO_KHZ	1024	// the target DCO clock rate in binary kHz
+#define ACLK_KHZ	32	// the ACLK rate in binary kHz
 #endif
+
 #endif
-}
