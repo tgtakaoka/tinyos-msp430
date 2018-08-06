@@ -33,6 +33,11 @@
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 
-interface Msp430CalibrateDco {
-    event void busyWaitCalibrateDco();
+configuration Msp430DcoCalibC {
+    uses interface Msp430DcoCalib as DcoCalib;
+}
+implementation {
+    components Msp430DcoCalibInfoAP;
+
+    DcoCalib = Msp430DcoCalibInfoAP;
 }

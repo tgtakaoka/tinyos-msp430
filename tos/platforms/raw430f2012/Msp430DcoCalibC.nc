@@ -33,11 +33,11 @@
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 
-configuration Msp430CalibrateDcoC {
-    uses interface Msp430CalibrateDco as CalibrateDco;
+configuration Msp430DcoCalibC {
+    uses interface Msp430DcoCalib as DcoCalib;
 }
 implementation {
-    components Msp430InfoACalDcoP;
+    components Msp430DcoCalibInfoAP;
 
-    CalibrateDco = Msp430InfoACalDcoP;
+    DcoCalib = Msp430DcoCalibInfoAP;
 }

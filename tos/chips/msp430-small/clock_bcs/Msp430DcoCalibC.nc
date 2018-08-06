@@ -1,6 +1,5 @@
-
-/* Copyright (c) 2000-2003 The Regents of the University of California.
- * All rights reserved.
+/*
+ * Copyright (c) 2018 Tadashi G. Takaoka
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -8,10 +7,12 @@
  *
  * - Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
+ *
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the
  *   distribution.
+ *
  * - Neither the name of the copyright holders nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
@@ -28,24 +29,30 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 
-/**
- * @author Cory Sharp <cssharp@eecs.berkeley.edu>
- */
-
-configuration Msp430ClockC
-{
-  provides interface Init;
-  provides interface Msp430ClockInit;
+configuration Msp430DcoCalibC {
+    uses interface Msp430DcoCalib as DcoCalib;
 }
-implementation
-{
-  components Msp430ClockP, McuSleepC;
-  components Msp430DcoCalibC;
+implementation {
+    components Msp430DcoCalibP, Msp430TimerC;
 
-  Init = Msp430ClockP;
-  Msp430ClockInit = Msp430ClockP;
-  Msp430DcoCalibC.DcoCalib -> Msp430ClockP;
-  McuSleepC.McuPowerOverride -> Msp430ClockP;
+    DcoCalib = Msp430DcoCalibP;
+
+    Msp430DcoCalibP.Timer -> Msp430TimerC.TimerA;
+#if defined(__MSP430_HAS_TA2__)
+    Msp430DcoCalibP.Control -> Msp430TimerC.ControlA0;
+    Msp430DcoCalibP.Capture -> Msp430TimerC.CaptureA0;
+#elif defined(__MSP430_HAS_TA3__)
+#if defined(__MSP430G2402) || defined(__MSP430G2452) || defined(__MSP430G2553)
+    /* Some MSP430G2xx have TA3 but ACLK is connected to CCR0.CCIB */
+    Msp430DcoCalibP.Control -> Msp430TimerC.ControlA0;
+    Msp430DcoCalibP.Capture -> Msp430TimerC.CaptureA0;
+#else
+    Msp430DcoCalibP.Control -> Msp430TimerC.ControlA2;
+    Msp430DcoCalibP.Capture -> Msp430TimerC.CaptureA2;
+#endif
+#endif
 }

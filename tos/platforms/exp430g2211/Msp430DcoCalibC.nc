@@ -33,25 +33,11 @@
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 
-module Msp430InfoACalDcoP {
-    uses interface Msp430CalibrateDco as CalibrateDco;
+configuration Msp430DcoCalibC {
+    uses interface Msp430DcoCalib as DcoCalib;
 }
 implementation {
-    event void CalibrateDco.busyWaitCalibrateDco() {
-#if TARGET_DCO_HZ == (16 * 1024UL * 1024UL) && defined(CALDCO_16MHZ_)
-        DCOCTL = CALDCO_16MHZ;
-        BCSCTL1 = CALBC1_16MHZ;
-#elif TARGET_DCO_HZ == (12 * 1024UL * 1024UL) && defined(CALDCO_12MHZ_)
-        DCOCTL = CALDCO_12MHZ;
-        BCSCTL1 = CALBC1_12MHZ;
-#elif TARGET_DCO_HZ == (8 * 1024UL * 1024UL) && defined(CALDCO_8MHZ_)
-        DCOCTL = CALDCO_8MHZ;
-        BCSCTL1 = CALBC1_8MHZ;
-#elif TARGET_DCO_HZ == (1 * 1024UL * 1024UL) && defined(CALDCO_1MHZ_)
-        DCOCTL = CALDCO_1MHZ;
-        BCSCTL1 = CALBC1_1MHZ;
-#else
-#error "TARGET_DCO_HZ is " TARGET_DCO_HZ ", but no CALDCO/CALBC1 value defined"
-#endif
-    }
+    components Msp430DcoCalibInfoAP;
+
+    DcoCalib = Msp430DcoCalibInfoAP;
 }
