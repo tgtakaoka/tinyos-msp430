@@ -30,8 +30,6 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "hardware.h"
-
 module PlatformI2CP {
     provides interface StdControl as I2CControl;
     uses interface Resource as I2CResource;

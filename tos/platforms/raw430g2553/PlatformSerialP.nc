@@ -30,20 +30,37 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-module PlatformSpiP {
-    provides interface StdControl as SpiControl;
-    uses interface Resource as SpiResource;
+#include "hardware.h"
+
+module PlatformSerialP {
+    provides interface StdControl as SerialControl;
+    uses interface Resource as SerialResource;
 }
 implementation {
-    command error_t SpiControl.start() {
-        return call SpiResource.immediateRequest();
+    // To enable USCI UART pins, P1SEL2 is necessary to set 1 on MSP430G2553.
+    // P1.1=UCA0RXD
+    // P1.2=UCA0TXD
+#if defined(PLATFORM_UART_USCI_A0)
+    enum {
+        USCI_PINS = (1 << 1) | (1 << 2),
+    };
+#endif
+
+    command error_t SerialControl.start() {
+#if defined(PLATFORM_UART_USCI_A0)
+        P1SEL2 |= USCI_PINS;
+#endif
+        return call SerialResource.immediateRequest();
     }
 
-    command error_t SpiControl.stop() {
-        call SpiResource.release();
+    command error_t SerialControl.stop() {
+        call SerialResource.release();
+#if defined(PLATFORM_UART_USCI_A0)
+        P1SEL2 &= ~USCI_PINS;
+#endif
         return SUCCESS;
     }
 
-    event void SpiResource.granted() {
+    event void SerialResource.granted() {
     }
 }

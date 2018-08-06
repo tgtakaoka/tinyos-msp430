@@ -30,9 +30,6 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "hardware.h"
-#include "PlatformLed.h"
-
 configuration PlatformLedC {
     provides {
         interface MultiLed;

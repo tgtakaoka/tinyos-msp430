@@ -30,17 +30,41 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "hardware.h"
+
 module PlatformSpiP {
     provides interface StdControl as SpiControl;
     uses interface Resource as SpiResource;
 }
 implementation {
+    // To enable USCI SPI pins, P1SEL2 is necessary to set 1 on MSP430G2553.
+    // P1.1=UCA0SOMI  P1.5=UCB0CLK
+    // P1.2=UCA0SIMO  P1.6=UCB0SOMI
+    // P1.4=UCA0CLK   P1.7=UCB0SIMO
+#if defined(PLATFORM_SPI_MASTER_USCI_A0)
+    enum {
+        USCI_PINS = (1 << 1) | (1 << 2) | (1 << 4),
+    };
+#elif defined(PLATFORM_SPI_MASTER_USCI_B0)
+    enum {
+        USCI_PINS = (1 << 5) | (1 << 6) | (1 << 7),
+    };
+#endif
+
     command error_t SpiControl.start() {
+#if defined(PLATFORM_SPI_MASTER_USCI_A0) \
+    || defined(PLATFORM_SPI_MASTER_USCI_B0)
+        P1SEL2 |= USCI_PINS;
+#endif
         return call SpiResource.immediateRequest();
     }
 
     command error_t SpiControl.stop() {
         call SpiResource.release();
+#if defined(PLATFORM_SPI_MASTER_USCI_A0) \
+    || defined(PLATFORM_SPI_MASTER_USCI_B0)
+        P1SEL2 &= ~USCI_PINS;
+#endif
         return SUCCESS;
     }
 
