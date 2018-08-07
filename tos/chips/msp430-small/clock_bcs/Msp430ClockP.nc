@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2018 Tadashi G. Takaoka
  * Copyright (c) 2010-2011 Eric B. Decker
  * Copyright (c) 2000-2003 The Regents of the University of California.
  * All rights reserved.
@@ -36,6 +37,7 @@
  * @author Vlado Handziski <handzisk@tkn.tu-berlind.de>
  * @author Xavier Orduna <xorduna@dexmatech.com>
  * @author Eric B. Decker <cire831@gmail.com>
+ * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 
 
@@ -48,13 +50,13 @@
  *
  * TinyOS assumes a 1 uis (us) ticker and a 32 KiHZ (30.5 us) ticker.  The
  * later is used for timing when sleeping.  On the x1 and x2 processors, the
- * 1 uis ticker (micro) is implemented by TimerA and the 32 KiHZ ticker is
- * on TimerB.
+ * 1 uis ticker (micro) is implemented by TimerB/A1 and the 32 KiHZ ticker is
+ * on TimerA.
  *
  * The basic_clock system provides a main clock (DCO) used to clock the
  * CPU (MCLK).  Peripherals (timers, usci, uart, spi, i2c, etc)
  * are driven off SMCLK (sub-main), driven off DCO via a divider network.
- * TimerA is clocked off SMCLK and needs to be set to provide a 1uis (1us)
+ * TimerB/A1 is clocked off SMCLK and needs to be set to provide a 1uis (1us)
  * ticker.
  *
  * The include file Msp430DcoSpec.h determines how the clock system should
@@ -62,7 +64,7 @@
  *
  * TARGET_DCO_HZ: Base DCO frequency.
  * SMCLK_DIV:	  SMCLK divider.   SMCLK = DCO/(SMCLK_DIV).
- * TIMERA_DIV:	  determines the SMCLK divider for TimerA.
+ * TIMERA_DIV:	  determines the SMCLK divider for TimerB/A1.
  *
  * Default settings:
  *
@@ -88,7 +90,7 @@
  *
  * ACLK (Aux Clk) is assumed to be run off the LFXT interface (low-freq) at
  * 32KiHz (32768).  This clock is used to calibrate the main DCO clock and
- * serves as the timer source for TB, the long term timer when sleeping.
+ * serves as the timer source for TA, the long term timer when sleeping.
  *
  * MCLK (Main Clk) is run off the DCO and is calibrated to 32KiHz (32768)
  * crystal (ACLK).  DCO/1.
@@ -97,12 +99,12 @@
  * All peripherals are run off the SMCLK.  The default should be 1MiHZ.  Default
  * baud rate setting are provided assuming this 1 MiHZ SMCLK setting.
  *
- * TimerA is programmed for a 1uis tick and is SMCLK/(TIMERA_DIV).  TIMERA_DIV can
+ * TimerB/A1 is programmed for a 1uis tick and is SMCLK/(TIMERA_DIV).  TIMERA_DIV can
  * be a maximum of 8 on x1 or x2 procs.  If MCLK is clocked faster than 8 MiHz
  * either SMCLK can become DCO/2 (which slows the peripherals down) or the timer
  * subsystem is changed to deal with a 512ns tick.
  *
- * TimerB is run off the 32KiHz crystal oscillator.  This is used to provide
+ * TimerA is run off the 32KiHz crystal oscillator.  This is used to provide
  * a stable time base for syncronizing the main DCO clock.  It also provides
  * a stable timer that runs the timer system especially when the cpu is
  * sleeping.
@@ -133,9 +135,9 @@
  * TARGET_DCO_HZ:	DCO frequency
  * ACLK_HZ:		Auxiliary clock frequency
  * SMCLK_DIV:		Divisor for SMCLK
- * TIMERA_DIV:		Divisor for TimerA
+ * TIMERA_DIV:		Divisor for TimerB/A1
  *
- * TimerA will be DCO/SMCLK_DIV/TIMERA_DIV and should be set for 1MiHZ or 1MHZ.
+ * TimerB/A1 will be DCO/SMCLK_DIV/TIMERA_DIV and should be set for 1MiHZ or 1MHZ.
  *
  * Suggested set up (if in doubt):
  *
@@ -168,7 +170,7 @@
 #error "ClockP: TIMERA_DIV needs to be defined."
 #endif
 
-/* TA clock is DCO/SMCLK_DIV/TIMERA_DIV */
+/* TB/TA1 clock is DCO/SMCLK_DIV/TIMERA_DIV */
 #if     TIMERA_DIV == 1
 #define TIMERA_ID ID_0
 #elif   TIMERA_DIV == 2
@@ -182,174 +184,176 @@
 #endif
 
 module Msp430ClockP @safe() {
-    provides {
-        interface Init;
-        interface Msp430ClockInit;
-        interface McuPowerOverride;
-        interface Msp430DcoCalib as DcoCalib;
-    }
+  provides {
+    interface Init;
+    interface Msp430ClockInit;
+    interface McuPowerOverride;
+    interface Msp430DcoCalib as DcoCalib;
+  }
 }
 
 implementation {
-    enum {
+  MSP430REG_NORACE(IE1);
+  MSP430REG_NORACE(TACTL);
+#if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
+  MSP430REG_NORACE(TA1CTL);
+#endif
+#if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
+  MSP430REG_NORACE(TBCTL);
+#endif
+
+  enum {
 /*
  * Basic Clock and BC2 differ in the size of the Range Select (RSEL)
  * field.   x1xxx (BASIC_CLOCK) has 3 bits, x2xxx (BC2) has 4 bits.
+ * RSEL_MAX denotes where to start for calibration, RSEL_MASK is used
+ * to mask the entire RSEL field.
  */
 #if defined(__MSP430_HAS_BC2__)
-        RSEL_MASK = (RSEL0 | RSEL1 | RSEL2 | RSEL3),
+    RSEL_MASK = (RSEL0 | RSEL1 | RSEL2 | RSEL3),
 #elif defined(__MSP430_HAS_BASIC_CLOCK__)
-        RSEL_MASK = (RSEL0 | RSEL1 | RSEL2),
+    RSEL_MASK = (RSEL0 | RSEL1 | RSEL2),
 #else
 #error "Msp430ClockP (clock_bcs): processor doesn't support BASIC_CLOCK/BC2"
 #endif
-    };
+  };
 
-    MSP430REG_NORACE(IE1);
-    MSP430REG_NORACE(TACTL);
-#if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
-    MSP430REG_NORACE(TA1CTL);
-#endif
-#if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
-    MSP430REG_NORACE(TBCTL);
-#endif
+  async command mcu_power_t McuPowerOverride.lowestState() {
+    return MSP430_POWER_LPM3;
+  }
 
-    async command mcu_power_t McuPowerOverride.lowestState() {
-        return MSP430_POWER_LPM3;
-    }
-
-    command void Msp430ClockInit.defaultInitClocks() {
-        // BCSCTL1
-        // .XT2OFF = 1;	disable the external oscillator for SCLK and MCLK
-        // .XTS    = 0;	set low frequency mode for LXFT1
-        // .DIVA   = 0;	set the divisor on ACLK to 1
-        // .RSEL		do not modify (3 or 4 bits), XT5V is 0 if present
-        BCSCTL1 = XT2OFF | (BCSCTL1 & RSEL_MASK);
+  command void Msp430ClockInit.defaultInitClocks() {
+    // BCSCTL1
+    // .XT2OFF = 1;	disable the external oscillator for SCLK and MCLK
+    // .XTS    = 0;	set low frequency mode for LXFT1
+    // .DIVA   = 0;	set the divisor on ACLK to 1
+    // .RSEL		do not modify (3 or 4 bits), XT5V is 0 if present
+    BCSCTL1 = XT2OFF | (BCSCTL1 & RSEL_MASK);
 
 #if defined(__msp430_using_vlo)
-        BCSCTL2 = SELM_0 | DIVM_0 | SELS | DIVS_0; // MCLK=DCO/1, SMCLK=VLO/1
-        BCSCTL3 = LFXT1S_2;                        // ACLK=VLO
+    BCSCTL2 = SELM_0 | DIVM_0 | SELS | DIVS_0; // MCLK=DCO/1, SMCLK=VLO/1
+    BCSCTL3 = LFXT1S_2;                        // ACLK=VLO
 #else
-        // BCSCTL2
-        // .SELM = 0;	select DCOCLK as source for MCLK
-        // .DIVM = 0;	set the divisor of MCLK to 1
-        // .SELS = 0;	select DCOCLK as source for SMCLK
-        // .DIVS = xxx;	set the divisor of SCLK to SMCLK_DIVS
-        // .DCOR = 0;	select internal resistor for DCO
-        BCSCTL2 = SMCLK_DIVS;
+    // BCSCTL2
+    // .SELM = 0;	select DCOCLK as source for MCLK
+    // .DIVM = 0;	set the divisor of MCLK to 1
+    // .SELS = 0;	select DCOCLK as source for SMCLK
+    // .DIVS = xxx;	set the divisor of SCLK to SMCLK_DIVS
+    // .DCOR = 0;	select internal resistor for DCO
+    BCSCTL2 = SMCLK_DIVS;
 #endif
 
 #if defined(ERRATA_XOSC8)
-        BCSCTL3 = LFXT1S_0 | XCAP_3;        // ACLK=32kHz, CL,eff=12.5pF
+    BCSCTL3 = LFXT1S_0 | XCAP_3;        // ACLK=32kHz, CL,eff=12.5pF
 #else
-        // BCSCTL3: use default, on reset set to 4, 6pF.
+    // BCSCTL3: use default, on reset set to 4, 6pF.
 #endif
 
-        // IE1.OFIE = 0; no interrupt for oscillator fault
-        CLR_FLAG( IE1, OFIE );
-    }
+    // IE1.OFIE = 0; no interrupt for oscillator fault
+    CLR_FLAG( IE1, OFIE );
+  }
 
-    command void Msp430ClockInit.defaultInitTimerMicro() {
+  command void Msp430ClockInit.defaultInitTimerMicro() {
 #if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
-        TA1R = 0;
+    TA1R = 0;
 
-        // TA1CTL
-        // .TASSEL = 2;	source SMCLK = DCO/1
-        // .ID = TIMERA_ID;	input divisor for 1uis ticks.
-        // .MC = 0;		initially disabled
-        // .TACLR = 0;
-        // .TAIE = 1;	enable timer A interrupts
-        TA1CTL = TASSEL_2 | TIMERA_ID | TAIE;
+    // TA1CTL
+    // .TASSEL = 2;	source SMCLK = DCO/1
+    // .ID = TIMERA_ID;	input divisor for 1uis ticks.
+    // .MC = 0;		initially disabled
+    // .TACLR = 0;
+    // .TAIE = 1;	enable timer A interrupts
+    TA1CTL = TASSEL_2 | TIMERA_ID | TAIE;
 #elif defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
-        TBR = 0;
+    TBR = 0;
 
-        // TBCTL
-        // .TBSSEL = 2;	source SMCLK = DCO/1
-        // .TBCLGRP = 0;	each TBCL group latched independently
-        // .CNTL = 0;	16-bit counter
-        // .ID = TIMERA_ID;	input divisor for 1uis ticks.
-        // .MC = 0;		initially disabled
-        // .TBCLR = 0;
-        // .TBIE = 1;	enable timer B interrupts
-        TBCTL = TBSSEL_2 | TIMERA_ID | TBIE;
+    // TBCTL
+    // .TBSSEL = 2;	source SMCLK = DCO/1
+    // .TBCLGRP = 0;	each TBCL group latched independently
+    // .CNTL = 0;	16-bit counter
+    // .ID = TIMERA_ID;	input divisor for 1uis ticks.
+    // .MC = 0;		initially disabled
+    // .TBCLR = 0;
+    // .TBIE = 1;	enable timer B interrupts
+    TBCTL = TBSSEL_2 | TIMERA_ID | TBIE;
 #endif
-    }
+  }
 
-    command void Msp430ClockInit.defaultInitTimerMilli() {
+  command void Msp430ClockInit.defaultInitTimerMilli() {
 #if defined(__MSP430_HAS_TA2__) || defined(__MSP430_HAS_TA3__)
-        TAR = 0;
+    TAR = 0;
 
-        // TACTL
-        // .TASSEL = 1;	source ACLK
-        // .ID = 0;		input divisor of 1
-        // .MC = 0;		initially disabled
-        // .TACLR = 0;
-        // .TAIE = 1;	enable timer A interrupts
-        TACTL = TASSEL_1 | TAIE;
+    // TACTL
+    // .TASSEL = 1;	source ACLK
+    // .ID = 0;		input divisor of 1
+    // .MC = 0;		initially disabled
+    // .TACLR = 0;
+    // .TAIE = 1;	enable timer A interrupts
+    TACTL = TASSEL_1 | TAIE;
 #endif
-    }
+  }
 
-    default event void Msp430ClockInit.initClocks() {
-        call Msp430ClockInit.defaultInitClocks();
-    }
+  default event void Msp430ClockInit.initClocks() {
+    call Msp430ClockInit.defaultInitClocks();
+  }
 
-    default event void Msp430ClockInit.initTimerMicro() {
-        call Msp430ClockInit.defaultInitTimerMicro();
-    }
+  default event void Msp430ClockInit.initTimerMicro() {
+    call Msp430ClockInit.defaultInitTimerMicro();
+  }
 
-    default event void Msp430ClockInit.initTimerMilli() {
-        call Msp430ClockInit.defaultInitTimerMilli();
-    }
+  default event void Msp430ClockInit.initTimerMilli() {
+    call Msp430ClockInit.defaultInitTimerMilli();
+  }
 
-    void startTimerMicro() {
+  void startTimerMicro() {
 #if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
-        // TA1CTL.MC = 2; continuous mode
-        TA1CTL = MC_2 | (TA1CTL & ~(MC1 | MC0));
+    // TA1CTL.MC = 2; continuous mode
+    TA1CTL = MC_2 | (TA1CTL & ~(MC1 | MC0));
 #elif defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
-        // TBCTL.MC = 2; continuous mode
-        TBCTL = MC_2 | (TBCTL & ~(MC1 | MC0));
+    // TBCTL.MC = 2; continuous mode
+    TBCTL = MC_2 | (TBCTL & ~(MC1 | MC0));
 #endif
-    }
+  }
 
-    void stopTimerMicro() {
+  void stopTimerMicro() {
 #if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
-        TA1CTL &= ~(MC1 | MC0);
+    TA1CTL &= ~(MC1 | MC0);
 #elif defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
-        TBCTL &= ~(MC1 | MC0);
+    TBCTL &= ~(MC1 | MC0);
 #endif
-    }
+  }
 
-    void startTimerMilli() {
+  void startTimerMilli() {
 #if defined(__MSP430_HAS_TA2__) || defined(__MSP430_HAS_TA3__)
-        // TACTL.MC = 2; continuous mode
-        TACTL = MC_2 | (TACTL & ~(MC1 | MC0));
+    // TACTL.MC = 2; continuous mode
+    TACTL = MC_2 | (TACTL & ~(MC1 | MC0));
 #endif
-    }
+  }
 
-    void stopTimerMilli() {
-#if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
-        // TACTL.MC = 0; stop timer A
-        TACTL &= ~(MC1 | MC0);
+  void stopTimerMilli() {
+#if defined(__MSP430_HAS_TA2__) || defined(__MSP430_HAS_TA3__)
+    // TACTL.MC = 0; stop timer A
+    TACTL &= ~(MC1 | MC0);
 #endif
-    }
+  }
 
-    command error_t Init.init() {
-        TACTL = TACLR;			/* clear should wack the IVs */
+  command error_t Init.init() {
+    TACTL = TACLR;			/* clear should wack the IVs */
 #if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
-        TA1CTL = TACLR;
+    TA1CTL = TACLR;
 #endif
 #if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
-        TBCTL = TBCLR;			/* also IVs are read-only */
+    TBCTL = TBCLR;			/* also IVs are read-only */
 #endif
 
-        atomic {
-            signal DcoCalib.busyWaitCalibrateDco();
-            signal Msp430ClockInit.initClocks();
-            signal Msp430ClockInit.initTimerMilli();
-            signal Msp430ClockInit.initTimerMicro();
-            startTimerMilli();
-            startTimerMicro();
-        }
-        return SUCCESS;
+    atomic {
+      signal DcoCalib.busyWaitCalibrateDco();
+      signal Msp430ClockInit.initClocks();
+      signal Msp430ClockInit.initTimerMilli();
+      signal Msp430ClockInit.initTimerMicro();
+      startTimerMilli();
+      startTimerMicro();
     }
+    return SUCCESS;
+  }
 }

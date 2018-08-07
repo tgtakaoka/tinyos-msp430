@@ -1,5 +1,7 @@
-
-/* Copyright (c) 2000-2003 The Regents of the University of California.  
+/*
+ * Copyright (c) 2011-2013, 2016 Eric B. Decker
+ * Copyright (c) 2010 People Power Co.
+ * Copyright (c) 2000-2003, 2010 The Regents of the University of California.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -8,11 +10,13 @@
  *
  * - Redistributions of source code must retain the above copyright
  *   notice, this list of conditions and the following disclaimer.
+
  * - Redistributions in binary form must reproduce the above copyright
  *   notice, this list of conditions and the following disclaimer in the
  *   documentation and/or other materials provided with the
  *   distribution.
- * - Neither the name of the copyright holder nor the names of
+
+ * - Neither the name of the copyright holders nor the names of
  *   its contributors may be used to endorse or promote products derived
  *   from this software without specific prior written permission.
  *
@@ -28,14 +32,53 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
  * OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @author Vlado Handziski <handzisk@tkn.tu-berlin.de>
+ * @author Joe Polastre <polastre@cs.berkeley.edu>
+ * @author Cory Sharp <cssharp@eecs.berkeley.edu>
+ * @author Peter A. Bigot <pab@peoplepowerco.com>
+ * @author Eric B. Decker <cire831@gmail.com>
  */
 
-// @author Vlado Handziski <handzisk@tkn.tu-berlin.de>
-// @author Joe Polastre <polastre@cs.berkeley.edu>
-// @author Cory Sharp <cssharp@eecs.berkeley.edu>
+#ifndef __H_MSP430HARDWARE_H__
+#define __H_MSP430HARDWARE_H__
 
-#ifndef _H_msp430hardware_h
+/* remain compatible with the old spelling */
 #define _H_msp430hardware_h
+
+/*
+ * Control Defines:
+ *
+ * DISABLE_ATOMIC_INLINE: normally, we force atomics to be inline which
+ * generating better simpler code.  For debugging, it is better to
+ * disable inlining.   Define DISABLE_ATOMIC_INLINE to cause this
+ * behavior.  The other advantage to turning off atomic inline is
+ * smaller code size.
+ */
+
+#define DISABLE_ATOMIC_INLINE
+#define OPTIMIZE_ATOMIC_END
+#define MSP430_PINS_ATOMIC_LOWLEVEL /* empty atomic */
+
+#ifdef DISABLE_ATOMIC_INLINE
+#define INLINE_ATOMIC
+#define INLINE_ATTRIBUTE
+#else
+#define INLINE_ATOMIC    inline
+#define INLINE_ATTRIBUTE __attribute__((always_inline))
+#endif
+
+/*
+ * __TOS_MSP430_CORE__ defines the release version of the msp430 core code.
+ * It can be used when transitioning between major changes in the msp430
+ * API.
+ *
+ * Ver 1, subver 0: original version
+ * Ver 1, subver 0: includes more fixes for Port<Alpha> breakage.  16 bit combined
+ *    vs. 8 bit ports.
+ */
+#define __TOS_MSP430_CORE__ 0101
+#define __TOS_MSP430_CORE_0101__ 0101
 
 #if defined(__MSPGCC__)
 /* mspgcc */
@@ -53,54 +96,118 @@
 #include <io.h>
 #include <signal.h>
 #endif /* __MSPGCC__ */
+
+/*
+ * old tool chain (3.2.3) defined in iomacros.h, new 4.5.+ no longer
+ * defines these.   Add back in those we use.
+ */
+#ifndef noinit
+#define noinit	__attribute__ ((section(".noinit"))) 
+#endif
+
+#if defined(__msp430x261x) && !defined(__msp430x26x)
+/*
+ * The old 3.2.3 toolchain defined __msp430x261x when compiling for the
+ * 261x series of chips.   The new TI HEADER based toolchains however define
+ * __msp430x26x instead.
+ *
+ * We are migrating to using the newer toolchain and the newer __msp430x26x
+ * define.  For backward compatibility, create the new define too if needed.
+ */
+#define __msp430x26x
+#endif
+
 #include "msp430regtypes.h"
+
+/*
+ * Families support and definition:
+ *
+ * Processor implementations are grouped by like behaviour into families.
+ * Only include processors that have been ported to TinyOS.  Behaviour includes
+ * differences in Port mapping, Interrupt behaviour, addressing.
+ *
+ * x1: msp430f149, msp430f1611
+ * x2: msp430f2616, 2617, 2618, 2619
+ * x5: cc430f5137, msp430f5438, msp430f5438a
+ */
 
 #ifdef __MSP430_TI_HEADERS__
 
-/* TI's msp430 headers define FAIL to be 0x80 in the flash module.
+/*
+ * TI's msp430 headers define FAIL to be 0x80 in the flash module.
  * I'd prefer that it match the value assigned to it in the
- * TinyError.h. */
+ * TinyError.h.
+ */
 #undef FAIL
 
-/* Accommodate old gcc alias */
+/*
+ * Accommodate old gcc alias
+ * deprecate?
+ */
 #define MC_STOP MC__STOP
 
-/* Port registers in MSP430 chips have two naming conventions: by
+/*
+ * Port registers in MSP430 chips have two naming conventions: by
  * number (e.g., P1IN), and by letter (e.g. PAIN).  The numeric-named
  * registers provide 8-bit values, while the alpha-named registers
  * provide 16-bit values.
  *
- * The headers for certain chips define numeric-named registers.
+ * How these port registers overlap varies by processor family.
  *
- * In a very few cases, both numeric-named and alpha-named registers
- * are defined.  By inspection, this occurs only for PAIN, which
- * combines P7IN (at the address of PAIN) and P8IN (at 1+&PAIN); and
- * for PBIN, which combines P9IN (at the address of PBIN) and P10IN
- * (at 1+&PBIN).
+ * x1: defines just numeric port registers.
+ * x2: define numeric ports and lettered.  PortA overlays Port7/8.
+ * x5: define numeric ports and lettered ports.  PortA overlays P1/2,
+ *     PortB overlays P3/4, etc.
  *
- * In more recent chips, only alpha-named registers are provided.
- * Since the current TinyOS MSP430 port interface assumes 8-bit
- * registers, by convention we map numeric-named registers to the
- * alpha-named registers beginning with PAIN==P1IN. */
+ * Note: other processors that haven't been ported yet will differ from
+ * the above.  New processors have to be individually inspected.  You'll
+ * want to look at the TI headers in <toolchain_home>/msp430/include.
+ *
+ * The TI headers define one or more of the following depending on
+ * the processor include file being looked at:
+ *
+ * P1IN		refers to any numeric port.
+ * PAIN		refers to any lettered port.
+ *
+ * P1IN_	numeric address of port location (#defined)
+ * P1IN		C variable placed in proper place with proper type.  8 bit.
+ * PAIN_	numeric address for letter port.  (#defined)
+ * PAIN		C variable at proper location with proper type.  16 bit.
+ *
+ * for example:
+ *     #define P1IN_                 0x0020    Port 1 Input
+ *     const_sfrb(P1IN, P1IN_);
+ *
+ * The TinyOS MSP430 port interface uses both the P1IN_ and P1IN forms for
+ * referencing the port values.   Later processor header files don't define
+ * the P1IN_ form.   For those processor files, we must define a mapping from
+ * the corresponding lettered port to the numeric port.  This only needs to be done
+ * for the x5 family.
+ *
+ * x1: defines both P1IN_ and P1IN.  no lettered ports.
+ * x2: defines both P1IN_ and P1IN.  Lettered ports defined.
+ * x5: Lettered PAIN_ and PAIN defined.  P1IN defined in terms of PAIN_L etc.
+ *     needs P1IN_ defined in terms of PAIN_.
+ */
 
 #if defined(__MSP430_HAS_PORTA__) || defined(__MSP430_HAS_PORTA_R__)
 #if (! defined(P1IN_)) && (defined(__MSP430_HAS_PORT1__) || defined(__MSP430_HAS_PORT1_R__))
-#define P1IN_ (uint16_t)(PAIN_)
-#define P1OUT_ (uint16_t)(PAOUT_)
-#define P1DIR_ (uint16_t)(PADIR_)
-#define P1SEL_ (uint16_t)(PASEL_)
+#define P1IN_  PAIN_
+#define P1OUT_ PAOUT_
+#define P1DIR_ PADIR_
+#define P1SEL_ PASEL_
 #if defined(__MSP430_HAS_PORT1_R__)
-#define P1REN_ (uint16_t)(PAREN_)
+#define P1REN_ PAREN_
 #endif /* __MSP430_HAS_PORT1_R__ */
 #endif /* __MSP430_HAS_PORT1__ */
 
 #if (! defined(P2IN_)) && (defined(__MSP430_HAS_PORT2__) || defined(__MSP430_HAS_PORT2_R__))
-#define P2IN_ (uint16_t)(PAIN_+1)
-#define P2OUT_ (uint16_t)(PAOUT_+1)
-#define P2DIR_ (uint16_t)(PADIR_+1)
-#define P2SEL_ (uint16_t)(PASEL_+1)
+#define P2IN_  PAIN_+1
+#define P2OUT_ PAOUT_+1
+#define P2DIR_ PADIR_+1
+#define P2SEL_ PASEL_+1
 #if defined(__MSP430_HAS_PORT2_R__)
-#define P2REN_ (uint16_t)(PAREN_+1)
+#define P2REN_ PAREN_+1
 #endif /* __MSP430_HAS_PORT2_R__ */
 #endif /* __MSP430_HAS_PORT2__ */
 #endif /* __MSP430_HAS_PORTA__ */
@@ -108,22 +215,24 @@
 
 #if defined(__MSP430_HAS_PORTB__) || defined(__MSP430_HAS_PORTB_R__)
 #if (! defined(P3IN_)) && (defined(__MSP430_HAS_PORT3__) || defined(__MSP430_HAS_PORT3_R__))
-#define P3IN_ (uint16_t)(PBIN_)
-#define P3OUT_ (uint16_t)(PBOUT_)
-#define P3DIR_ (uint16_t)(PBDIR_)
-#define P3SEL_ (uint16_t)(PBSEL_)
+#define P3IN_  PBIN_
+#define P3OUT_ PBOUT_
+#define P3DIR_ PBDIR_
+#define P3SEL_ PBSEL_
+#undef P3SEL
+#define P3SEL PBSEL_L
 #if defined(__MSP430_HAS_PORT3_R__)
-#define P3REN_ (uint16_t)(PBREN_)
+#define P3REN_ PBREN_
 #endif /* __MSP430_HAS_PORT3_R__ */
 #endif /* __MSP430_HAS_PORT3__ */
 
 #if (! defined(P4IN_)) && (defined(__MSP430_HAS_PORT4__) || defined(__MSP430_HAS_PORT4_R__))
-#define P4IN_ (uint16_t)(PBIN_+1)
-#define P4OUT_ (uint16_t)(PBOUT_+1)
-#define P4DIR_ (uint16_t)(PBDIR_+1)
-#define P4SEL_ (uint16_t)(PBSEL_+1)
+#define P4IN_  PBIN_+1
+#define P4OUT_ PBOUT_+1
+#define P4DIR_ PBDIR_+1
+#define P4SEL_ PBSEL_+1
 #if defined(__MSP430_HAS_PORT4_R__)
-#define P4REN_ (uint16_t)(PBREN_+1)
+#define P4REN_ PBREN_+1
 #endif /* __MSP430_HAS_PORT4_R__ */
 #endif /* __MSP430_HAS_PORT4__ */
 #endif /* __MSP430_HAS_PORTB__ */
@@ -131,22 +240,24 @@
 
 #if defined(__MSP430_HAS_PORTC__) || defined(__MSP430_HAS_PORTC_R__)
 #if (! defined(P5IN_)) && (defined(__MSP430_HAS_PORT5__) || defined(__MSP430_HAS_PORT5_R__))
-#define P5IN_ (uint16_t)(PCIN_)
-#define P5OUT_ (uint16_t)(PCOUT_)
-#define P5DIR_ (uint16_t)(PCDIR_)
-#define P5SEL_ (uint16_t)(PCSEL_)
+#define P5IN_  PCIN_
+#define P5OUT_ PCOUT_
+#define P5DIR_ PCDIR_
+#define P5SEL_ PCSEL_
+#undef  P5SEL
+#define P5SEL PCSEL_L
 #if defined(__MSP430_HAS_PORT5_R__)
 #define P5REN_ (uint16_t)(PCREN_)
 #endif /* __MSP430_HAS_PORT5_R__ */
 #endif /* __MSP430_HAS_PORT5__ */
 
 #if (! defined(P6IN_)) && (defined(__MSP430_HAS_PORT6__) || defined(__MSP430_HAS_PORT6_R__))
-#define P6IN_ (uint16_t)(PCIN_+1)
-#define P6OUT_ (uint16_t)(PCOUT_+1)
-#define P6DIR_ (uint16_t)(PCDIR_+1)
-#define P6SEL_ (uint16_t)(PCSEL_+1)
+#define P6IN_  PCIN_+1
+#define P6OUT_ PCOUT_+1
+#define P6DIR_ PCDIR_+1
+#define P6SEL_ PCSEL_+1
 #if defined(__MSP430_HAS_PORT6_R__)
-#define P6REN_ (uint16_t)(PCREN_+1)
+#define P6REN_ PCREN_+1
 #endif /* __MSP430_HAS_PORT6_R__ */
 #endif /* __MSP430_HAS_PORT6__ */
 #endif /* __MSP430_HAS_PORTC__ */
@@ -154,22 +265,24 @@
 
 #if defined(__MSP430_HAS_PORTD__) || defined(__MSP430_HAS_PORTD_R__)
 #if (! defined(P7IN_)) && (defined(__MSP430_HAS_PORT7__) || defined(__MSP430_HAS_PORT7_R__))
-#define P7IN_ (uint16_t)(PDIN_)
-#define P7OUT_ (uint16_t)(PDOUT_)
-#define P7DIR_ (uint16_t)(PDDIR_)
-#define P7SEL_ (uint16_t)(PDSEL_)
+#define P7IN_  PDIN_
+#define P7OUT_ PDOUT_
+#define P7DIR_ PDDIR_
+#define P7SEL_ PDSEL_
 #if defined(__MSP430_HAS_PORT7_R__)
-#define P7REN_ (uint16_t)(PDREN_)
+#define P7REN_ PDREN_
 #endif /* __MSP430_HAS_PORT7_R__ */
 #endif /* __MSP430_HAS_PORT7__ */
 
 #if (! defined(P8IN_)) && (defined(__MSP430_HAS_PORT8__) || defined(__MSP430_HAS_PORT8_R__))
-#define P8IN_ (uint16_t)(PDIN_+1)
-#define P8OUT_ (uint16_t)(PDOUT_+1)
-#define P8DIR_ (uint16_t)(PDDIR_+1)
-#define P8SEL_ (uint16_t)(PDSEL_+1)
+#define P8IN_  PDIN_+1
+#define P8OUT_ PDOUT_+1
+#define P8DIR_ PDDIR_+1
+#define P8SEL_ PDSEL_+1
+#undef P8DIR
+#define P8DIR PDDIR_H
 #if defined(__MSP430_HAS_PORT8_R__)
-#define P8REN_ (uint16_t)(PDREN_+1)
+#define P8REN_ PDREN_+1
 #endif /* __MSP430_HAS_PORT8_R__ */
 #endif /* __MSP430_HAS_PORT8__ */
 #endif /* __MSP430_HAS_PORTD__ */
@@ -177,22 +290,22 @@
 
 #if defined(__MSP430_HAS_PORTE__) || defined(__MSP430_HAS_PORTE_R__)
 #if (! defined(P9IN_)) && (defined(__MSP430_HAS_PORT9__) || defined(__MSP430_HAS_PORT9_R__))
-#define P9IN_ (uint16_t)(PEIN_)
-#define P9OUT_ (uint16_t)(PEOUT_)
-#define P9DIR_ (uint16_t)(PEDIR_)
-#define P9SEL_ (uint16_t)(PESEL_)
+#define P9IN_  PEIN_
+#define P9OUT_ PEOUT_
+#define P9DIR_ PEDIR_
+#define P9SEL_ PESEL_
 #if defined(__MSP430_HAS_PORT9_R__)
-#define P9REN_ (uint16_t)(PEREN_)
+#define P9REN_ PEREN_
 #endif /* __MSP430_HAS_PORT9_R__ */
 #endif /* __MSP430_HAS_PORT9__ */
 
 #if (! defined(P10IN_)) && (defined(__MSP430_HAS_PORT10__) || defined(__MSP430_HAS_PORT10_R__))
-#define P10IN_ (uint16_t)(PEIN_+1)
-#define P10OUT_ (uint16_t)(PEOUT_+1)
-#define P10DIR_ (uint16_t)(PEDIR_+1)
-#define P10SEL_ (uint16_t)(PESEL_+1)
+#define P10IN_  PEIN_+1
+#define P10OUT_ PEOUT_+1
+#define P10DIR_ PEDIR_+1
+#define P10SEL_ PESEL_+1
 #if defined(__MSP430_HAS_PORT10_R__)
-#define P10REN_ (uint16_t)(PEREN_+1)
+#define P10REN_ PEREN_+1
 #endif /* __MSP430_HAS_PORT10_R__ */
 #endif /* __MSP430_HAS_PORT10__ */
 #endif /* __MSP430_HAS_PORTE__ */
@@ -200,26 +313,73 @@
 
 #if defined(__MSP430_HAS_PORTF__) || defined(__MSP430_HAS_PORTF_R__)
 #if (! defined(P11IN_)) && (defined(__MSP430_HAS_PORT11__) || defined(__MSP430_HAS_PORT11_R__))
-#define P11IN_ (uint16_t)(PFIN_)
-#define P11OUT_ (uint16_t)(PFOUT_)
-#define P11DIR_ (uint16_t)(PFDIR_)
-#define P11SEL_ (uint16_t)(PFSEL_)
+#define P11IN_  PFIN_
+#define P11OUT_ PFOUT_
+#define P11DIR_ PFDIR_
+#define P11SEL_ PFSEL_
 #if defined(__MSP430_HAS_PORT11_R__)
-#define P11REN_ (uint16_t)(PFREN_)
+#define P11REN_ PFREN_
 #endif /* __MSP430_HAS_PORT11_R__ */
 #endif /* __MSP430_HAS_PORT11__ */
 
 #if (! defined(P12IN_)) && (defined(__MSP430_HAS_PORT12__) || defined(__MSP430_HAS_PORT12_R__))
-#define P12IN_ (uint16_t)(PFIN_+1)
-#define P12OUT_ (uint16_t)(PFOUT_+1)
-#define P12DIR_ (uint16_t)(PFDIR_+1)
-#define P12SEL_ (uint16_t)(PFSEL_+1)
+#define P12IN_  PFIN_+1
+#define P12OUT_ PFOUT_+1
+#define P12DIR_ PFDIR_+1
+#define P12SEL_ PFSEL_+1
 #if defined(__MSP430_HAS_PORT12_R__)
-#define P12REN_ (uint16_t)(PFREN_+1)
+#define P12REN_ PFREN_+1
 #endif /* __MSP430_HAS_PORT12_R__ */
 #endif /* __MSP430_HAS_PORT12__ */
 #endif /* __MSP430_HAS_PORTF__ */
 
+#if (!defined(UCA0IFG_)) && (defined(__MSP430_HAS_USCI_A0__))
+#ifdef UCA0IFG
+#define UCA0IFG_ UCA0ICTL_+1
+#endif
+#endif
+
+#if (!defined(UCA1IFG_)) && (defined(__MSP430_HAS_USCI_A1__))
+#ifdef UCA1IFG
+#define UCA1IFG_ UCA1ICTL_+1
+#endif
+#endif
+
+#if (!defined(UCA2IFG_)) && (defined(__MSP430_HAS_USCI_A2__))
+#ifdef UCA2IFG
+#define UCA2IFG_ UCA2ICTL_+1
+#endif
+#endif
+
+#if (!defined(UCA3IFG_)) && (defined(__MSP430_HAS_USCI_A3__))
+#ifdef UCA3IFG
+#define UCA3IFG_ UCA3ICTL_+1
+#endif
+#endif
+
+#if (!defined(UCB0IFG_)) && (defined(__MSP430_HAS_USCI_B0__))
+#ifdef UCB0IFG
+#define UCB0IFG_ UCB0ICTL_+1
+#endif
+#endif
+
+#if (!defined(UCB1IFG_)) && (defined(__MSP430_HAS_USCI_B1__))
+#ifdef UCB1IFG
+#define UCB1IFG_ UCB1ICTL_+1
+#endif
+#endif
+
+#if (!defined(UCB2IFG_)) && (defined(__MSP430_HAS_USCI_B2__))
+#ifdef UCB2IFG
+#define UCB2IFG_ UCB2ICTL_+1
+#endif
+#endif
+
+#if (!defined(UCB3IFG_)) && (defined(__MSP430_HAS_USCI_B3__))
+#ifdef UCB3IFG
+#define UCB3IFG_ UCB3ICTL_+1
+#endif
+#endif
 
 #endif /* __MSP430_TI_HEADERS__ */
 
@@ -270,23 +430,16 @@ MSP430REG_NORACE3(TYPE_##name,name,name##_)
 #else /* __MSPGCC__ */
 
 #define MSP430REG_NORACE_EXPAND(type,name,addr) \
-    norace extern volatile type name __asm__(#addr)
+norace extern volatile type name __asm__(#addr)
 
 #define MSP430REG_NORACE3(type,name,addr) \
-    MSP430REG_NORACE_EXPAND(type,name,addr)
+MSP430REG_NORACE_EXPAND(type,name,addr)
 
 #define MSP430REG_NORACE2(rename,name) \
-    MSP430REG_NORACE3(TYPE_##name,rename,name)
+MSP430REG_NORACE3(TYPE_##name,rename,name)
 
 #define MSP430REG_NORACE(name) \
-    MSP430REG_NORACE3(TYPE_##name,name,name)
-
-#define UART0RX_VECTOR  USART0RX_VECTOR
-#define UART0TX_VECTOR  USART0TX_VECTOR
-#define UART1RX_VECTOR  USART1RX_VECTOR
-#define UART1TX_VECTOR  USART1TX_VECTOR
-#define UARTRX_VECTOR   USARTRX_VECTOR
-#define UARTTX_VECTOR   USARTTX_VECTOR
+MSP430REG_NORACE3(TYPE_##name,name,name)
 
 #endif /* __MSPGCC__ */
 
@@ -351,22 +504,40 @@ to_type func_name(from_type x) @safe() { union {from_type f; to_type t;} c = {f:
 #define ADC12MCTL           TCAST(char * ONE, ADC12MCTL_)
 #endif
 
+
+// DEPRECATING
 // define platform constants that can be changed for different compilers
 // these are all msp430-gcc specific (add as necessary)
 
-#ifdef __msp430_headers_adc10_h
+#if defined(__msp430_headers_adc10_h) || defined(__MSP430_HAS_ADC10__)
+// DEPRECATING
 #define __msp430_have_adc10
 #endif
 
-#ifdef __msp430_headers_adc12_h
+#if defined(__msp430_headers_adc12_h) || defined(__MSP430_HAS_ADC12__)
+// DEPRECATING
 #define __msp430_have_adc12
 #endif
 
-// backwards compatibility to older versions of the header files
+/*
+ * backwards compatibility to older versions of the header files
+ *
+ * Note: TI in their infinite wisdom uses __MSP430_HAS_I2C__ to
+ * denote an x1 processor with I2C.   This is on USART0 only.
+ * yes confusing.
+ *
+ * Later processors, such as the 5438A, have USCIs.  A USCI of
+ * a particular flavor (B) implies that it has I2C.   Very strange
+ * way of doing things.
+ */
+
 #ifdef __MSP430_HAS_I2C__
 #define __msp430_have_usart0_with_i2c
 #endif
 
+
+#ifdef notdef
+// DEPRECATING
 // I2CBusy flag is not defined by current MSP430-GCC
 #ifdef __msp430_have_usart0_with_i2c
 #ifndef I2CBUSY
@@ -375,7 +546,10 @@ to_type func_name(from_type x) @safe() { union {from_type f; to_type t;} c = {f:
 MSP430REG_NORACE2(U0CTLnr,U0CTL);
 MSP430REG_NORACE2(I2CTCTLnr,I2CTCTL);
 MSP430REG_NORACE2(I2CDCTLnr,I2CDCTL);
-#endif
+
+#endif	/* __msp430_have_usart0_with_i2c */
+#endif	/* ifdef notdef */
+
 
 // The signal attribute has opposite meaning in msp430-gcc than in avr-gcc
 #define TOSH_SIGNAL(signame) \
@@ -392,7 +566,7 @@ MSP430REG_NORACE2(I2CDCTLnr,I2CDCTL);
 
 // TOSH_ASSIGN_PIN creates functions that are effectively marked as
 // "norace".  This means race conditions that result from their use will not
-// be detectde by nesc.
+// be detected by nesc.
 
 #define TOSH_ASSIGN_PIN_HEX(name, port, hex) \
 void TOSH_SET_##name##_PIN() @safe() { MSP430REG_NORACE2(r,P##port##OUT); r |= hex; } \
@@ -411,6 +585,7 @@ typedef uint8_t mcu_power_t @combine("mcombine");
 mcu_power_t mcombine(mcu_power_t m1, mcu_power_t m2) @safe() {
   return (m1 < m2) ? m1: m2;
 }
+
 enum {
   MSP430_POWER_ACTIVE = 0,
   MSP430_POWER_LPM0   = 1,
@@ -420,59 +595,82 @@ enum {
   MSP430_POWER_LPM4   = 5
 };
 
-void __nesc_disable_interrupt(void) @safe()
-{
+#ifndef INLINE
+#define INLINE inline __attribute__((always_inline))
+#endif
+
+inline void __nesc_disable_interrupt(void) __attribute__((always_inline)) @safe() {
   dint();
+#ifndef __MSPGCC__
+  nop();
+#endif
 }
 
-void __nesc_enable_interrupt(void) @safe()
-{
+inline void __nesc_enable_interrupt(void) __attribute__((always_inline)) @safe() {
   eint();
 }
 
-#define UINT16_ATOMIC_T
-#define INLINE_ATOMIC_FUNC
-
-#ifdef UINT16_ATOMIC_T
+/*
+ * __nesc_atomic_t is used to return whether interrupts are enabled
+ * or not.  Previously, a bool (still a uint16_t) was used.  However,
+ * using the uint16_t (native width of the msp430) fits in with how interrupts
+ * are checked below, see definition of __nesc_atomic_start.
+ *
+ * This should be checked to verify that it generates minimal code.  It does.
+ */
 typedef uint16_t __nesc_atomic_t;
-#else
-typedef bool __nesc_atomic_t;
-#endif
-#ifdef INLINE_ATOMIC_FUNC
-#define ATOMIC_INLINE static inline
-#define ATOMIC_SPONTANEOUS
-#else
-#define ATOMIC_INLINE
-#define ATOMIC_SPONTANEOUS @spontaneous()
-#endif
-ATOMIC_INLINE __nesc_atomic_t __nesc_atomic_start(void);
-ATOMIC_INLINE void __nesc_atomic_end(__nesc_atomic_t reenable_interrupts);
+INLINE_ATOMIC __nesc_atomic_t  __nesc_atomic_start(void) INLINE_ATTRIBUTE;
+INLINE_ATOMIC void __nesc_atomic_end(__nesc_atomic_t reenable_interrupts) INLINE_ATTRIBUTE;
 
 #ifndef NESC_BUILD_BINARY
-/* @spontaneous() functions should not be included when NESC_BUILD_BINARY
-   is #defined, to avoid duplicate functions definitions when binary
-   components are used. Such functions do need a prototype in all cases,
-   though. */
-ATOMIC_INLINE __nesc_atomic_t __nesc_atomic_start(void) ATOMIC_SPONTANEOUS @safe()
-{
-#ifdef UINT16_ATOMIC_T
-  __nesc_atomic_t result = READ_SR & SR_GIE;
-#else
-  __nesc_atomic_t result = ((READ_SR & SR_GIE) != 0);
+/*
+ * @spontaneous() functions should not be included when NESC_BUILD_BINARY
+ * is #defined, to avoid duplicate functions definitions when binary
+ * components are used. Such functions do need a prototype in all cases,
+ * though.
+ */
+
+  /*
+   * Entry for atomic.   (__nesc_atomic_start())
+   *
+   * Basically, test for GIE (remember for later), and then disable interrupts.
+   *
+   * old versions of the toolchain needed a nop following the dint to make sure
+   * that the dint took.  Otherwise, there was a race condition where the
+   * instruction following the dint could be executed before interrupts got
+   * disabled.
+   *
+   * Toolchains starting with uniarch (LTS_20110716, mspgcc 4.5.3+) automatically
+   * generate the nop when using the _dint intrinsic (invoked by dint()) and the
+   * extra nop is no longer needed.   The precence of the macro __MSPGCC__ is assumed
+   * to indicate a newer toolchain.
+   *
+   * Why do we care?   Well atomic is used all over the place and the extra nop
+   * burns two extra bytes of ROM.   We don't have that much to throw away so
+   * we deal with it.
+   */
+
+INLINE_ATOMIC __nesc_atomic_t __nesc_atomic_start(void) @spontaneous() INLINE_ATTRIBUTE @safe() {
+  __nesc_atomic_t result = (READ_SR & SR_GIE);
+
+  dint();
+
+#ifndef __MSPGCC__
+  /* see above */
+  nop();
 #endif
-  __nesc_disable_interrupt();
+
   asm volatile("" : : : "memory"); /* ensure atomic section effect visibility */
   return result;
 }
 
-ATOMIC_INLINE void __nesc_atomic_end(__nesc_atomic_t reenable_interrupts) ATOMIC_SPONTANEOUS @safe()
-{
+INLINE_ATOMIC void __nesc_atomic_end(__nesc_atomic_t reenable_interrupts) @spontaneous() INLINE_ATTRIBUTE @safe() {
   asm volatile("" : : : "memory"); /* ensure atomic section effect visibility */
-#ifdef UINT16_ATOMIC_T
+#ifdef OPTIMIZE_ATOMIC_END
   _BIS_SR(reenable_interrupts);
 #else
   if( reenable_interrupts )
-    __nesc_enable_interrupt();
+    eint();
 #endif
 }
 #endif
@@ -496,11 +694,13 @@ inline float __nesc_hton_afloat(void *COUNT(sizeof(float)) target, float value) 
   return value;
 }
 
-/* Support for chips with configurable resistors on digital inputs.  These
- * are denoted with __MSP430_HAS_PORT1_R__ and similar defines. */
+/*
+ * Support for chips with configurable resistors on digital inputs.  These
+ * are denoted with __MSP430_HAS_PORT1_R__ and similar defines.
+ */
 enum {
   MSP430_PORT_RESISTOR_INVALID,    /**< Hardware does not support resistor control, or pin is output */
-  MSP430_PORT_RESISTOR_OFF,        /**< Resistor disabled */
+  MSP430_PORT_RESISTOR_OFF,	   /**< Resistor off */
   MSP430_PORT_RESISTOR_PULLDOWN,   /**< Pulldown resistor enabled */
   MSP430_PORT_RESISTOR_PULLUP,     /**< Pullup resistor enabled */
 };
@@ -512,6 +712,31 @@ enum {
   MSP430_PORT_DRIVE_STRENGTH_FULL,
 };
 
-#define MSP430_PINS_ATOMIC_LOWLEVEL /* empty atomic */
+#ifndef STATIC_ARRAY_SIZE
 
-#endif//_H_msp430hardware_h
+/*
+ * Expression used when declaring a static array.  Compilers that disallow
+ * declaring arrays with a zero length should define this to be:
+ * #define STATIC_ARRAY_SIZE(_s) (((_s) == 0) ? 1 : (_s))
+ */
+#define STATIC_ARRAY_SIZE(_s) (_s)
+#endif	/* STATIC_ARRAY_SIZE */
+
+/* 
+ * Define the following ADC12 registers for the x5xxx chip set,
+ * the x5xxx header file does not have the older register names
+ *
+ */
+#ifndef ENC
+#define ENC ADC12ENC
+#endif
+
+#ifndef CONSEQ0
+#define CONSEQ0 ADC12CONSEQ0
+#endif
+
+#ifndef CONSEQ1
+#define CONSEQ1 ADC12CONSEQ1
+#endif
+
+#endif		// __H_MSP430HARDWARE_H__
