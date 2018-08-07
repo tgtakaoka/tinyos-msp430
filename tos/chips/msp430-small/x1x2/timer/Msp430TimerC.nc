@@ -136,7 +136,7 @@ implementation {
 #ifdef TAIV_TAIFG
   Msp430TimerA.Overflow -> Msp430TimerA.Event[TAIV_TAIFG];
 #else
-  Msp430TimerA.Overflow -> Msp430TimerA.Event[TA0IV_TA0IFG];
+  Msp430TimerA.Overflow -> Msp430TimerA.Event[TA0IV_TAIFG];
 #endif
   Msp430TimerA.VectorTimerX0 -> Common.VectorTimerA0;
   Msp430TimerA.VectorTimerX1 -> Common.VectorTimerA1;
@@ -156,7 +156,7 @@ implementation {
 #ifdef TAIV_TACCR1
   Msp430TimerA1.Event -> Msp430TimerA.Event[TAIV_TACCR1];
 #else
-  Msp430TimerA1.Event -> Msp430TimerA.Event[TA0IV_TA0CCR1];
+  Msp430TimerA1.Event -> Msp430TimerA.Event[TA0IV_TACCR1];
 #endif
 
 #if defined(__MSP430_HAS_TA3__)
@@ -168,14 +168,14 @@ implementation {
 #ifdef TAIV_TACCR2
   Msp430TimerA2.Event -> Msp430TimerA.Event[TAIV_TACCR2];
 #else
-  Msp430TimerA2.Event -> Msp430TimerA.Event[TA0IV_TA0CCR2];
+  Msp430TimerA2.Event -> Msp430TimerA.Event[TA0IV_TACCR2];
 #endif
 #endif
 
 #if defined(__MSP430_HAS_T1A2__) || defined(__MSP430_HAS_T1A3__)
   // Timer1 A
   Timer1A = Msp430Timer1A.Timer;
-  Msp430Timer1A.Overflow -> Msp430Timer1A.Event[TA1IV_TA1IFG];
+  Msp430Timer1A.Overflow -> Msp430Timer1A.Event[TA1IV_TAIFG];
   Msp430Timer1A.VectorTimerX0 -> Common.VectorTimer1A0;
   Msp430Timer1A.VectorTimerX1 -> Common.VectorTimer1A1;
 
@@ -191,7 +191,8 @@ implementation {
   Compare1A1 = Msp430Timer1A1.Compare;
   Capture1A1 = Msp430Timer1A1.Capture;
   Msp430Timer1A1.Timer -> Msp430Timer1A.Timer;
-  Msp430Timer1A1.Event -> Msp430Timer1A.Event[TA1IV_TA1CCR1];
+  Msp430Timer1A1.Event -> Msp430Timer1A.Event[TA1IV_TACCR1];
+#endif
 
 #if defined(__MSP430_HAS_T1A3__)
   // Timer1 A2
@@ -199,8 +200,7 @@ implementation {
   Compare1A2 = Msp430Timer1A2.Compare;
   Capture1A2 = Msp430Timer1A2.Capture;
   Msp430Timer1A2.Timer -> Msp430Timer1A.Timer;
-  Msp430Timer1A2.Event -> Msp430Timer1A.Event[TA1IV_TA1CCR2];
-#endif
+  Msp430Timer1A2.Event -> Msp430Timer1A.Event[TA1IV_TACCR2];
 #endif
 
 #if defined(__MSP430_HAS_TB3__) || defined(__MSP430_HAS_TB7__)
