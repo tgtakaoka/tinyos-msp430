@@ -38,8 +38,6 @@
  *          intended use.
  */
 
-#include "Timer-vlo.h"
- 
 generic configuration AlarmMilli16C()
 {
   provides interface Init;
@@ -49,13 +47,14 @@ implementation
 {
   components new AlarmVlo16C() as AlarmFrom;
   components CounterMilli16C as Counter;
-  components new ApproximateAlarmC(TMilli,uint16_t,TVlo,uint16_t,
-                                   VLO_HZ/1000) as Transform;
+  components Msp430VloCalibC as VloCalibC;
+  components VloAlarmAdapter16C as Transform;
 
   Init = AlarmFrom;
   Alarm = Transform;
 
   Transform.AlarmFrom -> AlarmFrom;
   Transform.Counter -> Counter;
+  Transform.VloCalibInfo -> VloCalibC;
 }
 

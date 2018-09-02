@@ -36,6 +36,7 @@ module PlatformClockVloP {
     uses {
         interface Msp430ClockInit;
         interface Msp430DcoCalib as DcoCalib;
+        interface Msp430VloCalib as VloCalib;
     }
 }
 implementation {
@@ -57,6 +58,7 @@ implementation {
 
     event void Msp430ClockInit.initClocks() {
         call DcoCalib.busyWaitCalibrateDco();
+        call VloCalib.busyWaitCalibrateVlo();
 
         // call Msp430ClockInit.defaultInitClocks();
         // BCSCTL2

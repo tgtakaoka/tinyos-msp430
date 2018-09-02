@@ -1,5 +1,4 @@
-/* -*- mode: c; mode: flyspell-prog; -*- */
-/* Copyright (c) 2010, Tadashi G. Takaoka
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,32 +29,29 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-generic module ApproximateAlarmC(
-    typedef to_precision_tag,
-    typedef to_size_type @integer(),
-    typedef from_precision_tag,
-    typedef from_size_type @integer(),
-    const uint16_t scale)
-{
-    provides interface Alarm<to_precision_tag,to_size_type>;
-    uses interface Counter<to_precision_tag,to_size_type>;
-    uses interface Alarm<from_precision_tag,from_size_type> as AlarmFrom;
+#include "Timer-vlo.h"
+
+module VloAlarmAdapter16C {
+    provides interface Alarm<TMilli,uint16_t>;
+    uses {
+        interface Counter<TMilli,uint16_t>;
+        interface Alarm<TVlo,uint16_t> as AlarmFrom;
+        interface Msp430VloCalibInfo as VloCalibInfo;
+    }
 }
-implementation
-{
-    to_size_type m_t0;
-    to_size_type m_dt;
+implementation {
+    uint16_t m_t0;
+    uint16_t m_dt;
 
     enum {
-        MAX_FROM = (to_size_type)1 << (sizeof(from_size_type) * 8 - 1),
-        MAX_DELAY = MAX_FROM / scale,
+        MAX_FROM = (uint16_t)1 << 15,
     };
 
-    async command to_size_type Alarm.getNow() {
+    async command uint16_t Alarm.getNow() {
         return call Counter.get();
     }
 
-    async command to_size_type Alarm.getAlarm() {
+    async command uint16_t Alarm.getAlarm() {
         atomic return m_t0 + m_dt;
     }
 
@@ -68,11 +64,11 @@ implementation
     }
 
     void set_alarm() {
-        to_size_type now = call Counter.get();
-        to_size_type expires, remaining;
-
-        expires = m_t0 + m_dt;
-        remaining = (to_size_type)(expires - now);
+        const uint16_t scale = call VloCalibInfo.getVloFreqKiHz();
+        const uint16_t MAX_DELAY = call VloCalibInfo.getMaxDelay();
+        uint16_t now = call Counter.get();
+        uint16_t expires = m_t0 + m_dt;
+        uint16_t remaining = (uint16_t)(expires - now);
 
         if (m_t0 <= now) {
             if (expires >= m_t0 && expires <= now)
@@ -89,12 +85,11 @@ implementation
             m_t0 += m_dt;
             m_dt = 0;
         }
-        call AlarmFrom.startAt((from_size_type)(now * scale),
-                               (from_size_type)(remaining * scale));
-
+        call AlarmFrom.startAt((uint16_t)(now * scale),
+                               (uint16_t)(remaining * scale));
     }
 
-    async command void Alarm.startAt(to_size_type t0, to_size_type dt) {
+    async command void Alarm.startAt(uint16_t t0, uint16_t dt) {
         atomic {
             m_t0 = t0;
             m_dt = dt;
@@ -102,7 +97,7 @@ implementation
         }
     }
 
-    async command void Alarm.start(to_size_type dt) {
+    async command void Alarm.start(uint16_t dt) {
         call Alarm.startAt(call Alarm.getNow(), dt);
     }
 
@@ -116,18 +111,7 @@ implementation
         }
     }
 
-    async event void Counter.overflow() {
-    }
+    async event void Counter.overflow() {}
 
-    default async event void Alarm.fired() {
-    }
+    default async event void Alarm.fired() {}
 }
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */

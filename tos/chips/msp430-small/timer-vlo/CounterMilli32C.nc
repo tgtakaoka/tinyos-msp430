@@ -38,17 +38,14 @@
  *          intended use.
  */
 
-#include "Timer-vlo.h"
-    
 configuration CounterMilli32C
 {
   provides interface Counter<TMilli,uint32_t>;
 }
 implementation
 {
-  components Msp430CounterVloC as CounterFrom;
-  components new ApproximateCounterC(TMilli,uint32_t,TVlo,uint16_t,
-                                     VLO_HZ/1000,uint32_t) as Transform;
+  components CounterMilli16C as CounterFrom;
+  components new EnlargeCounterC(TMilli,uint32_t,uint16_t) as Transform;
 
   Counter = Transform.Counter;
 

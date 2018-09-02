@@ -4,7 +4,9 @@ configuration PlatformClockC {
 implementation {
     components PlatformClockVloP as ClockP;
     components Msp430DcoCalibC;
+    components Msp430VloCalibC;
 
     Msp430ClockInit = ClockP;
     ClockP.DcoCalib -> Msp430DcoCalibC;
+    ClockP.VloCalib -> Msp430VloCalibC;
 }
