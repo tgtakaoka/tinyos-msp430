@@ -42,10 +42,8 @@ configuration Msp430ClockC
 implementation
 {
   components Msp430ClockP, McuSleepC;
-  components Msp430DcoCalibC;
 
   Init = Msp430ClockP;
   Msp430ClockInit = Msp430ClockP;
-  Msp430DcoCalibC.DcoCalib -> Msp430ClockP;
   McuSleepC.McuPowerOverride -> Msp430ClockP;
 }

@@ -155,7 +155,6 @@ module Msp430ClockP @safe() {
     interface Init;
     interface Msp430ClockInit;
     interface McuPowerOverride;
-    interface Msp430DcoCalib as DcoCalib;
   }
 }
 
@@ -341,7 +340,6 @@ implementation {
 #endif
 
     atomic {
-      signal DcoCalib.busyWaitCalibrateDco();
       signal Msp430ClockInit.initClocks();
       signal Msp430ClockInit.initTimerMilli();
       signal Msp430ClockInit.initTimerMicro();

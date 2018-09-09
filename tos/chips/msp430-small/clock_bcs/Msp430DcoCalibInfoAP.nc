@@ -34,10 +34,10 @@
  */
 
 module Msp430DcoCalibInfoAP {
-    uses interface Msp430DcoCalib as DcoCalib;
+    provides interface Msp430DcoCalib as DcoCalib;
 }
 implementation {
-    event void DcoCalib.busyWaitCalibrateDco() {
+    command void DcoCalib.busyWaitCalibrateDco() {
 #if TARGET_DCO_HZ == (16 * 1024UL * 1024UL) && defined(CALDCO_16MHZ_)
         DCOCTL = CALDCO_16MHZ;
         BCSCTL1 = CALBC1_16MHZ;

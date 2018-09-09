@@ -38,9 +38,11 @@ configuration PlatformC {
 }
 implementation {
     components PlatformP, Msp430ClockC;
+    components PlatformClockC;
     components PlatformNullP;
 
     Init = PlatformP;
     Platform = PlatformNullP;
     PlatformP.ClockInit -> Msp430ClockC.Init;
+    PlatformClockC.Msp430ClockInit -> Msp430ClockC;
 }

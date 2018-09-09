@@ -34,8 +34,8 @@
  */
 
 module Msp430DcoCalibP {
+    provides interface Msp430DcoCalib as DcoCalib;
     uses {
-        interface Msp430DcoCalib as DcoCalib;
         interface Msp430Timer as Timer;
         interface Msp430TimerControl as Control;
         interface Msp430Capture as Capture;
@@ -61,7 +61,7 @@ implementation {
         DELTA = (uint16_t)(TARGET_DCO_HZ / (ACLK_HZ / 8)),
     };
 
-    event void DcoCalib.busyWaitCalibrateDco() {
+    command void DcoCalib.busyWaitCalibrateDco() {
         const uint16_t saved_bcsctl1 = BCSCTL1 & ~RSEL_MASK;
         uint16_t calib = (RSEL_MAX << 8);
         uint16_t bit = calib;

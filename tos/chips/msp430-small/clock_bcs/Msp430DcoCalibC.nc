@@ -34,7 +34,7 @@
  */
 
 configuration Msp430DcoCalibC {
-    uses interface Msp430DcoCalib as DcoCalib;
+    provides interface Msp430DcoCalib as DcoCalib;
 }
 implementation {
     components Msp430DcoCalibInfoAP;

@@ -34,7 +34,7 @@
  */
 
 configuration Msp430DcoCalib32khzP {
-    uses interface Msp430DcoCalib as DcoCalib;
+    provides interface Msp430DcoCalib as DcoCalib;
 }
 implementation {
     components Msp430DcoCalibP, Msp430TimerC;

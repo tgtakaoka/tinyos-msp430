@@ -34,5 +34,5 @@
  */
 
 interface Msp430DcoCalib {
-    event void busyWaitCalibrateDco();
+    command void busyWaitCalibrateDco();
 }
