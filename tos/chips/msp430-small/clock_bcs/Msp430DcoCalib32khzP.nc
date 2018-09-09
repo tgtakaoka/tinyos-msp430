@@ -33,11 +33,26 @@
  * @author Tadashi G. Takaoka <tadashi.g.takaoka@gmail.com>
  */
 
-configuration Msp430DcoCalibC {
+configuration Msp430DcoCalib32khzP {
     uses interface Msp430DcoCalib as DcoCalib;
 }
 implementation {
-    components Msp430DcoCalibInfoAP;
+    components Msp430DcoCalibP, Msp430TimerC;
 
-    DcoCalib = Msp430DcoCalibInfoAP;
+    DcoCalib = Msp430DcoCalibP;
+
+    Msp430DcoCalibP.Timer -> Msp430TimerC.TimerA;
+#if defined(__MSP430_HAS_TA2__)
+    Msp430DcoCalibP.Control -> Msp430TimerC.ControlA0;
+    Msp430DcoCalibP.Capture -> Msp430TimerC.CaptureA0;
+#elif defined(__MSP430_HAS_TA3__)
+#if defined(__MSP430G2402) || defined(__MSP430G2452) || defined(__MSP430G2553)
+    /* Some MSP430G2xx have TA3 but ACLK is connected to CCR0.CCIB */
+    Msp430DcoCalibP.Control -> Msp430TimerC.ControlA0;
+    Msp430DcoCalibP.Capture -> Msp430TimerC.CaptureA0;
+#else
+    Msp430DcoCalibP.Control -> Msp430TimerC.ControlA2;
+    Msp430DcoCalibP.Capture -> Msp430TimerC.CaptureA2;
+#endif
+#endif
 }
