@@ -215,10 +215,6 @@ implementation {
   }
 
   command void Msp430ClockInit.defaultInitClocks() {
-#if defined(__msp430_using_vlo)
-    BCSCTL2 = SELM_0 | DIVM_0 | SMCLK_DIVS; // MCLK=DCO/1, SMCLK=DCO/N
-    BCSCTL3 = LFXT1S_2;                        // ACLK=VLO
-#else
     // BCSCTL1
     // .XT2OFF = 1;	disable the external oscillator for SCLK and MCLK
     // .XTS    = 0;	set low frequency mode for LXFT1
@@ -238,7 +234,6 @@ implementation {
     // BCSCTL3: use default, on reset set to 4, 6pF.
 #if defined(ERRATA_XOSC8)
     BCSCTL3 = LFXT1S_0 | XCAP_3;        // ACLK=32kHz, CL,eff=12.5pF
-#endif
 #endif
 #endif
 
