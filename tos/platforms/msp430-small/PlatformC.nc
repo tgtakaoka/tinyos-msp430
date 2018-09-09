@@ -38,16 +38,9 @@ configuration PlatformC {
 }
 implementation {
     components PlatformP, Msp430ClockC;
-    Init = PlatformP;
-    Platform = PlatformP;
-    PlatformP.Msp430ClockInit -> Msp430ClockC.Init;
-}
+    components PlatformNullP;
 
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
+    Init = PlatformP;
+    Platform = PlatformNullP;
+    PlatformP.ClockInit -> Msp430ClockC.Init;
+}

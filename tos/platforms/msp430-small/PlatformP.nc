@@ -31,12 +31,9 @@
  */
 
 module PlatformP {
-    provides {
-        interface Init;
-        interface Platform;
-    }
+    provides interface Init;
     uses {
-        interface Init as Msp430ClockInit;
+        interface Init as ClockInit;
         interface Init as LedsInit;
     }
 }
@@ -44,30 +41,11 @@ implementation {
     command error_t Init.init() {
         WDTCTL = WDTPW + WDTHOLD;
         call LedsInit.init();
-        call Msp430ClockInit.init();
+        call ClockInit.init();
         return SUCCESS;
     }
-
-    async command uint32_t Platform.localTime()      { return 0; }
-    async command uint32_t Platform.usecsRaw()       { return 0; }
-    async command uint32_t Platform.usecsRawSize()   { return 0; }
-    async command uint32_t Platform.jiffiesRaw()     { return 0; }
-    async command uint32_t Platform.jiffiesRawSize() { return 0; }
-    async command bool     Platform.set_unaligned_traps(bool on_off) {
-        return FALSE;
-    }
-    async command int Platform.getIntPriority(int irq_number) { return irq_number; }
 
     default command error_t LedsInit.init() {
         return SUCCESS;
     }
 }
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
