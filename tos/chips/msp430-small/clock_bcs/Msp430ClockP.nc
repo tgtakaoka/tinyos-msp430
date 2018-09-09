@@ -150,39 +150,6 @@
 #include "Msp430DcoSpec.h"
 #include "Msp430Timer.h"
 
-#ifndef SMCLK_DIV
-#error "ClockP: SMCLK_DIV needs to be defined."
-#endif
-
-#if     SMCLK_DIV == 1
-#define SMCLK_DIVS DIVS_0
-#elif   SMCLK_DIV == 2
-#define SMCLK_DIVS DIVS_1
-#elif   SMCLK_DIV == 4
-#define SMCLK_DIVS DIVS_2
-#elif   SMCLK_DIV == 8
-#define SMCLK_DIVS DIVS_3
-#else
-#error "ClockP: unknown SMCLK_DIV defined.  Need valid SMCLK_DIV to proceed."
-#endif
-
-#ifndef TIMERA_DIV
-#error "ClockP: TIMERA_DIV needs to be defined."
-#endif
-
-/* TB/TA1 clock is DCO/SMCLK_DIV/TIMERA_DIV */
-#if     TIMERA_DIV == 1
-#define TIMERA_ID ID_0
-#elif   TIMERA_DIV == 2
-#define TIMERA_ID ID_1
-#elif   TIMERA_DIV == 4
-#define TIMERA_ID ID_2
-#elif   TIMERA_DIV == 8
-#define TIMERA_ID ID_3
-#else
-#error "ClockP: unknown TIMERA_DIV defined.  Need valid TIMERA_DIV to proceed."
-#endif
-
 module Msp430ClockP @safe() {
   provides {
     interface Init;
@@ -216,13 +183,43 @@ implementation {
 #else
 #error "Msp430ClockP (clock_bcs): processor doesn't support BASIC_CLOCK/BC2"
 #endif
+
+#if   SMCLK_DIV == 1
+    SMCLK_DIVS = DIVS_0,
+#elif SMCLK_DIV == 2
+    SMCLK_DIVS = DIVS_1,
+#elif SMCLK_DIV == 4
+    SMCLK_DIVS = DIVS_2,
+#elif SMCLK_DIV == 8
+    SMCLK_DIVS = DIVS_3,
+#else
+#error "ClockP: unknown SMCLK_DIV defined.  Need valid SMCLK_DIV to proceed."
+#endif
+
+/* TB/TA1 clock is DCO/SMCLK_DIV/TIMERA_DIV */
+#if   TIMERA_DIV == 1
+    TIMERA_ID = ID_0,
+#elif TIMERA_DIV == 2
+    TIMERA_ID = ID_1,
+#elif TIMERA_DIV == 4
+    TIMERA_ID = ID_2,
+#elif TIMERA_DIV == 8
+    TIMERA_ID = ID_3,
+#else
+#error "ClockP: unknown TIMERA_DIV defined.  Need valid TIMERA_DIV to proceed."
+#endif
   };
 
+    
   async command mcu_power_t McuPowerOverride.lowestState() {
     return MSP430_POWER_LPM3;
   }
 
   command void Msp430ClockInit.defaultInitClocks() {
+#if defined(__msp430_using_vlo)
+    BCSCTL2 = SELM_0 | DIVM_0 | SMCLK_DIVS; // MCLK=DCO/1, SMCLK=DCO/N
+    BCSCTL3 = LFXT1S_2;                        // ACLK=VLO
+#else
     // BCSCTL1
     // .XT2OFF = 1;	disable the external oscillator for SCLK and MCLK
     // .XTS    = 0;	set low frequency mode for LXFT1
@@ -230,10 +227,6 @@ implementation {
     // .RSEL		do not modify (3 or 4 bits), XT5V is 0 if present
     BCSCTL1 = XT2OFF | (BCSCTL1 & RSEL_MASK);
 
-#if defined(__msp430_using_vlo)
-    BCSCTL2 = SELM_0 | DIVM_0 | SELS | DIVS_0; // MCLK=DCO/1, SMCLK=VLO/1
-    BCSCTL3 = LFXT1S_2;                        // ACLK=VLO
-#else
     // BCSCTL2
     // .SELM = 0;	select DCOCLK as source for MCLK
     // .DIVM = 0;	set the divisor of MCLK to 1
@@ -241,12 +234,13 @@ implementation {
     // .DIVS = xxx;	set the divisor of SCLK to SMCLK_DIVS
     // .DCOR = 0;	select internal resistor for DCO
     BCSCTL2 = SMCLK_DIVS;
-#endif
 
+#if defined(__MSP430_HAS_BC2__)
+    // BCSCTL3: use default, on reset set to 4, 6pF.
 #if defined(ERRATA_XOSC8)
     BCSCTL3 = LFXT1S_0 | XCAP_3;        // ACLK=32kHz, CL,eff=12.5pF
-#else
-    // BCSCTL3: use default, on reset set to 4, 6pF.
+#endif
+#endif
 #endif
 
     // IE1.OFIE = 0; no interrupt for oscillator fault
