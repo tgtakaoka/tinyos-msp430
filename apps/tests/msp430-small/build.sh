@@ -9,9 +9,7 @@ ROOT_APPS=${TINYOS_ROOT_DIR_ADDITIONAL}/apps/tests/msp430-small
 SMALL_MCUS=(msp430f2012 msp430f2013 msp430g2211 msp430g2231)
 LARGE_PROJECTS=(ds1624/Temperature uart/Localtime)
 # Known combination of fails.
-FAIL_KNOWNS=(
-    max549/Clock:ez430f2012,ez430f2013
-    max7219/Clock:ez430f2012,ez430f2013
+KNOWN_FAILURES=(
     uart/LocalTime:msp430f1121,msp430f1132
     uart/LocalTime:msp430f2012,msp430f2013,msp430f2131
     uart/LocalTime:msp430g2211,msp430g2231,msp430g2402,msp430g2452
@@ -119,7 +117,7 @@ function setup_expects {
     PASS_EXPECTS=()
 
     local project_targets project targets mcu target
-    for project_targets in "${FAIL_KNOWNS[@]}"; do
+    for project_targets in "${KNOWN_FAILURES[@]}"; do
 	project="${project_targets%:*}"
 	targets="${project_targets#${project}:}"
 	targets=(${targets//,/ })
