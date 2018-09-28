@@ -1,4 +1,3 @@
-/* -*- mode: c; mode: flyspell-prog; -*- */
 /* Copyright (c) 2013, Tadashi G. Takaoka
  * All rights reserved.
  *
@@ -33,7 +32,7 @@
 #ifndef _H_slaz413_h
 #define _H_slaz413_h
 
-/* See SLAZ413F MSP430G2211 Device Erratasheet, Revised December 2016 */
+/* See SLAZ413G MSP430G2211 Device Erratasheet, Revised May 2018 */
 
 #if defined(__MSP430G2211__)
 
@@ -65,12 +64,3 @@
 #endif
 
 #endif
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */

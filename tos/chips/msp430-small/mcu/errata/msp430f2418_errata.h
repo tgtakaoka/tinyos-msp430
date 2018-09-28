@@ -1,4 +1,3 @@
-/* -*- mode: c; mode: flyspell-prog; -*- */
 /* Copyright (c) 2013, Tadashi G. Takaoka
  * All rights reserved.
  *
@@ -33,7 +32,7 @@
 #ifndef _H_slaz178_h
 #define _H_slaz178_h
 
-/* See SLAZ178L MSP430F2418 Device Erratasheet, Revised December 2016 */
+/* See SLAZ178N MSP430F2418 Device Erratasheet, Revised July 2018 */
 
 #if defined(__MSP430F2418__)
 
@@ -49,6 +48,7 @@
 #define ERRATA_BCL15
 #define ERRATA_CPU8
 #define ERRATA_CPU16
+#define ERRATA_CPU19
 #define ERRATA_FLASH19
 #define ERRATA_FLASH24
 #define ERRATA_FLASH27
@@ -106,12 +106,3 @@
 #endif
 
 #endif
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */

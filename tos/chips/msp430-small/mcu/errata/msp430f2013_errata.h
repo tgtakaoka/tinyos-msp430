@@ -1,4 +1,3 @@
-/* -*- mode: c; mode: flyspell-prog; -*- */
 /* Copyright (c) 2013, Tadashi G. Takaoka
  * All rights reserved.
  *
@@ -33,7 +32,7 @@
 #ifndef _H_slaz156_h
 #define _H_slaz156_h
 
-/* See SLAZ156G MSP430F2013 Device Erratasheet, Revised December 2016 */
+/* See SLAZ156H MSP430F2013 Device Erratasheet, Revised May 2018 */
 
 #if defined(__MSP430F2013__)
 
@@ -86,12 +85,3 @@
 #endif
 
 #endif
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */

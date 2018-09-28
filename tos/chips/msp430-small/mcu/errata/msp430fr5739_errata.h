@@ -1,4 +1,3 @@
-/* -*- mode: c; mode: flyspell-prog; -*- */
 /* Copyright (c) 2013, Tadashi G. Takaoka
  * All rights reserved.
  *
@@ -33,7 +32,7 @@
 #ifndef _H_slaz392_h
 #define _H_slaz392_h
 
-/* See SLAZ392X MSP430FR5739 Device Erratasheet, Revised December 2016 */
+/* See SLAZ392AC MSP430FR5739 Device Erratasheet, Revised September 2018 */
 
 #if defined(__MSP430FR5739__)
 
@@ -46,6 +45,7 @@
 #define ERRATA_ADC38
 #define ERRATA_ADC39
 #define ERRATA_ADC42
+#define ERRATA_ADC66
 #define ERRATA_COMP10
 #define ERRATA_COMP11
 #define ERRATA_CPU21
@@ -76,6 +76,7 @@
 #define ERRATA_USCI42
 #define ERRATA_USCI44
 #define ERRATA_USCI47
+#define ERRATA_USCI50
 #define ERRATA_WDG6
 #define ERRATA_XOSC13
 #endif
@@ -85,12 +86,3 @@
 #endif
 
 #endif
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */

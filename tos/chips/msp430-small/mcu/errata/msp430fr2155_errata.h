@@ -1,4 +1,4 @@
-/* Copyright (c) 2013, Tadashi G. Takaoka
+/* Copyright (c) 2018, Tadashi G. Takaoka
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,52 +29,32 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef _H_slaz146_h
-#define _H_slaz146_h
+#ifndef _H_slaz722_h
+#define _H_slaz722_h
 
-/* See SLAZ146G MSP430F1611 Device Erratasheet, Revised May 2018 */
+/* See SLAZ722A MSP430FR2155 Device Erratasheet, Revised June 2018 */
 
-#if defined(__MSP430F1611__)
+#if defined(__MSP430FR2155__)
 
 #if !defined(__MSP430_REV__)
-#warning "__MSP430_REV__ not defined, default to 'A'"
-#define __MSP430_REV__ 'A'
+#warning "__MSP430_REV__ not defined, default to 'B'"
+#define __MSP430_REV__ 'B'
 #endif
 
-#if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B'
-#define ERRATA_ADC18
-#define ERRATA_ADC25
-#define ERRATA_BCL5
-#define ERRATA_CPU4
-#define ERRATA_CPU41
-#define ERRATA_I2C7
-#define ERRATA_I2C8
-#define ERRATA_I2C9
-#define ERRATA_I2C10
-#define ERRATA_I2C11
-#define ERRATA_I2C12
-#define ERRATA_I2C13
-#define ERRATA_I2C14
-#define ERRATA_I2C15
-#define ERRATA_I2C16
-#define ERRATA_MPY2
-#define ERRATA_TA12
-#define ERRATA_TA16
-#define ERRATA_TA21
-#define ERRATA_TAB22
-#define ERRATA_TB2
-#define ERRATA_TB16
-#define ERRATA_TB24
-#define ERRATA_US15
-#define ERRATA_WDG2
-#endif
-#if __MSP430_REV__ == 'A'
-#define ERRATA_DCA4
-#define ERRATA_US14
+#if __MSP430_REV__ == 'B'
+#define ERRATA_CPU21
+#define ERRATA_CPU22
+#define ERRATA_CPU40
+#define ERRATA_CPU46
+#define ERRATA_EEM23
+#define ERRATA_RTC15
+#define ERRATA_USCI42
+#define ERRATA_USCI47
+#define ERRATA_USCI50
 #endif
 
 #else
-#error "This errata/slaz146.h is for MSP430F1611"
+#error "This errata/slaz722.h is for MSP430FR2155"
 #endif
 
 #endif

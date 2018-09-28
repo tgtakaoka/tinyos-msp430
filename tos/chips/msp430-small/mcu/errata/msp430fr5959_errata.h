@@ -1,4 +1,3 @@
-/* -*- mode: c; mode: flyspell-prog; -*- */
 /* Copyright (c) 2017, Tadashi G. Takaoka
  * All rights reserved.
  *
@@ -33,7 +32,7 @@
 #ifndef _H_slaz469_h
 #define _H_slaz469_h
 
-/* See SLAZ469N MSP430FR5959 Device Erratasheet, Revised October 2017 */
+/* See SLAZ469R MSP430FR5959 Device Erratasheet, Revised September 2018 */
 
 #if defined(__MSP430FR5959__)
 
@@ -48,6 +47,7 @@
 #define ERRATA_ADC42
 #define ERRATA_ADC43
 #define ERRATA_ADC64
+#define ERRATA_ADC66
 #define ERRATA_AES1
 #define ERRATA_COMP7
 #define ERRATA_COMP10
@@ -68,6 +68,8 @@
 #define ERRATA_EEM31
 #define ERRATA_GC1
 #define ERRATA_JTAG27
+#define ERRATA_PMM24
+#define ERRATA_PMM31
 #define ERRATA_PORT28
 #define ERRATA_REF9
 #define ERRATA_RTC10
@@ -75,6 +77,7 @@
 #define ERRATA_USCI42
 #define ERRATA_USCI45
 #define ERRATA_USCI47
+#define ERRATA_USCI50
 #define ERRATA_WDG5
 #endif
 
@@ -87,12 +90,3 @@
 #endif
 
 #endif
-
-/*
- * Local Variables:
- * c-file-style: "bsd"
- * c-basic-offset: 4
- * indent-tabs-mode: nil
- * End:
- * vim: set et ts=4 sw=4:
- */
