@@ -32,7 +32,7 @@
 #ifndef _H_slaz392_h
 #define _H_slaz392_h
 
-/* See SLAZ392AC MSP430FR5739 Device Erratasheet, Revised September 2018 */
+/* See SLAZ392AD MSP430FR5739 Device Erratasheet, Revised October 2018 */
 
 #if defined(__MSP430FR5739__)
 
@@ -46,6 +46,7 @@
 #define ERRATA_ADC39
 #define ERRATA_ADC42
 #define ERRATA_ADC66
+#define ERRATA_ADC67
 #define ERRATA_COMP10
 #define ERRATA_COMP11
 #define ERRATA_CPU21
@@ -63,6 +64,7 @@
 #define ERRATA_EEM30
 #define ERRATA_EEM31
 #define ERRATA_GC3
+#define ERRATA_GC4
 #define ERRATA_JTAG27
 #define ERRATA_MPY1
 #define ERRATA_PORT16

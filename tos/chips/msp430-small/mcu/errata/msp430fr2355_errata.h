@@ -32,7 +32,7 @@
 #ifndef _H_slaz695_h
 #define _H_slaz695_h
 
-/* See SLAZ695C MSP430FR2355 Device Erratasheet, Revised June 2018 */
+/* See SLAZ695E MSP430FR2355 Device Erratasheet, Revised November 2018 */
 
 #if defined(__MSP430FR2355__)
 
@@ -46,7 +46,9 @@
 #define ERRATA_CPU22
 #define ERRATA_CPU40
 #define ERRATA_CPU46
+#define ERRATA_CS13
 #define ERRATA_EEM23
+#define ERRATA_PMM32
 #define ERRATA_RTC15
 #define ERRATA_USCI42
 #define ERRATA_USCI45

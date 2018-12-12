@@ -32,7 +32,7 @@
 #ifndef _H_slaz550_h
 #define _H_slaz550_h
 
-/* See SLAZ550U MSP430FR4133 Device Erratasheet, Revised September 2018 */
+/* See SLAZ550W MSP430FR4133 Device Erratasheet, Revised November 2018 */
 
 #if defined(__MSP430FR4133__)
 
@@ -50,10 +50,13 @@
 #define ERRATA_CPU40
 #define ERRATA_CPU46
 #define ERRATA_CS11
+#define ERRATA_CS13
 #define ERRATA_EEM23
 #define ERRATA_EEM28
 #define ERRATA_EEM30
 #define ERRATA_GC1
+#define ERRATA_GC4
+#define ERRATA_PMM32
 #define ERRATA_PORT28
 #define ERRATA_RTC15
 #define ERRATA_SYS23

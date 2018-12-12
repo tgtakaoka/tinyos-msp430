@@ -32,7 +32,7 @@
 #ifndef _H_slaz687_h
 #define _H_slaz687_h
 
-/* See SLAZ687J MSP430FR2111 Device Erratasheet, Revised September 2018 */
+/* See SLAZ687L MSP430FR2111 Device Erratasheet, Revised November 2018 */
 
 #if defined(__MSP430FR2111__)
 
@@ -48,7 +48,9 @@
 #define ERRATA_CPU22
 #define ERRATA_CPU40
 #define ERRATA_CPU46
+#define ERRATA_CS13
 #define ERRATA_EEM23
+#define ERRATA_PMM32
 #define ERRATA_RTC15
 #define ERRATA_USCI42
 #define ERRATA_USCI47
