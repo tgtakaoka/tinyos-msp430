@@ -9,7 +9,7 @@ supported officially, is designed with [TinyOS prod for msp430-elf][].
 This project is intended as a basis for electronics hobbyist.
 
 You may find that [Homebrew][], [Linuxbrew][], and the following taps
-are quite handy for develoipment.
+are quite handy for development.
 
 - [tgtakaoka/mspgcc][]: `msp430-gcc` and tools. MSP430 port of `gcc
   4.7` known as `mspgcc4`.
@@ -50,7 +50,7 @@ To do
 * USI I2C Master
 * Bit-bang UART
 * ADC10, SD16A, DAC12, Comparator
-* [MSP430F4270](http://www.ti.com/product/MSP430F4270) (64pin, 8MHz, 32KB Flash, 256B RAM)
+* [MSP430F4270](http://www.ti.com/product/MSP430F4270) (64pin, 8MHz, 32KB Flash, 256B RAM, LCD)
 * [MSP430F5172](http://www.ti.com/product/MSP430F5172) (38pin, 25MHz, 32KB Flash, 2KB RAM)
 * [MSP430F5310](http://www.ti.com/product/MSP430F5310) (48pin, 25MHz, 32kB Flash, 6KB RAM)
 * [MSP430F5510](http://www.ti.com/product/MSP430F5510) (48pin, 25MHz, 32kB Flash, 6KB RAM, USB)
@@ -60,10 +60,15 @@ To do
 * [MSP430FR2311](http://www.ti.com/product/MSP430FR2311) (20pin, 16MHz, 4KB FRAM, 1KB RAM)
 * [MSP430FR2355](http://www.ti.com/product/MSP430FR2355) (38pin, 24MHz, 32KB FRAM, 4KB RAM)
 * [MSP430FR2422](http://www.ti.com/product/MSP430FR2422) (16pin, 16MHz, 8KB FRAM, 2KB RAM)
+* [MSP430FR2512](http://www.ti.com/product/MSP430FR2512) (16pin, 16MHz, 8KB FRAM, 2KB RAM)
+* [MSP430FR2522](http://www.ti.com/product/MSP430FR2522) (16pin, 16MHz, 8KB FRAM, 2KB RAM)
 * [MSP430FR2533](http://www.ti.com/product/MSP430FR2533) (32pin, 16MHz, 16KB FRAM, 2KB RAM)
 * [MSP430FR2633](http://www.ti.com/product/MSP430FR2633) (32pin, 16MHz, 16KB FRAM, 4KB RAM)
-* [MSP430FR4133](http://www.ti.com/product/MSP430FR4133) (48pin, 16MHz, 16KB FRAM, 2KB RAM)
+* [MSP430FR4133](http://www.ti.com/product/MSP430FR4133) (48pin, 16MHz, 16KB FRAM, 2KB RAM, LCD)
+* [MSP430FR5738](http://www.ti.com/product/MSP430FR5738) (28pin, 24MHz, 16KB FRAM, 1KB RAM)
 * [MSP430FR5739](http://www.ti.com/product/MSP430FR5739) (38pin, 24MHz, 16KB FRAM, 1KB RAM)
+* [MSP430FR5969](http://www.ti.com/product/MSP430FR5969) (38pin, 16MHz, 64KB FRAM, 2KB RAM)
+* [MSP430G2955](http://www.ti.com/product/MSP430G2955) (38pin, 16MHz, 56KB Flash, 4KB RAM)
 * [MSP430I2041](http://www.ti.com/product/MSP430I2041) (28pin, 16MHz, 32KB Flash, 2KB RAM)
 * [MSP430AFE253](http://www.ti.com/product/MSP430AFE253) (24pin, 12MHz, 16KB Flash, 512B RAM)
 * [MSP-EXP430FR2311](http://www.ti.com/tool/MSP-EXP430FR2311)
@@ -71,6 +76,7 @@ To do
 * [MSP-EXP430FR2433](http://www.ti.com/tool/MSP-EXP430FR2433)
 * [MSP-EXP430FR4133](http://www.ti.com/tool/MSP-EXP430FR4133)
 * [MSP-EXP430FR5739](http://www.ti.com/tool/MSP-EXP430FR5739)
+* [MSP-EXP430FR5969](http://www.ti.com/tool/MSP-EXP430FR5969)
 
 [TI MSP430-GCC]: http://www.ti.com/tool/MSP430-GCC-OPENSOURCE
 [TinyOS prod]: https://github.com/tp-freeforall/prod
