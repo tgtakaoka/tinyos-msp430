@@ -5,14 +5,11 @@ ROOT_TARGETS=${TINYOS_ROOT_DIR_ADDITIONAL}/support/make/targets
 # Root directory of all projects.
 ROOT_APPS=${TINYOS_ROOT_DIR_ADDITIONAL}/apps/tests/msp430-small
 
-# Large projects for small MCUs are expected to fail.
-SMALL_MCUS=(msp430f2012 msp430f2013 msp430g2211 msp430g2231)
-LARGE_PROJECTS=(ds1624/Temperature uart/Localtime)
-# Known combination of fails.
+# Known combinations of failure.
 KNOWN_FAILURES=(
     uart/LocalTime:msp430f1121,msp430f1132
-    uart/LocalTime:msp430f2012,msp430f2013,msp430f2131
-    uart/LocalTime:msp430g2211,msp430g2231,msp430g2402,msp430g2452
+    uart/LocalTime:msp430f2131
+    uart/LocalTime:msp430g2402,msp430g2452
 )
 
 if [[ -t 1 ]]; then
@@ -56,17 +53,6 @@ function get_targets_of {
 	[[ ${target_mcu} =~ :${mcu}$ ]] && targets+=("${target_mcu%:${mcu}}")
     done
     echo "${targets[@]}"
-}
-
-function is_small_target {
-    local target="$1"
-    local mcu=$(get_mcu_of "${target}")
-    in_array "${mcu}" "${SMALL_MCUS[@]}"
-}
-
-function is_large_project {
-    local project="$1"
-    in_array "${project}" "${LARGE_PROJECTS[@]}"
 }
 
 function insertion_sort {
@@ -137,10 +123,6 @@ function setup_expects {
     for target in "${TARGETS[@]}"; do
 	for project in "${PROJECTS[@]}"; do
 	    project_target="${project}:${target}"
-	    if is_small_target "${target}" && is_large_project "${project}"; then
-		in_array "${project_target}" "${FAIL_EXPECTS[@]}" \
-		    || FAIL_EXPECTS+=("${project_target}")
-	    fi
 	    in_array "${project_target}" "${FAIL_EXPECTS[@]}" \
 		|| PASS_EXPECTS+=("${project_target}")
 	done

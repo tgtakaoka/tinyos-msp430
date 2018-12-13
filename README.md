@@ -47,7 +47,6 @@ Unconfirmed (should work)
 
 To do
 -----
-* configurable timer
 * USI I2C Master
 * Bit-bang UART
 * ADC10, SD16A, DAC12, Comparator
@@ -72,14 +71,6 @@ To do
 * [MSP-EXP430FR2433](http://www.ti.com/tool/MSP-EXP430FR2433)
 * [MSP-EXP430FR4133](http://www.ti.com/tool/MSP-EXP430FR4133)
 * [MSP-EXP430FR5739](http://www.ti.com/tool/MSP-EXP430FR5739)
-
-Deprecated targets
-------------------
-* [MSP430F2012](http://www.ti.com/product/MSP430F2012) (14pin, 16MHz, 2KB Flash, 128B RAM)
-* [MSP430F2013](http://www.ti.com/product/MSP430F2013) (14pin, 16MHz, 2KB Flash, 128B RAM)
-* [MSP430G2211](http://www.ti.com/product/MSP430G2211) (14pin, 16MHz, 2KB Flash, 128B RAM)
-* [MSP430G2231](http://www.ti.com/product/MSP430G2231) (14pin, 16MHz, 2KB Flash, 128B RAM)
-* [EZ430-F2013](http://www.ti.com/tool/EZ430-F2013) and [EZ430-T2012](http://www.ti.com/tool/EZ430-T2012)
 
 [TI MSP430-GCC]: http://www.ti.com/tool/MSP430-GCC-OPENSOURCE
 [TinyOS prod]: https://github.com/tp-freeforall/prod

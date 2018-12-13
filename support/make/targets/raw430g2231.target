@@ -1,9 +1,0 @@
-# -*- mode: makefile-gmake; mode: flyspell-prog; -*-
-
-TARGET = raw430g2231
-MSP_MCU = msp430g2231
-
-$(call TOSMake_include_family,raw430)
-$(call TOSMake_include_make_platform,msp430-small)
-
-# vim: set noet ts=8 sw=8 syntax=make:
