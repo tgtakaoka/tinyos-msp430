@@ -32,7 +32,7 @@
 #ifndef _H_slaz661_h
 #define _H_slaz661_h
 
-/* See SLAZ661N MSP430FR2533 Device Erratasheet, Revised October 2018 */
+/* See SLAZ661Q MSP430FR2533 Device Erratasheet, Revised March 2019 */
 
 #if defined(__MSP430FR2533__)
 
@@ -44,7 +44,6 @@
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'C'
 #define ERRATA_ADC50
 #define ERRATA_ADC63
-#define ERRATA_BSL18
 #define ERRATA_CPU21
 #define ERRATA_CPU22
 #define ERRATA_CPU40
@@ -52,12 +51,18 @@
 #define ERRATA_CS13
 #define ERRATA_EEM23
 #define ERRATA_GC4
+#define ERRATA_GC5
+#define ERRATA_PMM32
 #define ERRATA_PORT28
 #define ERRATA_RTC15
 #define ERRATA_USCI42
 #define ERRATA_USCI45
 #define ERRATA_USCI47
 #define ERRATA_USCI50
+#endif
+
+#if __MSP430_REV__ == 'A'
+#define ERRATA_BSL18
 #endif
 
 #else

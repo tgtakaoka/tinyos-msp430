@@ -32,7 +32,7 @@
 #ifndef _H_slaz188_h
 #define _H_slaz188_h
 
-/* See SLAZ188N MSP430F2618 Device Erratasheet, Revised July 2018 */
+/* See SLAZ188P MSP430F2618 Device Erratasheet, Revised March 2019 */
 
 #if defined(__MSP430F2618__)
 
@@ -49,6 +49,7 @@
 #define ERRATA_CPU8
 #define ERRATA_CPU16
 #define ERRATA_CPU19
+#define ERRATA_CPU47
 #define ERRATA_DAC4
 #define ERRATA_DMA3
 #define ERRATA_DMA4
@@ -77,6 +78,7 @@
 #define ERRATA_USCI26
 #define ERRATA_USCI27
 #define ERRATA_USCI30
+#define ERRATA_USCI34
 #define ERRATA_USCI35
 #define ERRATA_USCI40
 #define ERRATA_XOSC5

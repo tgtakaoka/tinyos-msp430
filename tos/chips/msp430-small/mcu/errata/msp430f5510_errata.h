@@ -32,7 +32,7 @@
 #ifndef _H_slaz301_h
 #define _H_slaz301_h
 
-/* See SLAZ301X MSP430F5510 Device Erratasheet, Revised September 2018 */
+/* See SLAZ301AA MSP430F5510 Device Erratasheet, Revised March 2019 */
 
 #if defined(__MSP430F5510__)
 
@@ -53,12 +53,14 @@
     __MSP430_REV__ == 'F'
 #define ERRATA_ADC39
 #define ERRATA_ADC42
+#define ERRATA_ADC69
 #define ERRATA_COMP10
 #define ERRATA_CPU21
 #define ERRATA_CPU22
 #define ERRATA_CPU39
 #define ERRATA_CPU40
 #define ERRATA_CPU46
+#define ERRATA_CPU47
 #define ERRATA_DMA4
 #define ERRATA_DMA7
 #define ERRATA_DMA10
@@ -97,6 +99,7 @@
 #define ERRATA_USB12
 #define ERRATA_USCI26
 #define ERRATA_USCI31
+#define ERRATA_USCI34
 #define ERRATA_USCI35
 #define ERRATA_USCI39
 #define ERRATA_USCI40

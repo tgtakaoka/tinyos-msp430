@@ -32,7 +32,7 @@
 #ifndef _H_slaz695_h
 #define _H_slaz695_h
 
-/* See SLAZ695E MSP430FR2355 Device Erratasheet, Revised November 2018 */
+/* See SLAZ695H MSP430FR2355 Device Erratasheet, Revised March 2019 */
 
 #if defined(__MSP430FR2355__)
 

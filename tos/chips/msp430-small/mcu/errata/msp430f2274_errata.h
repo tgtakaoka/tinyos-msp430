@@ -32,7 +32,7 @@
 #ifndef _H_slaz169_h
 #define _H_slaz169_h
 
-/* See SLAZ169L MSP430F2274 Device Erratasheet, Revised May 2018 */
+/* See SLAZ169M MSP430F2274 Device Erratasheet, Revised March 2019 */
 
 #if defined(__MSP430F2274__)
 
@@ -70,6 +70,7 @@
 #define ERRATA_USCI26
 #define ERRATA_USCI27
 #define ERRATA_USCI30
+#define ERRATA_USCI34
 #define ERRATA_USCI35
 #define ERRATA_USCI40
 #define ERRATA_XOSC5

@@ -32,7 +32,7 @@
 #ifndef _H_slaz465_h
 #define _H_slaz465_h
 
-/* See SLAZ465T MSP430FR5949 Device Erratasheet, Revised November 2018 */
+/* See SLAZ465V MSP430FR5949 Device Erratasheet, Revised March 2019 */
 
 #if defined(__MSP430FR5949__)
 
@@ -49,6 +49,7 @@
 #define ERRATA_ADC64
 #define ERRATA_ADC66
 #define ERRATA_ADC67
+#define ERRATA_ADC69
 #define ERRATA_AES1
 #define ERRATA_COMP7
 #define ERRATA_COMP10
@@ -56,6 +57,7 @@
 #define ERRATA_CPU22
 #define ERRATA_CPU40
 #define ERRATA_CPU46
+#define ERRATA_CPU49
 #define ERRATA_CS3
 #define ERRATA_CS7
 #define ERRATA_CS12
@@ -69,6 +71,7 @@
 #define ERRATA_EEM31
 #define ERRATA_GC1
 #define ERRATA_GC4
+#define ERRATA_GC5
 #define ERRATA_JTAG27
 #define ERRATA_PMM24
 #define ERRATA_PMM31

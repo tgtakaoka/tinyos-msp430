@@ -32,7 +32,7 @@
 #ifndef _H_slaz251_h
 #define _H_slaz251_h
 
-/* See SLAZ251W MSP430F5172 Device Erratasheet, Revised September 2018 */
+/* See SLAZ251X MSP430F5172 Device Erratasheet, Revised January 2019 */
 
 #if defined(__MSP430F5172__)
 
@@ -44,12 +44,14 @@
 #if __MSP430_REV__ == 'C'
 #define ERRATA_ADC39
 #define ERRATA_ADC42
+#define ERRATA_ADC69
 #define ERRATA_BSL7
 #define ERRATA_COMP10
 #define ERRATA_CPU21
 #define ERRATA_CPU22
 #define ERRATA_CPU40
 #define ERRATA_CPU46
+#define ERRATA_CPU47
 #define ERRATA_DMA4
 #define ERRATA_DMA7
 #define ERRATA_DMA10

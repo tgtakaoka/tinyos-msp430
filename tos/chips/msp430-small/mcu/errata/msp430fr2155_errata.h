@@ -32,7 +32,7 @@
 #ifndef _H_slaz722_h
 #define _H_slaz722_h
 
-/* See SLAZ722C MSP430FR2155 Device Erratasheet, Revised November 2018 */
+/* See SLAZ722F MSP430FR2155 Device Erratasheet, Revised March 2019 */
 
 #if defined(__MSP430FR2155__)
 

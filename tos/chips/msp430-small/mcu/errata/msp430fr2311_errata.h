@@ -32,7 +32,7 @@
 #ifndef _H_slaz679_h
 #define _H_slaz679_h
 
-/* See SLAZ679N MSP430FR2311 Device Erratasheet, Revised November 2018 */
+/* See SLAZ679P MSP430FR2311 Device Erratasheet, Revised March 2019 */
 
 #if defined(__MSP430FR2311__)
 
@@ -44,7 +44,6 @@
 #if __MSP430_REV__ == 'A' || __MSP430_REV__ == 'B'
 #define ERRATA_ADC50
 #define ERRATA_ADC63
-#define ERRATA_BSL18
 #define ERRATA_CPU21
 #define ERRATA_CPU22
 #define ERRATA_CPU40
@@ -57,6 +56,10 @@
 #define ERRATA_USCI45
 #define ERRATA_USCI47
 #define ERRATA_USCI50
+#endif
+
+#if __MSP430_REV__ == 'A'
+#define ERRATA_BSL18
 #endif
 
 #else

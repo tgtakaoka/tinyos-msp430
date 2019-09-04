@@ -32,7 +32,7 @@
 #ifndef _H_slaz677_h
 #define _H_slaz677_h
 
-/* See SLAZ677F MSP430I2041 Device Erratasheet, Revised May 2018 */
+/* See SLAZ677G MSP430I2041 Device Erratasheet, Revised March 2019 */
 
 #if defined(__MSP430I2041__)
 

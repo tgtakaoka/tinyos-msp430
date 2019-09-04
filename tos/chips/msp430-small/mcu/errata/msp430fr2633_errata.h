@@ -32,7 +32,7 @@
 #ifndef _H_slaz660_h
 #define _H_slaz660_h
 
-/* See SLAZ660N MSP430FR2633 Device Erratasheet, Revised October 2018 */
+/* See SLAZ660Q MSP430FR2633 Device Erratasheet, Revised March 2019 */
 
 #if defined(__MSP430FR2633__)
 
@@ -51,6 +51,8 @@
 #define ERRATA_CS13
 #define ERRATA_EEM23
 #define ERRATA_GC4
+#define ERRATA_GC5
+#define ERRATA_PMM32
 #define ERRATA_PORT28
 #define ERRATA_RTC15
 #define ERRATA_USCI42
